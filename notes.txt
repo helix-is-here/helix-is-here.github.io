@@ -1,0 +1,6 @@
+Returns each Season within the division
+https://prod.services.nbl.com.au/api_cache/bbv/synergy?route=competitions/ee4035f8-76a3-11eb-a481-2a86bfd2d24d/seasons&format=true
+
+Returns all games in a seasons
+https://prod.services.nbl.com.au/api_cache/bbv/synergy?route=seasons/15444d25-b1da-11ef-9497-9d00368d54d0/fixtures&limit=200&include=entities,venues&fields=startTimeLocal,fixtureId,roundNumber,status,competitors,venue&&format=true
+
