@@ -1,0 +1,290 @@
+{
+    "data": [
+        {
+            "added": "2023-02-02T08:26:01",
+            "ageGroup": "SENIOR",
+            "competition": {
+                "id": "ee43298e-76a3-11eb-a481-2a86bfd2d24d",
+                "resourceType": "competitions"
+            },
+            "competitionId": "ee43298e-76a3-11eb-a481-2a86bfd2d24d",
+            "discipline": null,
+            "durationFull": 180,
+            "endDate": "2023-07-24",
+            "eventType": "FIXTURE",
+            "externalId": "2023_D1M",
+            "fixtureProfile": {
+                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+                "resourceType": "fixtureProfiles"
+            },
+            "gender": "MALE",
+            "grade": null,
+            "images": [],
+            "includeInStatistics": true,
+            "internationalReference": null,
+            "leaderCriteriaId": null,
+            "liveDataAvailable": false,
+            "liveVideoAvailable": false,
+            "lockStandings": false,
+            "nameLatin": null,
+            "nameLocal": "2023 D1M",
+            "nameShortLatin": null,
+            "nameShortLocal": null,
+            "organization": {
+                "id": "b1bt2",
+                "resourceType": "organizations"
+            },
+            "organizationId": "b1bt2",
+            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+            "promotionRelegationRules": null,
+            "representation": "CLUB",
+            "rosterConfiguration": null,
+            "seasonId": "3a05aa37-a2d3-11ed-ae87-91a4110a4315",
+            "seasonType": "SEASON",
+            "standard": "TIER2",
+            "standingConfiguration": {
+                "id": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
+                "resourceType": "standingConfigurations"
+            },
+            "standingConfigurationId": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
+            "startDate": "2023-03-18",
+            "status": "COMPLETE",
+            "updated": "2024-03-17T06:55:41",
+            "videoProduction": "NONE",
+            "year": 2023
+        },
+        {
+            "added": "2024-02-12T12:15:46",
+            "ageGroup": "SENIOR",
+            "competition": {
+                "id": "ee43298e-76a3-11eb-a481-2a86bfd2d24d",
+                "resourceType": "competitions"
+            },
+            "competitionId": "ee43298e-76a3-11eb-a481-2a86bfd2d24d",
+            "discipline": null,
+            "durationFull": 180,
+            "endDate": "2024-07-31",
+            "eventType": "FIXTURE",
+            "externalId": "2024_D1M",
+            "fixtureProfile": {
+                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+                "resourceType": "fixtureProfiles"
+            },
+            "gender": "MALE",
+            "grade": null,
+            "images": [],
+            "includeInStatistics": true,
+            "internationalReference": null,
+            "leaderCriteriaId": "d9f7e6b5-fb32-11ec-b502-05d971e5225e",
+            "leadersCriteria": {
+                "id": "d9f7e6b5-fb32-11ec-b502-05d971e5225e",
+                "resourceType": "leaderCriteria"
+            },
+            "liveDataAvailable": false,
+            "liveVideoAvailable": false,
+            "lockStandings": false,
+            "nameLatin": null,
+            "nameLocal": "2024 Division 1 Men",
+            "nameShortLatin": null,
+            "nameShortLocal": "2024 D1M",
+            "organization": {
+                "id": "b1bt2",
+                "resourceType": "organizations"
+            },
+            "organizationId": "b1bt2",
+            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+            "promotionRelegationRules": null,
+            "representation": "CLUB",
+            "rosterConfiguration": {
+                "fixtureBibEdit": false,
+                "seasonRosterStatusAllowed": []
+            },
+            "seasonId": "7385ec55-c9a0-11ee-82c2-b99d64b17a9e",
+            "seasonType": "SEASON",
+            "standard": "TIER2",
+            "standingConfiguration": {
+                "id": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
+                "resourceType": "standingConfigurations"
+            },
+            "standingConfigurationId": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
+            "startDate": "2024-03-01",
+            "status": "COMPLETE",
+            "updated": "2024-11-19T02:27:49",
+            "videoProduction": "NONE",
+            "year": 2024
+        },
+        {
+            "added": "2022-02-02T14:36:31",
+            "ageGroup": "SENIOR",
+            "competition": {
+                "id": "ee43298e-76a3-11eb-a481-2a86bfd2d24d",
+                "resourceType": "competitions"
+            },
+            "competitionId": "ee43298e-76a3-11eb-a481-2a86bfd2d24d",
+            "discipline": null,
+            "durationFull": 180,
+            "endDate": "2022-08-07",
+            "eventType": "FIXTURE",
+            "externalId": "2022_D1M",
+            "fixtureProfile": {
+                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+                "resourceType": "fixtureProfiles"
+            },
+            "gender": "MALE",
+            "grade": null,
+            "images": [],
+            "includeInStatistics": true,
+            "internationalReference": null,
+            "leaderCriteriaId": null,
+            "liveDataAvailable": false,
+            "liveVideoAvailable": false,
+            "lockStandings": true,
+            "nameLatin": null,
+            "nameLocal": "2022 D1M",
+            "nameShortLatin": null,
+            "nameShortLocal": null,
+            "organization": {
+                "id": "b1bt2",
+                "resourceType": "organizations"
+            },
+            "organizationId": "b1bt2",
+            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+            "promotionRelegationRules": null,
+            "representation": "CLUB",
+            "rosterConfiguration": null,
+            "seasonId": "83a5f656-8435-11ec-8128-b55682bb0e92",
+            "seasonType": "SEASON",
+            "standard": "TIER2",
+            "standingConfiguration": {
+                "id": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
+                "resourceType": "standingConfigurations"
+            },
+            "standingConfigurationId": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
+            "startDate": "2022-03-19",
+            "status": "COMPLETE",
+            "updated": "2024-03-17T06:59:05",
+            "videoProduction": "NONE",
+            "year": 2022
+        },
+        {
+            "added": "2025-01-13T00:37:08",
+            "ageGroup": "SENIOR",
+            "competition": {
+                "id": "ee43298e-76a3-11eb-a481-2a86bfd2d24d",
+                "resourceType": "competitions"
+            },
+            "competitionId": "ee43298e-76a3-11eb-a481-2a86bfd2d24d",
+            "discipline": null,
+            "durationFull": 180,
+            "endDate": "2025-08-23",
+            "eventType": "FIXTURE",
+            "externalId": null,
+            "fixtureProfile": {
+                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+                "resourceType": "fixtureProfiles"
+            },
+            "gender": "MALE",
+            "grade": null,
+            "images": [],
+            "includeInStatistics": true,
+            "internationalReference": null,
+            "leaderCriteriaId": "d9f7e6b5-fb32-11ec-b502-05d971e5225e",
+            "leadersCriteria": {
+                "id": "d9f7e6b5-fb32-11ec-b502-05d971e5225e",
+                "resourceType": "leaderCriteria"
+            },
+            "liveDataAvailable": false,
+            "liveVideoAvailable": false,
+            "lockStandings": false,
+            "nameLatin": null,
+            "nameLocal": "2025 Division One Men",
+            "nameShortLatin": null,
+            "nameShortLocal": "D1M",
+            "organization": {
+                "id": "b1bt2",
+                "resourceType": "organizations"
+            },
+            "organizationId": "b1bt2",
+            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+            "promotionRelegationRules": null,
+            "representation": "CLUB",
+            "rosterConfiguration": {
+                "fixtureBibEdit": true,
+                "fixtureRosterLock": false,
+                "seasonRosterLock": false,
+                "seasonRosterStatusAllowed": [
+                    "ACTIVE"
+                ]
+            },
+            "seasonId": "8502fbf2-d146-11ef-a89f-8dce3f6e708b",
+            "seasonType": "SEASON",
+            "standard": "TIER2",
+            "standingConfiguration": {
+                "id": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
+                "resourceType": "standingConfigurations"
+            },
+            "standingConfigurationId": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
+            "startDate": "2025-03-21",
+            "status": "ACTIVE",
+            "updated": "2025-03-18T03:21:25",
+            "videoProduction": "NONE",
+            "year": 2025
+        },
+        {
+            "added": "2021-02-24T13:26:44",
+            "ageGroup": "SENIOR",
+            "competition": {
+                "id": "ee43298e-76a3-11eb-a481-2a86bfd2d24d",
+                "resourceType": "competitions"
+            },
+            "competitionId": "ee43298e-76a3-11eb-a481-2a86bfd2d24d",
+            "discipline": null,
+            "durationFull": 180,
+            "endDate": "2021-07-25",
+            "eventType": "FIXTURE",
+            "externalId": "2021_D1M",
+            "fixtureProfile": {
+                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+                "resourceType": "fixtureProfiles"
+            },
+            "gender": "MALE",
+            "grade": null,
+            "images": [],
+            "includeInStatistics": true,
+            "internationalReference": null,
+            "leaderCriteriaId": null,
+            "liveDataAvailable": false,
+            "liveVideoAvailable": false,
+            "lockStandings": false,
+            "nameLatin": null,
+            "nameLocal": "Division One Men",
+            "nameShortLatin": null,
+            "nameShortLocal": null,
+            "organization": {
+                "id": "b1bt2",
+                "resourceType": "organizations"
+            },
+            "organizationId": "b1bt2",
+            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+            "promotionRelegationRules": null,
+            "representation": "CLUB",
+            "rosterConfiguration": null,
+            "seasonId": "efd4f78c-76a3-11eb-bf75-6ec8402b0194",
+            "seasonType": "SEASON",
+            "standard": "ELITE",
+            "standingConfiguration": {
+                "id": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
+                "resourceType": "standingConfigurations"
+            },
+            "standingConfigurationId": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
+            "startDate": "2021-03-13",
+            "status": "COMPLETE",
+            "updated": "2024-03-17T07:02:10",
+            "videoProduction": "NONE",
+            "year": 2021
+        }
+    ],
+    "includes": null,
+    "generated_on": 1747281946,
+    "public": true
+}

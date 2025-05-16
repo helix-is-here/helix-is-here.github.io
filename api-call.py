@@ -1,52 +1,24 @@
 import requests
 
 from divisions import divisions
-
-def getGameStatistics(fixtureId):
-    url = "https://eapi.web.prod.cloud.atriumsports.com/v1/embed/2/fixture_detail"
-    params = {
-        "sub": "statistics",
-        "fixtureId": fixtureId
-    }
-
-    response = requests.get(url, params=params)
-    data = response.json()
-
-    #print(data["data"]["statistics"]["data"]["base"]["home"]["persons"][0]["rows"])
-    #print(data["data"]["statistics"]["data"]["base"]["away"]["persons"][0]["rows"])
-    for i in range(0, len(data["data"]["statistics"]["data"]["base"]["home"]["persons"][0]["rows"])):
-        print(data["data"]["statistics"]["data"]["base"]["home"]["persons"][0]["rows"][i]["personName"])
-
-def getMensChamp2025FixtureIds():
-
-    url = "https://prod.services.nbl.com.au/api_cache/bbv/synergy"
-    # params = {
-    #     "route": "seasons/f622e8a8-b1d9-11ef-a813-7beee0b79583/fixtures",
-    #     "limit": "200",
-    #     "include": "entities,venues",
-    #     "fields": "startTimeLocal,fixtureId,roundNumber,status,competitors,venue",
-    #     "format": "true"
-    # }
-    params = {
-        "route": "seasons/7385ec55-c9a0-11ee-82c2-b99d64b17a9e/fixtures",
-        "limit": "200",
-        "include": "entities,venues",
-        "fields": "startTimeLocal,fixtureId,roundNumber,status,competitors,venue",
-        "format": "true"
-    }
-
-    response = requests.get(url, params=params)
-    data = response.json()
-
-    print(len(data["data"]))
-    for i in range(0, len(data["data"])):
-        if (data["data"][i]["competitors"][0]["score"] is not None and data["data"][i]["competitors"][0]["score"] is not None):
-            print(data["data"][i]["fixtureId"] + " - " + data["data"][i]["roundNumber"] + " | Scores: " + data["data"][i]["competitors"][0]["score"] + " - " + data["data"][i]["competitors"][0]["score"])
+# gets the divisionId from the divisions list.
+def getDivisionId(choice: int) -> str:
+    # map input number onto division values
+    try:
+        choice_index = int(choice)
+        if 0 <= choice_index < len(divisions):
+            division_id = divisions[choice_index]["id"]
+            division_name = divisions[choice_index]["name"]
+            print(f"You selected: {division_name} (ID: {division_id})")
+            print()
+            return division_id
         else:
-            print(data["data"][i]["fixtureId"] + " - " + data["data"][i]["roundNumber"] + " | Scores: N/A - N/A")
+            print("Invalid selection: number out of range.")
+    except ValueError:
+        print("Invalid input: please enter a number.")
 
+# prints a list of divisions, gets the user to select one, then returns the divisionId.
 def selectDivision() -> str:
-        # print divisons for selection
     print("Select Divison:")
     for index, div in enumerate(divisions):
         print(f"{index}) {div['name']}")
@@ -54,27 +26,132 @@ def selectDivision() -> str:
     # get user input
     choice = input("Enter the number of your choice: ")
 
-    # map input number onto division values
-    try:
-        choice_index = int(choice)
-        if 0 <= choice_index < len(divisions):
-            division_value = divisions[choice_index]["value"]
-            division_id = divisions[choice_index]["name"]
-            print(f"You selected: {division_value} (ID: {division_id})")
-        else:
-            print("Invalid selection: number out of range.")
-    except ValueError:
-        print("Invalid input: please enter a number.")
+    return getDivisionId(choice)
+
+# calls the API for the seasons in a division
+def getDivisionSeasonsData(divisionId: str) -> list:
+    url = "https://prod.services.nbl.com.au/api_cache/bbv/synergy"
+
+    params = {
+        "route": "competitions/" + divisionId + "/seasons",
+        "format": "true"
+    }
+
+    response = requests.get(url, params=params)
+    
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Request failed with status code {response.status_code}")
+
+# prints a list of seasons, then asks the user to select one, and returns the season id
+def selectSeason(divisionId: str) -> str:
+    divisionSeasons = getDivisionSeasonsData(divisionId)
+    
+    print("Select Season:")
+    for index, season in enumerate(divisionSeasons["data"]):
+        print(f"{index}) {season['year']}")
+
+    # get user input
+    seasonChoiceIndex = int(input("Enter the number of your choice: "))
+    yearChoice = divisionSeasons["data"][seasonChoiceIndex]["year"]
+    
+    seasonId = divisionSeasons["data"][seasonChoiceIndex]["seasonId"]
+    
+    print(f"You selected: {yearChoice} (Season ID: {seasonId})")
+    print()
+
+    return seasonId
+
+# calls the API for the games in a season
+def getSeasonGames(competitionId: str) -> list:
+
+    url = "https://prod.services.nbl.com.au/api_cache/bbv/synergy"
+    params = {
+        "route": "seasons/" + competitionId + "/fixtures",
+        "limit": "200",
+        "include": "entities,venues",
+        "fields": "startTimeLocal,fixtureId,roundNumber,status,competitors,venue",
+        "format": "true"
+    }
+
+    response = requests.get(url, params=params)
+    
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Request failed with status code {response.status_code}")
+
+    # print(len(data["data"]))
+    # for i in range(0, len(data["data"])):
+    #     if (data["data"][i]["competitors"][0]["score"] is not None and data["data"][i]["competitors"][0]["score"] is not None):
+    #         print(data["data"][i]["fixtureId"] + " - " + data["data"][i]["roundNumber"] + " | Scores: " + data["data"][i]["competitors"][0]["score"] + " - " + data["data"][i]["competitors"][0]["score"])
+    #     else:
+    #         print(data["data"][i]["fixtureId"] + " - " + data["data"][i]["roundNumber"] + " | Scores: N/A - N/A")
+
+def selectRound(seasonGames) -> str:
+    rounds = set()
+    
+    for index, game in enumerate(seasonGames["data"]):
+        if game["roundNumber"] not in rounds:
+            print("adding " + game["roundNumber"])
+            rounds.add(game["roundNumber"])
+
+    rounds = sorted(rounds)
+    
+    print("Select Round:")
+    print(rounds)
+    
+    roundChoice = input()
+    
+    return roundChoice
+
+def selectGame(competitionId: str) -> str:
+    seasonGames = getSeasonGames(competitionId)
+    
+    # print(seasonGames)
+    
+    roundNumber = selectRound(seasonGames)
+    
+    print(f"you selected {roundNumber}")
+    
+    for index, game in enumerate(seasonGames["data"]):
+        if game["roundNumber"] == roundNumber:
+            
+def getRoundGameStatistics(roundNumber: str) -> list:
+    roundGames = []
+
+# calls the API for the statistics in a game
+def getGameStatistics(fixtureId: str):
+    url = "https://eapi.web.prod.cloud.atriumsports.com/v1/embed/2/fixture_detail"
+    params = {
+        "sub": "statistics",
+        "fixtureId": fixtureId
+    }
+
+    response = requests.get(url, params=params)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Request failed with status code {response.status_code}")
+
+    #print(data["data"]["statistics"]["data"]["base"]["home"]["persons"][0]["rows"])
+    #print(data["data"]["statistics"]["data"]["base"]["away"]["persons"][0]["rows"])
+    # for i in range(0, len(data["data"]["statistics"]["data"]["base"]["home"]["persons"][0]["rows"])):
+    #     print(data["data"]["statistics"]["data"]["base"]["home"]["persons"][0]["rows"][i]["personName"])
+
 
 def main():
-    divisionSelection = selectDivision()
-
+    divisionId = selectDivision()
     
+    competitionId = selectSeason(divisionId)
     
+    fixtureId = selectGame(competitionId)
     
 
-        
-
-#getGameStatistics("f849bfc9-b6ee-11ef-852a-89deb67de033")
-getMensChamp2025FixtureIds()
-#main()
+#print(getGameStatistics("f849bfc9-b6ee-11ef-852a-89deb67de033"))
+#print(getSeasonGames("ee3cafaa-76a3-11eb-a481-2a86bfd2d24d"))
+#print(getSeasonGames("728c222a-c9a0-11ee-a13a-49cca5d46df0"))
+#print(test_me())
+main()
