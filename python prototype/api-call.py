@@ -115,14 +115,19 @@ def selectGame(competitionId: str) -> str:
     
     print(f"you selected {roundNumber}")
     
+    selectedRoundGames = []
     for index, game in enumerate(seasonGames["data"]):
         if game["roundNumber"] == roundNumber:
-            
-def getRoundGameStatistics(roundNumber: str) -> list:
-    roundGames = []
+            print("selected round with game with fixtureId: " + game["fixtureId"])
+            selectedRoundGames.append(game)
+    
+    roundGamesStatistics = []
+    for index, game in enumerate(selectedRoundGames):
+        roundGamesStatistics.append(getGameStatistics(game["fixtureId"]))
+    
 
 # calls the API for the statistics in a game
-def getGameStatistics(fixtureId: str):
+def getGameStatistics(fixtureId: str) -> list:
     url = "https://eapi.web.prod.cloud.atriumsports.com/v1/embed/2/fixture_detail"
     params = {
         "sub": "statistics",
@@ -132,6 +137,9 @@ def getGameStatistics(fixtureId: str):
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
+        competitor1 = response.json()["data"]["banner"]["fixture"]["competitors"][0]["name"]
+        competitor2 = response.json()["data"]["banner"]["fixture"]["competitors"][1]["name"]
+        print("received game data for " + fixtureId + " | " + competitor1 + " vs " + competitor2)
         return response.json()
     else:
         print(f"Request failed with status code {response.status_code}")
