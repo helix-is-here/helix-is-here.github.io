@@ -11,13 +11,14 @@
 
 <body>
     <div class="container">
-        <div class="row border">
-            <div class="col-md col-sm-6 p-3">
+        <div class="row">
+            <div class="col-md-1 col-sm-0"></div>
+            <div class="col-md-3 col-sm-4 col-6 p-3">
                 <select id="divisionSelect" class="form-select">
                     <option value="">Select Division</option>
                 </select>
             </div>
-            <div class="col-md col-sm-6 p-3">
+            <div class="col-md-3 col-sm-4 col-6 p-3">
                 <select id="seasonSelect" class="form-select" disabled>
                     <option>Select Season</option>
                     <div class="spinner-border spinner-border-sm" role="status">
@@ -26,16 +27,14 @@
                 </select>
 
             </div>
-            <div class="col-md col-sm-6 p-3">
+            <div class="col-md-3 col-sm-4 col-6 p-3">
                 <select id="roundSelect" class="form-select" disabled>
                     <option>Select Round</option>
                 </select>
             </div>
-            <div class="col-auto p-3">
-                <button type="submit" class="btn btn-primary">Fetch Data</button>
-            </div>
+            <div class="col-md-1 col-sm-0"></div>
         </div>
-        <div class="row border">
+        <div class="row">
             <div class="col p-3">
                 <table class="table table-striped border" id="statsTable">
                     <thead>
