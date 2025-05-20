@@ -204,11 +204,9 @@ async function populateRoundSelect(seasonId) {
 }
 
 async function handleRoundSelect(seasonId, roundNumber) {
-  const table = document.getElementById("statsTable");
+  // show progress bat and set it to 0%
   const progressContainer = document.getElementById("progressContainer")
   const progressBar = document.getElementById("progressBar")
-
-  // show progress bat and set it to 0%
   progressContainer.classList.remove("d-none");
   progressBar.style.width = "0%";
   progressBar.setAttribute("aria-valuenow", "0");
@@ -216,13 +214,13 @@ async function handleRoundSelect(seasonId, roundNumber) {
   const seasonGames = await getCachedSeasonGames(seasonId);
   const seasonGamesThisRound = seasonGames.filter(game => game.roundNumber === roundNumber);
 
+  // get game stats and fill in player stats
   const roundPlayers = [];
 
   // Progress tracking
   const totalGames = seasonGamesThisRound.length;
   let completedGames = 0;
 
-  // get game stats and fill in player stats
   for (const game of seasonGamesThisRound) {
     const gameStats = await getCachedGameStatistics(game.fixtureId);
 
@@ -261,7 +259,7 @@ async function handleRoundSelect(seasonId, roundNumber) {
 
   // Insert top 15 rows
   const topPlayers = roundPlayers.slice(0, 15);
-  const tbody = table.querySelector("tbody");
+  const statsTableBody = document.getElementById("statsTableBody");
 
   topPlayers.forEach((player, index) => {
     const stats = player.statistics;
@@ -279,10 +277,9 @@ async function handleRoundSelect(seasonId, roundNumber) {
       <td>${stats.efficiency || 0}</td>
       <td>${stats.gameScore.toFixed(1)}</td>
     `;
-    tbody.appendChild(row);
+    statsTableBody.appendChild(row);
   });
 
-  
   // Hide progress bar and set it to 100%
   progressContainer.classList.remove("d-none");
   progressBar.style.width = `100%`;

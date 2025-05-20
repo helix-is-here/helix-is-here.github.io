@@ -13,12 +13,12 @@
 <body>
     <div class="container">
         <div class="row border">
-            <div class="col p-3">
+            <div class="col-md col-sm-6 p-3">
                 <select id="divisionSelect" class="form-select">
                     <option value="">Select Division</option>
                 </select>
             </div>
-            <div class="col p-3">
+            <div class="col-md col-sm-6 p-3">
                 <select id="seasonSelect" class="form-select" disabled>
                     <option>Select Season</option>
                     <div class="spinner-border spinner-border-sm" role="status">
@@ -27,10 +27,13 @@
                 </select>
 
             </div>
-            <div class="col p-3">
+            <div class="col-md col-sm-6 p-3">
                 <select id="roundSelect" class="form-select" disabled>
                     <option>Select Round</option>
                 </select>
+            </div>
+            <div class="col-auto p-3">
+                <button type="submit" class="btn btn-primary">Fetch Data</button>
             </div>
         </div>
         <div class="row border">
@@ -51,7 +54,7 @@
                             <th scope="col">GmSc</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="statsTableBody">
                     </tbody>
                 </table>
                 <div id="progressContainer" class="progress d-none" role="progressbar" aria-label="Round data loading" aria-valuemin="0"
