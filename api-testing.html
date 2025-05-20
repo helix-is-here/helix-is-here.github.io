@@ -12,29 +12,40 @@
 </head>
 
 <body>
-    <button onclick="getSeasonGamesData('39acbaf6-a2d3-11ed-8a5c-830ab0c2f042')">getSeasonGamesData('39acbaf6-a2d3-11ed-8a5c-830ab0c2f042')</button>
+    <button onclick="getCachedGameStatistics('e7ebf2b3-b6ee-11ef-85e8-a709c6662c39')">run</button>
 
 
         <script>
-        async function getSeasonGamesData(seasonId) {
-            const url = "https://prod.services.nbl.com.au/api_cache/bbv/synergy";
-            const params = new URLSearchParams({
-                route: `seasons/${seasonId}/fixtures`,
-                format: "true"
-            });
+        const gameStatsCache = new Map();
 
-            try {
-                const response = await fetch(`${url}?${params}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("Season data:", data);
-                } else {
-                    console.error("Request failed:", response.status);
-                }
-            } catch (err) {
-                console.error("Fetch error:", err);
-            }
-        }
+async function getCachedGameStatistics(fixtureId) {
+  if (!gameStatsCache.has(fixtureId)) {
+    const stats = await getGameStatistics(fixtureId);
+    gameStatsCache.set(fixtureId, stats);
+  }
+  return gameStatsCache.get(fixtureId);
+}
+
+async function getGameStatistics(fixtureId) {
+  const url = "https://eapi.web.prod.cloud.atriumsports.com/v1/embed/2/fixture_detail";
+  const params = new URLSearchParams({
+    sub: "statistics",
+    fixtureId: fixtureId
+  });
+
+  try {
+    const response = await fetch(`${url}?${params}`);
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Game stats:", data);
+      return data
+    } else {
+      console.error("Request failed:", response.status);
+    }
+  } catch (err) {
+    console.error("Fetch error:", err);
+  }
+}
 
     </script>
 </body>
