@@ -42,6 +42,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Name</th>
                             <th scope="col">Team</th>
+                            <th scope="col">Game</th>
                             <th scope="col">MIN</th>
                             <th scope="col">PTS</th>
                             <th scope="col">FG%</th>
@@ -331,13 +332,13 @@
                 // fill in the stats for home team
                 const homePlayers = gameStats.statistics.data.base.home.persons[0].rows;
                 for (const player of homePlayers) {
-                    roundPlayers.push(fillInPlayerStats(player, homeTeamName));
+                    roundPlayers.push(fillInPlayerStats(player, homeTeamName, awayTeamName));
                 }
 
                 // fill in the stats for away team
                 const awayPlayers = gameStats.statistics.data.base.away.persons[0].rows;
                 for (const player of awayPlayers) {
-                    roundPlayers.push(fillInPlayerStats(player, awayTeamName));
+                    roundPlayers.push(fillInPlayerStats(player, awayTeamName, homeTeamName));
                 }
 
                 // Update progress
@@ -362,6 +363,7 @@
       <th scope="row">${player.bib}</th>
       <td>${player.personName}</td>
       <td>${player.teamName}</td>
+      <td>${player.gameTitleHomeVsAway}</td>
       <td>${formatDuration(stats.minutes)}</td>
       <td>${stats.points || 0}</td>
       <td>${(stats.fieldGoalsPercentage || 0).toFixed(1)}%</td>
@@ -384,7 +386,7 @@
         // HELPER FUNCTIONS
         // ----------------
 
-        function fillInPlayerStats(player, teamName) {
+        function fillInPlayerStats(player, playerTeamName, opponentTeamName) {
             const stats = player.statistics;
             const FGA = stats.fieldGoalsAttempted || 0;
             const FTA = stats.freeThrowsAttempted || 0;
@@ -410,7 +412,10 @@
                 - (stats.turnovers || 0);
 
             // Add player team
-            player.teamName = teamName
+            player.teamName = playerTeamName
+
+            // add game title
+            player.gameTitleHomeVsAway = playerTeamName + " vs " + opponentTeamName
 
             return player;
         }
