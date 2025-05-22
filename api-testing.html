@@ -12,7 +12,8 @@
 </head>
 
 <body>
-    <button onclick="getCachedGameStatistics('e7ebf2b3-b6ee-11ef-85e8-a709c6662c39')">run</button>
+    <button onclick="getCachedGameStatistics('e7ebf2b3-b6ee-11ef-85e8-a709c6662c39')">Get seasons</button>
+    <button onclick="getCachedGameStatistics('e7ebf2b3-b6ee-11ef-85e8-a709c6662c39')">Get games</button>
 
 
         <script>
@@ -46,6 +47,38 @@ async function getGameStatistics(fixtureId) {
     console.error("Fetch error:", err);
   }
 }
+
+        // Season Games Caching
+        const seasonGamesCache = new Map();
+
+        async function getCachedSeasonGames(seasonId) {
+            if (!seasonGamesCache.has(seasonId)) {
+                const data = await getSeasonGamesData(seasonId);
+                seasonGamesCache.set(seasonId, data.data);
+            }
+            return seasonGamesCache.get(seasonId);
+        }
+
+        async function getSeasonGamesData(seasonId) {
+            const url = "https://prod.services.nbl.com.au/api_cache/bbv/synergy";
+            const params = new URLSearchParams({
+                route: `seasons/${seasonId}/fixtures`,
+                format: "true"
+            });
+
+            try {
+                const response = await fetch(`${url}?${params}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("Season games data:", data);
+                    return data
+                } else {
+                    console.error("Request failed:", response.status);
+                }
+            } catch (err) {
+                console.error("Fetch error:", err);
+            }
+        }
 
     </script>
 </body>

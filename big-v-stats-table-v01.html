@@ -75,8 +75,6 @@
         integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
         crossorigin="anonymous"></script>
     <script>
-        // import { divisions } from "./divisions.js";
-
         const divisions = [
             { id: "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Men" },
             { id: "ee4035f8-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Women" },
@@ -258,8 +256,9 @@
         }
 
         async function populateRoundSelect(seasonId) {
-            const games = await getCachedSeasonGames(seasonId);
             const oldSelect = document.getElementById("roundSelect");
+            oldSelect.disabled = true;
+            const games = await getCachedSeasonGames(seasonId);
 
             // Clear and reset the select
             const newSelect = oldSelect.cloneNode(false);
@@ -271,7 +270,8 @@
             // Extract and sort unique round numbers
             const roundSet = new Set();
             games.forEach((game) => {
-                if (game.roundNumber) roundSet.add(game.roundNumber);
+                if (game.roundNumber && game.status == "CONFIRMED")
+                    roundSet.add(game.roundNumber);
             });
 
             const uniqueRounds = Array.from(roundSet).sort((a, b) => Number(a) - Number(b));
@@ -353,6 +353,7 @@
             // Insert top 15 rows
             const topPlayers = roundPlayers.slice(0, 15);
             const statsTableBody = document.getElementById("statsTableBody");
+            statsTableBody.innerHTML = "";
 
             topPlayers.forEach((player, index) => {
                 const stats = player.statistics;
@@ -374,7 +375,7 @@
             });
 
             // Hide progress bar and set it to 100%
-            progressContainer.classList.remove("d-none");
+            progressContainer.classList.add("d-none");
             progressBar.style.width = `100%`;
             progressBar.setAttribute("aria-valuenow", "100");
         }
