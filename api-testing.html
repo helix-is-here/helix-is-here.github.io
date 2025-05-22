@@ -2,85 +2,94 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css"> <!-- my stylesheet -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css"> <!-- my stylesheet -->
 
 </head>
 
 <body>
-    <button onclick="getCachedGameStatistics('e7ebf2b3-b6ee-11ef-85e8-a709c6662c39')">Get seasons</button>
-    <button onclick="getCachedGameStatistics('e7ebf2b3-b6ee-11ef-85e8-a709c6662c39')">Get games</button>
+  <button onclick="getCachedGameStatistics('e7ebf2b3-b6ee-11ef-85e8-a709c6662c39')">Get seasons</button>
+  <button onclick="getCachedGameStatistics('e7ebf2b3-b6ee-11ef-85e8-a709c6662c39')">Get games</button>
+  <button onclick="myFunction('bib')">Test</button>
 
 
-        <script>
-        const gameStatsCache = new Map();
+  <script>
+    const gameStatsCache = new Map();
 
-async function getCachedGameStatistics(fixtureId) {
-  if (!gameStatsCache.has(fixtureId)) {
-    const stats = await getGameStatistics(fixtureId);
-    gameStatsCache.set(fixtureId, stats);
-  }
-  return gameStatsCache.get(fixtureId);
-}
-
-async function getGameStatistics(fixtureId) {
-  const url = "https://eapi.web.prod.cloud.atriumsports.com/v1/embed/2/fixture_detail";
-  const params = new URLSearchParams({
-    sub: "statistics",
-    fixtureId: fixtureId
-  });
-
-  try {
-    const response = await fetch(`${url}?${params}`);
-    if (response.ok) {
-      const data = await response.json();
-      console.log("Game stats:", data);
-      return data
-    } else {
-      console.error("Request failed:", response.status);
+    async function getCachedGameStatistics(fixtureId) {
+      if (!gameStatsCache.has(fixtureId)) {
+        const stats = await getGameStatistics(fixtureId);
+        gameStatsCache.set(fixtureId, stats);
+      }
+      return gameStatsCache.get(fixtureId);
     }
-  } catch (err) {
-    console.error("Fetch error:", err);
-  }
-}
 
-        // Season Games Caching
-        const seasonGamesCache = new Map();
+    async function getGameStatistics(fixtureId) {
+      const url = "https://eapi.web.prod.cloud.atriumsports.com/v1/embed/2/fixture_detail";
+      const params = new URLSearchParams({
+        sub: "statistics",
+        fixtureId: fixtureId
+      });
 
-        async function getCachedSeasonGames(seasonId) {
-            if (!seasonGamesCache.has(seasonId)) {
-                const data = await getSeasonGamesData(seasonId);
-                seasonGamesCache.set(seasonId, data.data);
-            }
-            return seasonGamesCache.get(seasonId);
+      try {
+        const response = await fetch(`${url}?${params}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Game stats:", data);
+          return data
+        } else {
+          console.error("Request failed:", response.status);
         }
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+    }
 
-        async function getSeasonGamesData(seasonId) {
-            const url = "https://prod.services.nbl.com.au/api_cache/bbv/synergy";
-            const params = new URLSearchParams({
-                route: `seasons/${seasonId}/fixtures`,
-                format: "true"
-            });
+    // Season Games Caching
+    const seasonGamesCache = new Map();
 
-            try {
-                const response = await fetch(`${url}?${params}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("Season games data:", data);
-                    return data
-                } else {
-                    console.error("Request failed:", response.status);
-                }
-            } catch (err) {
-                console.error("Fetch error:", err);
-            }
+    async function getCachedSeasonGames(seasonId) {
+      if (!seasonGamesCache.has(seasonId)) {
+        const data = await getSeasonGamesData(seasonId);
+        seasonGamesCache.set(seasonId, data.data);
+      }
+      return seasonGamesCache.get(seasonId);
+    }
+
+    async function getSeasonGamesData(seasonId) {
+      const url = "https://prod.services.nbl.com.au/api_cache/bbv/synergy";
+      const params = new URLSearchParams({
+        route: `seasons/${seasonId}/fixtures`,
+        format: "true"
+      });
+
+      try {
+        const response = await fetch(`${url}?${params}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Season games data:", data);
+          return data
+        } else {
+          console.error("Request failed:", response.status);
         }
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+    }
 
-    </script>
+    function myFunction(sortBy) {
+      let car = {};
+      car.brand = "Toyota";
+      car.model = "Corolla";
+
+      console.log(car.sortBy)
+    }
+
+  </script>
 </body>
 
 </html>
