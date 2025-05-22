@@ -43,6 +43,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Team</th>
                             <th scope="col">Game</th>
+                            <th scope="col">Comp</th>
                             <th scope="col">MIN</th>
                             <th scope="col">PTS</th>
                             <th scope="col">FG%</th>
@@ -318,15 +319,16 @@
             for (const game of seasonGamesThisRound) {
                 const gameStats = await getCachedGameStatistics(game.fixtureId);
 
-                let homeTeamName = "Unknown"
-                let awayTeamName = "Unknown"
+                let competitionName = gameStats.banner.competition.name;
+                let homeTeamName = "Unknown";
+                let awayTeamName = "Unknown";
                 if (gameStats.banner.fixture.competitors[0].isHome) {
-                    homeTeamName = gameStats.banner.fixture.competitors[0].name
-                    awayTeamName = gameStats.banner.fixture.competitors[1].name
+                    homeTeamName = gameStats.banner.fixture.competitors[0].name;
+                    awayTeamName = gameStats.banner.fixture.competitors[1].name;
                 }
                 else {
-                    homeTeamName = gameStats.banner.fixture.competitors[1].name
-                    awayTeamName = gameStats.banner.fixture.competitors[0].name
+                    homeTeamName = gameStats.banner.fixture.competitors[1].name;
+                    awayTeamName = gameStats.banner.fixture.competitors[0].name;
                 }
 
                 // fill in the stats for home team
@@ -364,6 +366,7 @@
       <td>${player.personName}</td>
       <td>${player.teamName}</td>
       <td>${player.gameTitleHomeVsAway}</td>
+      <td>${player.competitionName}</td>
       <td>${formatDuration(stats.minutes)}</td>
       <td>${stats.points || 0}</td>
       <td>${(stats.fieldGoalsPercentage || 0).toFixed(1)}%</td>
@@ -386,7 +389,7 @@
         // HELPER FUNCTIONS
         // ----------------
 
-        function fillInPlayerStats(player, playerTeamName, opponentTeamName) {
+        function fillInPlayerStats(player, playerTeamName, opponentTeamName, competitionName) {
             const stats = player.statistics;
             const FGA = stats.fieldGoalsAttempted || 0;
             const FTA = stats.freeThrowsAttempted || 0;
@@ -411,11 +414,9 @@
                 - 0.4 * (stats.foulsPersonal || 0)
                 - (stats.turnovers || 0);
 
-            // Add player team
-            player.teamName = playerTeamName
-
-            // add game title
-            player.gameTitleHomeVsAway = playerTeamName + " vs " + opponentTeamName
+            player.teamName = playerTeamName;
+            player.gameTitleHomeVsAway = playerTeamName + " vs " + opponentTeamName;
+            player.competitionName = competitionName;
 
             return player;
         }
