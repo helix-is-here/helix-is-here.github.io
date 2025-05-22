@@ -39,19 +39,19 @@
                 <table class="table table-striped border" id="statsTable">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Team</th>
-                            <th scope="col">Game</th>
-                            <th scope="col">Comp</th>
-                            <th scope="col">MIN</th>
-                            <th scope="col">PTS</th>
-                            <th scope="col">FG%</th>
-                            <th scope="col">TS%</th>
-                            <th scope="col">PF</th>
-                            <th scope="col">+/-</th>
-                            <th scope="col">Eff</th>
-                            <th scope="col">GmSc</th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('bib')">#</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('personName')">Name</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('teamName')">Team</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('gameTitleHomeVsAway')">Game</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('competitionName')">Comp</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('minutes')">MIN</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('points')">PTS</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('fieldGoalsPercentage')">FG%</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('trueShootingPercentage')">TS%</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('foulsPersonal')">PF</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('plusMinus')">+/-</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('efficiency')">Eff</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('gameScore')">GmSc</button></th>
                         </tr>
                     </thead>
                     <tbody id="statsTableBody">
@@ -193,6 +193,12 @@
             }
         }
 
+        const roundPlayers = [];
+
+        function getRoundPlayers(competitionName, roundNumber) {
+            
+        }
+
         // --------------------------
         // POPULATING SELECT ELEMENTS
         // --------------------------
@@ -298,6 +304,41 @@
             });
         }
 
+        function populateTable(competitionName, roundNumber, sortBy) {
+            // default sort by is game score
+            sortBy = sortBy || "gameScore";
+
+            // Sort players by Game Score descending
+            roundPlayers.sort((a, b) => b.statistics[sortBy] - a.statistics[sortBy]);
+
+            // Insert top 15 rows
+            const topPlayers = roundPlayers.slice(0, 15);
+            const statsTableBody = document.getElementById("statsTableBody");
+            statsTableBody.innerHTML = "";
+
+            topPlayers.forEach((player, index) => {
+                const stats = player.statistics;
+                const row = document.createElement("tr");
+                row.innerHTML = `
+      <th scope="row">${player.bib}</th>
+      <td>${player.personName}</td>
+      <td>${player.teamName}</td>
+      <td>${player.gameTitleHomeVsAway}</td>
+      <td>${player.competitionName}</td>
+      <td>${formatDuration(stats.minutes)}</td>
+      <td>${stats.points || 0}</td>
+      <td>${(stats.fieldGoalsPercentage || 0).toFixed(1)}%</td>
+      <td>${(stats.trueShootingPercentage).toFixed(1)}%</td>
+      <td>${stats.foulsPersonal || 0}</td>
+      <td>${stats.plusMinus || 0}</td>
+      <td>${stats.efficiency || 0}</td>
+      <td>${stats.gameScore.toFixed(1)}</td>
+    `;
+                statsTableBody.appendChild(row);
+            });
+
+        }
+
         async function handleRoundSelect(seasonId, roundNumber) {
             // show progress bat and set it to 0%
             const progressContainer = document.getElementById("progressContainer")
@@ -350,39 +391,13 @@
                 progressBar.setAttribute("aria-valuenow", percent.toString());
             }
 
-            // Sort players by Game Score descending
-            roundPlayers.sort((a, b) => b.statistics.gameScore - a.statistics.gameScore);
-
-            // Insert top 15 rows
-            const topPlayers = roundPlayers.slice(0, 15);
-            const statsTableBody = document.getElementById("statsTableBody");
-            statsTableBody.innerHTML = "";
-
-            topPlayers.forEach((player, index) => {
-                const stats = player.statistics;
-                const row = document.createElement("tr");
-                row.innerHTML = `
-      <th scope="row">${player.bib}</th>
-      <td>${player.personName}</td>
-      <td>${player.teamName}</td>
-      <td>${player.gameTitleHomeVsAway}</td>
-      <td>${player.competitionName}</td>
-      <td>${formatDuration(stats.minutes)}</td>
-      <td>${stats.points || 0}</td>
-      <td>${(stats.fieldGoalsPercentage || 0).toFixed(1)}%</td>
-      <td>${(stats.trueShootingPercentage).toFixed(1)}%</td>
-      <td>${stats.foulsPersonal || 0}</td>
-      <td>${stats.plusMinus || 0}</td>
-      <td>${stats.efficiency || 0}</td>
-      <td>${stats.gameScore.toFixed(1)}</td>
-    `;
-                statsTableBody.appendChild(row);
-            });
 
             // Hide progress bar and set it to 100%
             progressContainer.classList.add("d-none");
             progressBar.style.width = `100%`;
             progressBar.setAttribute("aria-valuenow", "100");
+
+            populateTable()
         }
 
         // ----------------
