@@ -39,19 +39,32 @@
                 <table class="table table-striped border" id="statsTable">
                     <thead>
                         <tr>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('bib')">#</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('personName')">Name</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('teamName')">Team</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('gameTitleHomeVsAway')">Game</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('competitionName')">Comp</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('minutes')">MIN</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('points')">PTS</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('fieldGoalsPercentage')">FG%</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('trueShootingPercentage')">TS%</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('foulsPersonal')">PF</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('plusMinus')">+/-</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('efficiency')">Eff</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('gameScore')">GmSc</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('bib')">#</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('personName')">Name</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('teamName')">Team</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('gameTitleHomeVsAway')">Game</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('competitionName')">Comp</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('minutes')">MIN</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('points')">PTS</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('fieldGoalsPercentage')">FG%</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('trueShootingPercentage')">TS%</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('foulsPersonal')">PF</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('plusMinus')">+/-</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('efficiency')">Eff</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('gameScore')">GmSc</button></th>
                         </tr>
                     </thead>
                     <tbody id="statsTableBody">
@@ -78,34 +91,42 @@
         crossorigin="anonymous"></script>
     <script>
         const divisions = [
-            { id: "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Men" },
-            { id: "ee4035f8-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Women" },
-            { id: "ee43298e-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Men" },
-            { id: "ee46747c-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Women" },
-            { id: "ee4a0420-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Men" },
-            { id: "ee4d24e8-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Women" },
-            { id: "ee501d7e-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Men" },
-            { id: "ee53fe30-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Women" },
-            { id: "ee57fec2-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Men" },
-            { id: "ee64436c-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Women" },
-            { id: "ee615c24-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Men" },
-            { id: "ee6709f8-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Women" },
-            { id: "a5809a1b-b1d9-11ef-823f-656618bcf3f0", name: "Youth League Three Men" }
+            { id: "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Men", group: "Senior Men", seasons: [] },
+            { id: "ee4035f8-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Women", group: "Senior Women", seasons: [] },
+            { id: "ee43298e-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Men", group: "Senior Men", seasons: [] },
+            { id: "ee46747c-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Women", group: "Senior Men", seasons: [] },
+            { id: "ee4a0420-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Men", group: "Senior Men", seasons: [] },
+            { id: "ee4d24e8-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Women", group: "Senior Men", seasons: [] },
+            { id: "ee501d7e-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Men", group: "Youth Men", seasons: [] },
+            { id: "ee53fe30-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Women", group: "Youth Women", seasons: [] },
+            { id: "ee57fec2-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Men", group: "Youth Men", seasons: [] },
+            { id: "ee64436c-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Women", group: "Youth Women", seasons: [] },
+            { id: "ee615c24-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Men", group: "Youth Men", seasons: [] },
+            { id: "ee6709f8-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Women", group: "Youth Women", seasons: [] },
+            { id: "a5809a1b-b1d9-11ef-823f-656618bcf3f0", name: "Youth League Three Men", group: "Youth Men", seasons: [] }
         ];
+
+        const seasons = [];
 
         // --------------------
         // FETCHING AND CACHING
         // --------------------
 
         // Division Seasons Caching
-        const divisionSeasonsCache = new Map();
+        async function getCachedDivision(divisionId) {
+            const division = divisions.find(d => d.id === divisionId);
 
-        async function getCachedDivisionSeasons(divisionId) {
-            if (!divisionSeasonsCache.has(divisionId)) {
-                const data = await getDivisionSeasonsData(divisionId);
-                divisionSeasonsCache.set(divisionId, data.data);
+            if (!division) {
+                console.error("Division not found:", divisionId);
+                return {};
             }
-            return divisionSeasonsCache.get(divisionId);
+
+            if (division.seasons.length === 0) {
+                const data = await getDivisionSeasonsData(divisionId);
+                division.seasons = data?.data || [];
+            }
+
+            return division;
         }
 
         async function getDivisionSeasonsData(divisionId) {
@@ -130,14 +151,26 @@
         }
 
         // Season Games Caching
-        const seasonGamesCache = new Map();
+        async function getCachedSeason(divisionId, seasonId) {
+            const division = getCachedDivision(divisionId);
 
-        async function getCachedSeasonGames(seasonId) {
-            if (!seasonGamesCache.has(seasonId)) {
-                const data = await getSeasonGamesData(seasonId);
-                seasonGamesCache.set(seasonId, data.data);
+            // check if there's somewhere to put the data
+            const season = division.seasons.find(s => s.seasonId === seasonId);
+            if (!season) {
+                console.error("Season not found:", seasonId);
+                return {};
             }
-            return seasonGamesCache.get(seasonId);
+
+            // check if season already has games
+            if (!season.hasOwnProperty('games')) {
+                season.games = [];
+            }
+            if (division.seasons.games.length === 0) {
+                const data = await getSeasonGamesData(seasonId);
+                division.seasons.games = data?.data || [];
+            }
+
+            return season;
         }
 
         async function getSeasonGamesData(seasonId) {
@@ -162,14 +195,24 @@
         }
 
         // Game Stats Caching
-        const gameStatsCache = new Map();
+        async function getCachedGame(divisionId, seasonId, fixtureId) {
+            const season = getCachedSeason(divisionId, seasonId);
 
-        async function getCachedGameStatistics(fixtureId) {
-            if (!gameStatsCache.has(fixtureId)) {
-                const data = await getGameStatistics(fixtureId);
-                gameStatsCache.set(fixtureId, data.data);
+            // check if there's somewhere to put the data
+            const game = division.seasons.games.find(g => g.fixtureId === fixtureId);
+            if (!game) {
+                console.error("Game not found:", fixtureId);
+                return {};
             }
-            return gameStatsCache.get(fixtureId);
+
+            // check if data already exists
+            if (!game.hasOwnProperty('')) {
+                season.games = [];
+            }
+            if (division.seasons.games.length === 0) {
+                const data = await getSeasonGamesData(seasonId);
+                division.seasons.games = data?.data || [];
+            }
         }
 
         async function getGameStatistics(fixtureId) {
@@ -196,7 +239,7 @@
         const roundPlayers = [];
 
         function getRoundPlayers(competitionName, roundNumber) {
-            
+
         }
 
         // --------------------------
@@ -221,15 +264,15 @@
 
             // Listen for user selection
             select.addEventListener("change", () => {
-                const selectedId = select.value;
-                if (selectedId) {
-                    populateSeasonSelect(selectedId);
+                const selectedDivisionId = select.value;
+                if (selectedDivisionId) {
+                    populateSeasonSelect(selectedDivisionId);
                 }
             });
         }
 
         async function populateSeasonSelect(divisionId) {
-            const seasonsData = await getDivisionSeasonsData(divisionId);
+            const division = await getCachedDivision(divisionId);
             const select = document.getElementById("seasonSelect");
 
             // Clear all options except the first one ("Select Season")
@@ -243,7 +286,7 @@
             select.disabled = false;
 
             // Add new season options
-            seasonsData.data.forEach((season) => {
+            division.seasons.forEach((season) => {
                 const option = document.createElement("option");
                 option.value = season.seasonId;
                 option.textContent = season.year;
@@ -258,7 +301,7 @@
             newSelect.addEventListener("change", () => {
                 const selectedSeasonId = newSelect.value;
                 if (selectedSeasonId) {
-                    populateRoundSelect(selectedSeasonId);
+                    populateRoundSelect(divisionId, selectedSeasonId);
                 }
             });
         }
@@ -299,7 +342,7 @@
             newSelect.addEventListener("change", () => {
                 const selectedRound = newSelect.value;
                 if (selectedRound) {
-                    handleRoundSelect(seasonId, selectedRound);
+                    handleRoundSelect(divisionId, selectedRound);
                 }
             });
         }

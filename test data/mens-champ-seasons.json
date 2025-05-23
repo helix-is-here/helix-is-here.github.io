@@ -1,31 +1,31 @@
 {
     "data": [
         {
-            "added": "2024-12-04T00:52:48",
+            "added": "2023-02-02T08:26:00",
             "ageGroup": "SENIOR",
             "competition": {
-                "id": "ee4035f8-76a3-11eb-a481-2a86bfd2d24d",
+                "id": "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d",
                 "resourceType": "competitions"
             },
-            "competitionId": "ee4035f8-76a3-11eb-a481-2a86bfd2d24d",
+            "competitionId": "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d",
             "discipline": null,
             "durationFull": 180,
-            "endDate": "2025-08-30",
+            "endDate": "2023-07-31",
             "eventType": "FIXTURE",
-            "externalId": "2025_CW",
+            "externalId": "2023_CM",
             "fixtureProfile": {
                 "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
                 "resourceType": "fixtureProfiles"
             },
-            "gender": "FEMALE",
+            "gender": "MALE",
             "grade": null,
             "images": [
                 {
-                    "added": "2024-12-04T00:54:15",
-                    "baseId": "15444d25-b1da-11ef-9497-9d00368d54d0",
+                    "added": "2023-03-07T00:04:34",
+                    "baseId": "39acbaf6-a2d3-11ed-8a5c-830ab0c2f042",
                     "baseType": "SEASON",
                     "fileType": "PNG",
-                    "imageId": "4909813f-b1da-11ef-b939-3924a303b7fc",
+                    "imageId": "a4a52353-bc7b-11ed-a590-3350e33ac018",
                     "imageType": "LOGO",
                     "maximumHeight": 898,
                     "maximumWidth": 1039,
@@ -35,8 +35,246 @@
                     },
                     "organizationId": "b1bt2",
                     "secondaryType": null,
-                    "updated": "2024-12-04T00:54:15",
-                    "url": "https://images.dc.prod.cloud.atriumsports.com/b1bt2/14112e849a974936b8854d62b0ea3ec4"
+                    "updated": "2023-03-07T00:04:34",
+                    "url": "https://images.dc.prod.cloud.atriumsports.com/b1bt2/4764ad70d6f34884b9d99742071bdde5"
+                }
+            ],
+            "includeInStatistics": true,
+            "internationalReference": null,
+            "leaderCriteriaId": null,
+            "liveDataAvailable": false,
+            "liveVideoAvailable": false,
+            "lockStandings": false,
+            "nameLatin": null,
+            "nameLocal": "2023 CM",
+            "nameShortLatin": null,
+            "nameShortLocal": null,
+            "organization": {
+                "id": "b1bt2",
+                "resourceType": "organizations"
+            },
+            "organizationId": "b1bt2",
+            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+            "promotionRelegationRules": null,
+            "representation": "CLUB",
+            "rosterConfiguration": null,
+            "seasonId": "39acbaf6-a2d3-11ed-8a5c-830ab0c2f042",
+            "seasonType": "SEASON",
+            "standard": "ELITE",
+            "standingConfiguration": {
+                "id": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
+                "resourceType": "standingConfigurations"
+            },
+            "standingConfigurationId": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
+            "startDate": "2023-03-18",
+            "status": "COMPLETE",
+            "updated": "2024-03-17T06:54:35",
+            "videoProduction": "NONE",
+            "year": 2023
+        },
+        {
+            "added": "2024-02-12T12:15:44",
+            "ageGroup": "SENIOR",
+            "competition": {
+                "id": "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d",
+                "resourceType": "competitions"
+            },
+            "competitionId": "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d",
+            "discipline": null,
+            "durationFull": 180,
+            "endDate": "2024-07-31",
+            "eventType": "FIXTURE",
+            "externalId": "2024_CM",
+            "fixtureProfile": {
+                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+                "resourceType": "fixtureProfiles"
+            },
+            "gender": "MALE",
+            "grade": null,
+            "images": [],
+            "includeInStatistics": true,
+            "internationalReference": null,
+            "leaderCriteriaId": "d9f7e6b5-fb32-11ec-b502-05d971e5225e",
+            "leadersCriteria": {
+                "id": "d9f7e6b5-fb32-11ec-b502-05d971e5225e",
+                "resourceType": "leaderCriteria"
+            },
+            "liveDataAvailable": false,
+            "liveVideoAvailable": false,
+            "lockStandings": false,
+            "nameLatin": null,
+            "nameLocal": "2024 Championship Men",
+            "nameShortLatin": null,
+            "nameShortLocal": "2024 CM",
+            "organization": {
+                "id": "b1bt2",
+                "resourceType": "organizations"
+            },
+            "organizationId": "b1bt2",
+            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+            "promotionRelegationRules": null,
+            "representation": "CLUB",
+            "rosterConfiguration": {
+                "fixtureBibEdit": false,
+                "seasonRosterStatusAllowed": []
+            },
+            "seasonId": "728c222a-c9a0-11ee-a13a-49cca5d46df0",
+            "seasonType": "SEASON",
+            "standard": "ELITE",
+            "standingConfiguration": {
+                "id": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
+                "resourceType": "standingConfigurations"
+            },
+            "standingConfigurationId": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
+            "startDate": "2024-03-01",
+            "status": "COMPLETE",
+            "updated": "2024-11-19T02:27:40",
+            "videoProduction": "NONE",
+            "year": 2024
+        },
+        {
+            "added": "2022-02-02T14:36:30",
+            "ageGroup": "SENIOR",
+            "competition": {
+                "id": "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d",
+                "resourceType": "competitions"
+            },
+            "competitionId": "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d",
+            "discipline": null,
+            "durationFull": 180,
+            "endDate": "2022-08-07",
+            "eventType": "FIXTURE",
+            "externalId": "2022_CM",
+            "fixtureProfile": {
+                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+                "resourceType": "fixtureProfiles"
+            },
+            "gender": "MALE",
+            "grade": null,
+            "images": [],
+            "includeInStatistics": true,
+            "internationalReference": null,
+            "leaderCriteriaId": null,
+            "liveDataAvailable": false,
+            "liveVideoAvailable": false,
+            "lockStandings": true,
+            "nameLatin": null,
+            "nameLocal": "2022 CM",
+            "nameShortLatin": null,
+            "nameShortLocal": null,
+            "organization": {
+                "id": "b1bt2",
+                "resourceType": "organizations"
+            },
+            "organizationId": "b1bt2",
+            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+            "promotionRelegationRules": null,
+            "representation": "CLUB",
+            "rosterConfiguration": null,
+            "seasonId": "82a44654-8435-11ec-ac7c-79265ac2f563",
+            "seasonType": "SEASON",
+            "standard": "TIER2",
+            "standingConfiguration": {
+                "id": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
+                "resourceType": "standingConfigurations"
+            },
+            "standingConfigurationId": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
+            "startDate": "2022-03-19",
+            "status": "COMPLETE",
+            "updated": "2024-03-17T06:58:33",
+            "videoProduction": "NONE",
+            "year": 2022
+        },
+        {
+            "added": "2021-02-24T13:26:42",
+            "ageGroup": "SENIOR",
+            "competition": {
+                "id": "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d",
+                "resourceType": "competitions"
+            },
+            "competitionId": "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d",
+            "discipline": null,
+            "durationFull": 180,
+            "endDate": "2021-07-25",
+            "eventType": "FIXTURE",
+            "externalId": "2021_CM",
+            "fixtureProfile": {
+                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+                "resourceType": "fixtureProfiles"
+            },
+            "gender": "MALE",
+            "grade": null,
+            "images": [],
+            "includeInStatistics": true,
+            "internationalReference": null,
+            "leaderCriteriaId": null,
+            "liveDataAvailable": false,
+            "liveVideoAvailable": false,
+            "lockStandings": false,
+            "nameLatin": null,
+            "nameLocal": "2021 CM",
+            "nameShortLatin": null,
+            "nameShortLocal": null,
+            "organization": {
+                "id": "b1bt2",
+                "resourceType": "organizations"
+            },
+            "organizationId": "b1bt2",
+            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+            "promotionRelegationRules": null,
+            "representation": "CLUB",
+            "rosterConfiguration": {},
+            "seasonId": "ef02940e-76a3-11eb-bf75-6ec8402b0194",
+            "seasonType": "SEASON",
+            "standard": "ELITE",
+            "standingConfiguration": {
+                "id": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
+                "resourceType": "standingConfigurations"
+            },
+            "standingConfigurationId": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
+            "startDate": "2021-03-13",
+            "status": "COMPLETE",
+            "updated": "2024-03-17T07:00:53",
+            "videoProduction": "NONE",
+            "year": 2021
+        },
+        {
+            "added": "2024-12-04T00:51:56",
+            "ageGroup": "SENIOR",
+            "competition": {
+                "id": "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d",
+                "resourceType": "competitions"
+            },
+            "competitionId": "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d",
+            "discipline": null,
+            "durationFull": 180,
+            "endDate": "2025-08-30",
+            "eventType": "FIXTURE",
+            "externalId": "2025_CM",
+            "fixtureProfile": {
+                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
+                "resourceType": "fixtureProfiles"
+            },
+            "gender": "MALE",
+            "grade": null,
+            "images": [
+                {
+                    "added": "2024-12-04T00:55:14",
+                    "baseId": "f622e8a8-b1d9-11ef-a813-7beee0b79583",
+                    "baseType": "SEASON",
+                    "fileType": "PNG",
+                    "imageId": "6c2bec3d-b1da-11ef-9f76-4b500af1684a",
+                    "imageType": "LOGO",
+                    "maximumHeight": 898,
+                    "maximumWidth": 1039,
+                    "organization": {
+                        "id": "b1bt2",
+                        "resourceType": "organizations"
+                    },
+                    "organizationId": "b1bt2",
+                    "secondaryType": null,
+                    "updated": "2024-12-04T00:55:14",
+                    "url": "https://images.dc.prod.cloud.atriumsports.com/b1bt2/bbb360d913504a5b90d168ddfd8a5690"
                 }
             ],
             "includeInStatistics": true,
@@ -50,9 +288,9 @@
             "liveVideoAvailable": false,
             "lockStandings": false,
             "nameLatin": null,
-            "nameLocal": "2025 Championship Women",
+            "nameLocal": "2025 Championship Men",
             "nameShortLatin": null,
-            "nameShortLocal": "2025 CW",
+            "nameShortLocal": "2025 CM",
             "organization": {
                 "id": "b1bt2",
                 "resourceType": "organizations"
@@ -69,7 +307,7 @@
                     "ACTIVE"
                 ]
             },
-            "seasonId": "15444d25-b1da-11ef-9497-9d00368d54d0",
+            "seasonId": "f622e8a8-b1d9-11ef-a813-7beee0b79583",
             "seasonType": "SEASON",
             "standard": "ELITE",
             "standingConfiguration": {
@@ -79,250 +317,12 @@
             "standingConfigurationId": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
             "startDate": "2025-03-29",
             "status": "ACTIVE",
-            "updated": "2025-03-13T01:31:41",
+            "updated": "2025-02-08T08:48:32",
             "videoProduction": "NONE",
             "year": 2025
-        },
-        {
-            "added": "2023-02-02T08:26:01",
-            "ageGroup": "SENIOR",
-            "competition": {
-                "id": "ee4035f8-76a3-11eb-a481-2a86bfd2d24d",
-                "resourceType": "competitions"
-            },
-            "competitionId": "ee4035f8-76a3-11eb-a481-2a86bfd2d24d",
-            "discipline": null,
-            "durationFull": 180,
-            "endDate": "2023-08-07",
-            "eventType": "FIXTURE",
-            "externalId": "2023_CW",
-            "fixtureProfile": {
-                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
-                "resourceType": "fixtureProfiles"
-            },
-            "gender": "FEMALE",
-            "grade": null,
-            "images": [
-                {
-                    "added": "2023-03-07T00:05:18",
-                    "baseId": "39db9b5d-a2d3-11ed-bc13-830ab0c2f042",
-                    "baseType": "SEASON",
-                    "fileType": "PNG",
-                    "imageId": "be9feef6-bc7b-11ed-8c6e-3fe0bce11829",
-                    "imageType": "LOGO",
-                    "maximumHeight": 898,
-                    "maximumWidth": 1039,
-                    "organization": {
-                        "id": "b1bt2",
-                        "resourceType": "organizations"
-                    },
-                    "organizationId": "b1bt2",
-                    "secondaryType": null,
-                    "updated": "2023-03-07T00:05:18",
-                    "url": "https://images.dc.prod.cloud.atriumsports.com/b1bt2/95e41954ffd04d75892f8c6b6f5409ca"
-                }
-            ],
-            "includeInStatistics": true,
-            "internationalReference": null,
-            "leaderCriteriaId": null,
-            "liveDataAvailable": false,
-            "liveVideoAvailable": false,
-            "lockStandings": false,
-            "nameLatin": null,
-            "nameLocal": "2023 CW",
-            "nameShortLatin": null,
-            "nameShortLocal": null,
-            "organization": {
-                "id": "b1bt2",
-                "resourceType": "organizations"
-            },
-            "organizationId": "b1bt2",
-            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
-            "promotionRelegationRules": null,
-            "representation": "CLUB",
-            "rosterConfiguration": null,
-            "seasonId": "39db9b5d-a2d3-11ed-bc13-830ab0c2f042",
-            "seasonType": "SEASON",
-            "standard": "ELITE",
-            "standingConfiguration": {
-                "id": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
-                "resourceType": "standingConfigurations"
-            },
-            "standingConfigurationId": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
-            "startDate": "2023-03-18",
-            "status": "COMPLETE",
-            "updated": "2024-03-17T06:55:07",
-            "videoProduction": "NONE",
-            "year": 2023
-        },
-        {
-            "added": "2024-02-12T12:15:45",
-            "ageGroup": "SENIOR",
-            "competition": {
-                "id": "ee4035f8-76a3-11eb-a481-2a86bfd2d24d",
-                "resourceType": "competitions"
-            },
-            "competitionId": "ee4035f8-76a3-11eb-a481-2a86bfd2d24d",
-            "discipline": null,
-            "durationFull": 180,
-            "endDate": "2024-07-31",
-            "eventType": "FIXTURE",
-            "externalId": "2024_CW",
-            "fixtureProfile": {
-                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
-                "resourceType": "fixtureProfiles"
-            },
-            "gender": "FEMALE",
-            "grade": null,
-            "images": [],
-            "includeInStatistics": true,
-            "internationalReference": null,
-            "leaderCriteriaId": "d9f7e6b5-fb32-11ec-b502-05d971e5225e",
-            "leadersCriteria": {
-                "id": "d9f7e6b5-fb32-11ec-b502-05d971e5225e",
-                "resourceType": "leaderCriteria"
-            },
-            "liveDataAvailable": false,
-            "liveVideoAvailable": false,
-            "lockStandings": false,
-            "nameLatin": null,
-            "nameLocal": "2024 Championship Women",
-            "nameShortLatin": null,
-            "nameShortLocal": "2024 CW",
-            "organization": {
-                "id": "b1bt2",
-                "resourceType": "organizations"
-            },
-            "organizationId": "b1bt2",
-            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
-            "promotionRelegationRules": null,
-            "representation": "CLUB",
-            "rosterConfiguration": {
-                "fixtureBibEdit": false,
-                "seasonRosterStatusAllowed": []
-            },
-            "seasonId": "730f4726-c9a0-11ee-9fe2-e5208b78b76b",
-            "seasonType": "SEASON",
-            "standard": "ELITE",
-            "standingConfiguration": {
-                "id": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
-                "resourceType": "standingConfigurations"
-            },
-            "standingConfigurationId": "0ed19e5b-c3ba-11ed-a7d8-dd1738a4a1f1",
-            "startDate": "2024-03-01",
-            "status": "COMPLETE",
-            "updated": "2024-11-19T02:27:44",
-            "videoProduction": "NONE",
-            "year": 2024
-        },
-        {
-            "added": "2022-02-02T14:36:30",
-            "ageGroup": "SENIOR",
-            "competition": {
-                "id": "ee4035f8-76a3-11eb-a481-2a86bfd2d24d",
-                "resourceType": "competitions"
-            },
-            "competitionId": "ee4035f8-76a3-11eb-a481-2a86bfd2d24d",
-            "discipline": null,
-            "durationFull": 180,
-            "endDate": "2022-08-07",
-            "eventType": "FIXTURE",
-            "externalId": "2022_CW",
-            "fixtureProfile": {
-                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
-                "resourceType": "fixtureProfiles"
-            },
-            "gender": "FEMALE",
-            "grade": null,
-            "images": [],
-            "includeInStatistics": true,
-            "internationalReference": null,
-            "leaderCriteriaId": null,
-            "liveDataAvailable": false,
-            "liveVideoAvailable": false,
-            "lockStandings": true,
-            "nameLatin": null,
-            "nameLocal": "2022 CW",
-            "nameShortLatin": null,
-            "nameShortLocal": null,
-            "organization": {
-                "id": "b1bt2",
-                "resourceType": "organizations"
-            },
-            "organizationId": "b1bt2",
-            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
-            "promotionRelegationRules": null,
-            "representation": "CLUB",
-            "rosterConfiguration": null,
-            "seasonId": "8321cf9b-8435-11ec-b469-79265ac2f563",
-            "seasonType": "SEASON",
-            "standard": "TIER2",
-            "standingConfiguration": {
-                "id": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
-                "resourceType": "standingConfigurations"
-            },
-            "standingConfigurationId": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
-            "startDate": "2022-03-19",
-            "status": "COMPLETE",
-            "updated": "2024-03-17T06:58:48",
-            "videoProduction": "NONE",
-            "year": 2022
-        },
-        {
-            "added": "2021-02-24T13:26:43",
-            "ageGroup": "SENIOR",
-            "competition": {
-                "id": "ee4035f8-76a3-11eb-a481-2a86bfd2d24d",
-                "resourceType": "competitions"
-            },
-            "competitionId": "ee4035f8-76a3-11eb-a481-2a86bfd2d24d",
-            "discipline": null,
-            "durationFull": 180,
-            "endDate": "2021-07-25",
-            "eventType": "FIXTURE",
-            "externalId": "2021_CW",
-            "fixtureProfile": {
-                "id": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
-                "resourceType": "fixtureProfiles"
-            },
-            "gender": "FEMALE",
-            "grade": null,
-            "images": [],
-            "includeInStatistics": true,
-            "internationalReference": null,
-            "leaderCriteriaId": null,
-            "liveDataAvailable": false,
-            "liveVideoAvailable": false,
-            "lockStandings": false,
-            "nameLatin": null,
-            "nameLocal": "Championship Women",
-            "nameShortLatin": null,
-            "nameShortLocal": null,
-            "organization": {
-                "id": "b1bt2",
-                "resourceType": "organizations"
-            },
-            "organizationId": "b1bt2",
-            "profileId": "cd2d67fa-981f-11ec-acea-07b394f8f18d",
-            "promotionRelegationRules": null,
-            "representation": "CLUB",
-            "rosterConfiguration": null,
-            "seasonId": "ef9256a2-76a3-11eb-bf75-6ec8402b0194",
-            "seasonType": "SEASON",
-            "standard": "ELITE",
-            "standingConfiguration": {
-                "id": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
-                "resourceType": "standingConfigurations"
-            },
-            "standingConfigurationId": "2a8784f0-7a21-11eb-9485-fe8cb79ee557",
-            "startDate": "2021-03-13",
-            "status": "COMPLETE",
-            "updated": "2024-03-17T07:01:20",
-            "videoProduction": "NONE",
-            "year": 2021
         }
     ],
     "includes": null,
-    "generated_on": 1747883863,
+    "generated_on": 1747977793,
     "public": true
 }
