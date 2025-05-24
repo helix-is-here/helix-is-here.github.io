@@ -1,0 +1,23 @@
+page load
+	populate select with division groups
+
+handle division group selected (divisionGroup)
+    selectedDivision = [];
+    for every division,
+        if division.group == divisionGroup
+            selectedDivisions.add(division)
+
+    selectedDivisionSeasons = []
+    for every selectedDivision,
+
+	get seasons for every division in the division group
+	populate season select with years that exist
+
+handle season selected
+	get games in the season, for every division in the division group
+	populate round select with rounds that exist
+
+handle round selected
+	get game stats for every game, in the round, in the season, in the division group
+	populate table with stats
+	

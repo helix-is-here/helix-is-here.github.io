@@ -11,47 +11,94 @@
 
 <body>
     <div class="container">
-        <div class="row">
-            <div class="col-md-1 col-sm-0"></div>
-            <div class="col-md-3 col-sm-4 col-6 p-3">
+        <div class="row align-items-end">
+            <!-- <div class="col-md-1 col-sm-0"></div> -->
+            <div class="col-md-3 col-sm-6 col-6 p-3">
+                <label for="divisionSelect" class="form-label">Division Group</label>
                 <select id="divisionSelect" class="form-select">
-                    <option value="">Select Division</option>
+                    <option value="Senior Men">Senior Men</option>
+                    <option value="Senior Women">Senior Women</option>
+                    <option value="Youth Men">Youth Men</option>
+                    <option value="Youth Women">Youth Women</option>
                 </select>
             </div>
-            <div class="col-md-3 col-sm-4 col-6 p-3">
-                <select id="seasonSelect" class="form-select" disabled>
-                    <option>Select Season</option>
-                    <div class="spinner-border spinner-border-sm" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
+            <div class="col-md-3 col-sm-6 col-6 p-3">
+                <label for="seasonSelect" class="form-label">Season</label>
+                <select id="seasonSelect" class="form-select">
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
                 </select>
 
             </div>
-            <div class="col-md-3 col-sm-4 col-6 p-3">
-                <select id="roundSelect" class="form-select" disabled>
-                    <option>Select Round</option>
+            <div class="col-md-3 col-sm-6 col-6 p-3">
+                <label for="roundSelect" class="form-label">Round</label>
+                <select id="roundSelect" class="form-select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
                 </select>
             </div>
-            <div class="col-md-1 col-sm-0"></div>
+            <div class="col-md-3 col-sm-6 col-6 p-3">
+                <button type="button" class="btn btn-primary" onclick="fetchData()">Fetch Data</button>
+            </div>
+            <!-- <div class="col-md-1 col-sm-0"></div> -->
         </div>
         <div class="row">
             <div class="col p-3">
-                <table class="table table-striped border" id="statsTable">
+                <table class="table table-striped" id="statsTable" style="display: flex; overflow: auto;">
                     <thead>
                         <tr>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('bib')">#</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('personName')">Name</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('teamName')">Team</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('gameTitleHomeVsAway')">Game</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('competitionName')">Comp</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('minutes')">MIN</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('points')">PTS</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('fieldGoalsPercentage')">FG%</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('trueShootingPercentage')">TS%</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('foulsPersonal')">PF</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('plusMinus')">+/-</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('efficiency')">Eff</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link" onclick="populateTable('gameScore')">GmSc</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('bib')">#</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('personName')">Name</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('teamName')">Team</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('gameTitleHomeVsAway')">Game</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('competitionName')">Comp</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('minutes')">MIN</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('points')">PTS</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('fieldGoalsPercentage')">FG%</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('trueShootingPercentage')">TS%</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('foulsPersonal')">PF</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('plusMinus')">+/-</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('efficiency')">Eff</button></th>
+                            <th scope="col"><button type="button" class="btn btn-link"
+                                    onclick="populateTable('gameScore')">GmSc</button></th>
                         </tr>
                     </thead>
                     <tbody id="statsTableBody">
@@ -77,20 +124,21 @@
         integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
         crossorigin="anonymous"></script>
     <script>
+
         const divisions = [
-            { id: "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Men" },
-            { id: "ee4035f8-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Women" },
-            { id: "ee43298e-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Men" },
-            { id: "ee46747c-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Women" },
-            { id: "ee4a0420-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Men" },
-            { id: "ee4d24e8-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Women" },
-            { id: "ee501d7e-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Men" },
-            { id: "ee53fe30-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Women" },
-            { id: "ee57fec2-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Men" },
-            { id: "ee64436c-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Women" },
-            { id: "ee615c24-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Men" },
-            { id: "ee6709f8-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Women" },
-            { id: "a5809a1b-b1d9-11ef-823f-656618bcf3f0", name: "Youth League Three Men" }
+            { id: "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Men", group: "Senior Men", seasons: []},
+            { id: "ee4035f8-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Women", group: "Senior Women", seasons: [] },
+            { id: "ee43298e-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Men", group: "Senior Men", seasons: [] },
+            { id: "ee46747c-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Women", group: "Senior Men", seasons: [] },
+            { id: "ee4a0420-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Men", group: "Senior Men", seasons: [] },
+            { id: "ee4d24e8-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Women", group: "Senior Men", seasons: [] },
+            { id: "ee501d7e-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Men", group: "Youth Men", seasons: [] },
+            { id: "ee53fe30-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Women", group: "Youth Women", seasons: [] },
+            { id: "ee57fec2-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Men", group: "Youth Men", seasons: [] },
+            { id: "ee64436c-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Women", group: "Youth Women", seasons: [] },
+            { id: "ee615c24-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Men", group: "Youth Men", seasons: [] },
+            { id: "ee6709f8-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Women", group: "Youth Women", seasons: [] },
+            { id: "a5809a1b-b1d9-11ef-823f-656618bcf3f0", name: "Youth League Three Men", group: "Youth Men", seasons: [] }
         ];
 
         // --------------------
@@ -98,6 +146,7 @@
         // --------------------
 
         // Division Seasons Caching
+
         const divisionSeasonsCache = new Map();
 
         async function getCachedDivisionSeasons(divisionId) {
@@ -193,123 +242,39 @@
             }
         }
 
-        const roundPlayers = [];
+        // ----------------
+        // POPULATING TABLE
+        // ----------------
+        function fetchData() {
 
-        function getRoundPlayers(competitionName, roundNumber) {
+            divisionGroupSelection = document.getElementById('divisionSelect');
+            seasonSelection = document.getElementById('seasonSelect');
+            roundSelection = document.getElementById('roundSelect');
+
+            // get selected divisions
+
+            // get season ids for selected divisions
+
+            // get fixture ids for selected seasons
+
+            // start progress tracking
             
+            // get game stats for selected rounds in se
+
+            // end progress tracking
+
+            // calculate extra stats
+
         }
 
-        // --------------------------
-        // POPULATING SELECT ELEMENTS
-        // --------------------------
-
-        // once the DOM content has finished loading
-        document.addEventListener("DOMContentLoaded", function () {
-            populateDivisionSelect();
-        })
-
-        function populateDivisionSelect() {
-            // Populate the division select element
-            const select = document.getElementById("divisionSelect");
-
-            divisions.forEach((div) => {
-                const option = document.createElement("option");
-                option.value = div.id;
-                option.textContent = div.name;
-                select.appendChild(option);
-            });
-
-            // Listen for user selection
-            select.addEventListener("change", () => {
-                const selectedId = select.value;
-                if (selectedId) {
-                    populateSeasonSelect(selectedId);
-                }
-            });
-        }
-
-        async function populateSeasonSelect(divisionId) {
-            const seasonsData = await getDivisionSeasonsData(divisionId);
-            const select = document.getElementById("seasonSelect");
-
-            // Clear all options except the first one ("Select Season")
-            select.innerHTML = "";
-            const defaultOption = document.createElement("option");
-            defaultOption.textContent = "Select Season";
-            defaultOption.value = "";
-            select.appendChild(defaultOption);
-
-            // Enable the select element
-            select.disabled = false;
-
-            // Add new season options
-            seasonsData.data.forEach((season) => {
-                const option = document.createElement("option");
-                option.value = season.seasonId;
-                option.textContent = season.year;
-                select.appendChild(option);
-            });
-
-            // Remove any existing event listener by cloning the element
-            const newSelect = select.cloneNode(true);
-            select.parentNode.replaceChild(newSelect, select);
-
-            // Add fresh event listener
-            newSelect.addEventListener("change", () => {
-                const selectedSeasonId = newSelect.value;
-                if (selectedSeasonId) {
-                    populateRoundSelect(selectedSeasonId);
-                }
-            });
-        }
-
-        async function populateRoundSelect(seasonId) {
-            const oldSelect = document.getElementById("roundSelect");
-            oldSelect.disabled = true;
-            const games = await getCachedSeasonGames(seasonId);
-
-            // Clear and reset the select
-            const newSelect = oldSelect.cloneNode(false);
-            const defaultOption = document.createElement("option");
-            defaultOption.textContent = "Select Round";
-            defaultOption.value = "";
-            newSelect.appendChild(defaultOption);
-
-            // Extract and sort unique round numbers
-            const roundSet = new Set();
-            games.forEach((game) => {
-                if (game.roundNumber && game.status == "CONFIRMED")
-                    roundSet.add(game.roundNumber);
-            });
-
-            const uniqueRounds = Array.from(roundSet).sort((a, b) => Number(a) - Number(b));
-
-            // Populate select
-            uniqueRounds.forEach((round) => {
-                const option = document.createElement("option");
-                option.value = round;
-                option.textContent = `Round ${round}`;
-                newSelect.appendChild(option);
-            });
-
-            newSelect.disabled = false;
-            oldSelect.parentNode.replaceChild(newSelect, oldSelect);
-
-            // Add event listener for round selection
-            newSelect.addEventListener("change", () => {
-                const selectedRound = newSelect.value;
-                if (selectedRound) {
-                    handleRoundSelect(seasonId, selectedRound);
-                }
-            });
-        }
-
-        function populateTable(competitionName, roundNumber, sortBy) {
+        function populateTable(sortBy) {
             // default sort by is game score
             sortBy = sortBy || "gameScore";
 
-            // Sort players by Game Score descending
+            // sort players
             roundPlayers.sort((a, b) => b.statistics[sortBy] - a.statistics[sortBy]);
+
+            // populate table with 
 
             // Insert top 15 rows
             const topPlayers = roundPlayers.slice(0, 15);
