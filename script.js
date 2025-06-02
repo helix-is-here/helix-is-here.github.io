@@ -161,19 +161,43 @@ async function populateSeasonSelect() {
 async function populateWeekSelect(year) {
     const weeksSet = new Set();
 
-    // for every season in cache of the correct year
-        // get season game data
-            // using estimatedFinishTimeUTC populate the set of weeks
-            // (probs should have a helper function to convert)
+    for (const div of divisions) {
+        const seasons = await getCachedDivisionSeasons(div.competitionId);
 
-    // sort weeks
+        // Filter only seasons matching the selected year
+        const matchingSeasons = seasons.filter(season => season.year == year);
 
-    // populate week select 
+        for (const season of matchingSeasons) {
+            const games = await getCachedSeasonGames(season.seasonId);
+
+            games.forEach(game => {
+                if (game.status === "CONFIRMED" && game.estimatedFinishTimeUTC) {
+                    const week = convertToWeek(game.estimatedFinishTimeUTC);
+                    weeksSet.add(week);
+                }
+            });
+        }
+    }
+
+    // Sort weeks numerically
+    const sortedWeeks = Array.from(weeksSet).sort((a, b) => a - b);
+
+    // Populate week select dropdown
     const select = document.getElementById('weekSelect');
+    select.innerHTML = ''; // Clear old options
 
-    // enable the select
+    sortedWeeks.forEach(week => {
+        const option = document.createElement('option');
+        option.value = week;
+        option.textContent = `Week ${week}`;
+        select.appendChild(option);
+    });
 
+    // Enable the select element
+    select.disabled = false;
 }
+
+
 
 function populateTable(sortBy) {
     // default sort by is game score
@@ -282,6 +306,15 @@ function enableLoadingSpinner() {
 function disableLoadingSpinner() {
     console.log('loading spinner off')
 }
+
+function convertToWeek(utcString) {
+    const date = new Date(utcString);
+    const oneJan = new Date(date.getFullYear(), 0, 1);
+    const dayOfYear = Math.floor((date - oneJan) / (1000 * 60 * 60 * 24)) + 1;
+    return Math.ceil(dayOfYear / 7);
+}
+
+
 
 function fillInPlayerStats(player, playerTeamName, opponentTeamName, competitionName) {
     const stats = player.statistics;
