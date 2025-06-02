@@ -1,17 +1,17 @@
 const divisions = [
-    { id: "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Men" },
-    { id: "ee4035f8-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Women" },
-    { id: "ee43298e-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Men" },
-    { id: "ee46747c-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Women" },
-    { id: "ee4a0420-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Men" },
-    { id: "ee4d24e8-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Women" },
-    { id: "ee501d7e-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Men" },
-    { id: "ee53fe30-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Women" },
-    { id: "ee57fec2-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Men" },
-    { id: "ee64436c-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Women" },
-    { id: "ee615c24-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Men" },
-    { id: "ee6709f8-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Women" },
-    { id: "a5809a1b-b1d9-11ef-823f-656618bcf3f0", name: "Youth League Three Men" }
+    { competitionId: "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Men" },
+    { competitionId: "ee4035f8-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Women" },
+    { competitionId: "ee43298e-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Men" },
+    { competitionId: "ee46747c-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Women" },
+    { competitionId: "ee4a0420-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Men" },
+    { competitionId: "ee4d24e8-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Women" },
+    { competitionId: "ee501d7e-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Men" },
+    { competitionId: "ee53fe30-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Women" },
+    { competitionId: "ee57fec2-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Men" },
+    { competitionId: "ee64436c-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Women" },
+    { competitionId: "ee615c24-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Men" },
+    { competitionId: "ee6709f8-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Women" },
+    { competitionId: "a5809a1b-b1d9-11ef-823f-656618bcf3f0", name: "Youth League Three Men" }
 ];
 
 // --------------------
@@ -114,129 +114,68 @@ async function getGameStatistics(fixtureId) {
     }
 }
 
-const roundPlayers = [];
-
-function getRoundPlayers(competitionName, roundNumber) {
-
-}
-
 // --------------------------
 // POPULATING SELECT ELEMENTS
 // --------------------------
 
 // once the DOM content has finished loading
 document.addEventListener("DOMContentLoaded", function () {
-    populateDivisionSelect();
+    populateSeasonSelect();
 })
 
-function populateDivisionSelect() {
-    // Populate the division select element
-    const dropdownMenu = document.getElementById('divisionDropdown')
 
-    divisions.forEach(division => {
-        const li = document.createElement('li');
+async function populateSeasonSelect() {
+    const yearsSet = new Set();
 
-        const checkWrapper = document.createElement('div');
-        checkWrapper.className = 'form-check';
+    for (const div of divisions) {
+        const seasonData = await getCachedDivisionSeasons(div.competitionId);
 
-        const checkbox = document.createElement('input');
-        checkbox.className = 'form-check-input';
-        checkbox.type = 'checkbox';
-        checkbox.value = division.id;
-        checkbox.id = `div-${division.id}`;
+        seasonData.forEach(season => {
+            yearsSet.add(season.year);
+        });
+    }
 
-        const label = document.createElement('label');
-        label.className = 'form-check-label';
-        label.setAttribute('for', checkbox.id);
-        label.textContent = division.name;
-
-        checkWrapper.appendChild(checkbox);
-        checkWrapper.appendChild(label);
-        li.appendChild(checkWrapper);
-        dropdownMenu.appendChild(li);
-
-        // Prevent dropdown from closing on click
-        checkWrapper.addEventListener('click', (e) => e.stopPropagation());
-    });
-}
-
-async function populateSeasonSelect(divisionId) {
-    const seasonsData = await getDivisionSeasonsData(divisionId);
     const select = document.getElementById("seasonSelect");
 
-    // Clear all options except the first one ("Select Season")
-    select.innerHTML = "";
-    const defaultOption = document.createElement("option");
-    defaultOption.textContent = "Select Season";
-    defaultOption.value = "";
-    select.appendChild(defaultOption);
+    const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
 
-    // Enable the select element
-    select.disabled = false;
-
-    // Add new season options
-    seasonsData.data.forEach((season) => {
+    sortedYears.forEach((year) => {
         const option = document.createElement("option");
-        option.value = season.seasonId;
-        option.textContent = season.year;
+        option.value = year;
+        option.textContent = year;
         select.appendChild(option);
     });
 
-    // Remove any existing event listener by cloning the element
-    const newSelect = select.cloneNode(true);
-    select.parentNode.replaceChild(newSelect, select);
-
-    // Add fresh event listener
-    newSelect.addEventListener("change", () => {
-        const selectedSeasonId = newSelect.value;
-        if (selectedSeasonId) {
-            populateRoundSelect(selectedSeasonId);
+    // Add change event listener
+    select.addEventListener("change", () => {
+        const selectedYear = select.value;
+        if (selectedYear) {
+            populateWeekSelect(selectedYear);
         }
     });
+
+    // Enable the select
+    select.disabled = false;
 }
 
-async function populateRoundSelect(seasonId) {
-    const oldSelect = document.getElementById("roundSelect");
-    oldSelect.disabled = true;
-    const games = await getCachedSeasonGames(seasonId);
+async function populateWeekSelect(year) {
+    const weeksSet = new Set();
 
-    // Clear and reset the select
-    const newSelect = oldSelect.cloneNode(false);
-    const defaultOption = document.createElement("option");
-    defaultOption.textContent = "Select Round";
-    defaultOption.value = "";
-    newSelect.appendChild(defaultOption);
+    // for every season in cache of the correct year
+        // get season game data
+            // using estimatedFinishTimeUTC populate the set of weeks
+            // (probs should have a helper function to convert)
 
-    // Extract and sort unique round numbers
-    const roundSet = new Set();
-    games.forEach((game) => {
-        if (game.roundNumber && game.status == "CONFIRMED")
-            roundSet.add(game.roundNumber);
-    });
+    // sort weeks
 
-    const uniqueRounds = Array.from(roundSet).sort((a, b) => Number(a) - Number(b));
+    // populate week select 
+    const select = document.getElementById('weekSelect');
 
-    // Populate select
-    uniqueRounds.forEach((round) => {
-        const option = document.createElement("option");
-        option.value = round;
-        option.textContent = `Round ${round}`;
-        newSelect.appendChild(option);
-    });
+    // enable the select
 
-    newSelect.disabled = false;
-    oldSelect.parentNode.replaceChild(newSelect, oldSelect);
-
-    // Add event listener for round selection
-    newSelect.addEventListener("change", () => {
-        const selectedRound = newSelect.value;
-        if (selectedRound) {
-            handleRoundSelect(seasonId, selectedRound);
-        }
-    });
 }
 
-function populateTable(competitionName, roundNumber, sortBy) {
+function populateTable(sortBy) {
     // default sort by is game score
     sortBy = sortBy || "gameScore";
 
@@ -335,6 +274,14 @@ async function handleRoundSelect(seasonId, roundNumber) {
 // ----------------
 // HELPER FUNCTIONS
 // ----------------
+
+function enableLoadingSpinner() {
+    console.log('loading spinner on');
+}
+
+function disableLoadingSpinner() {
+    console.log('loading spinner off')
+}
 
 function fillInPlayerStats(player, playerTeamName, opponentTeamName, competitionName) {
     const stats = player.statistics;

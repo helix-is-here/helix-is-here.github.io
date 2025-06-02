@@ -14,29 +14,51 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-sm-4 col-12 p-3">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Select Divisions
-                    </button>
-                    <ul class="dropdown-menu p-2" id="divisionDropdown" style="width: 300px;">
-                        <!-- JavaScript will populate this -->
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-4 col-12 p-3">
                 <select id="seasonSelect" class="form-select" disabled>
                     <option>Select Season</option>
-                    <div class="spinner-border spinner-border-sm" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
                 </select>
-
             </div>
             <div class="col-md-4 col-sm-4 col-12 p-3">
-                <select id="roundSelect" class="form-select" disabled>
-                    <option>Select Round</option>
+                <select id="weekSelect" class="form-select" disabled>
+                    <option>Select Week</option>
                 </select>
+            </div>
+            <div class="col-md-4 col-sm-4 col-12 p-3">
+                <button type="button" class="btn btn-primary">Fetch Data</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkChampMen">
+                    <label class="form-check-label" for="checkChampMen">
+                        Championship Men
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkChampMen">
+                    <label class="form-check-label" for="checkChampMen">
+                        Championship Women
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkChampMen">
+                    <label class="form-check-label" for="checkChampMen">
+                        Division One Men
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkChampMen">
+                    <label class="form-check-label" for="checkChampMen">
+                        Division One Women
+                    </label>
+                </div>
             </div>
         </div>
         <div class="row">
