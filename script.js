@@ -1,17 +1,17 @@
 const divisions = [
-    { competitionId: "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Men" },
-    { competitionId: "ee4035f8-76a3-11eb-a481-2a86bfd2d24d", name: "Championship Women" },
-    { competitionId: "ee43298e-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Men" },
-    { competitionId: "ee46747c-76a3-11eb-a481-2a86bfd2d24d", name: "Division One Women" },
-    { competitionId: "ee4a0420-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Men" },
-    { competitionId: "ee4d24e8-76a3-11eb-a481-2a86bfd2d24d", name: "Division Two Women" },
-    { competitionId: "ee501d7e-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Men" },
-    { competitionId: "ee53fe30-76a3-11eb-a481-2a86bfd2d24d", name: "Victorian Youth Championship Women" },
-    { competitionId: "ee57fec2-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Men" },
-    { competitionId: "ee64436c-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League One Women" },
-    { competitionId: "ee615c24-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Men" },
-    { competitionId: "ee6709f8-76a3-11eb-a481-2a86bfd2d24d", name: "Youth League Two Women" },
-    { competitionId: "a5809a1b-b1d9-11ef-823f-656618bcf3f0", name: "Youth League Three Men" }
+    { competitionId: "ee3cafaa-76a3-11eb-a481-2a86bfd2d24d", value: "champMen", name: "Championship Men" },
+    { competitionId: "ee4035f8-76a3-11eb-a481-2a86bfd2d24d", value: "champWomen", name: "Championship Women" },
+    { competitionId: "ee43298e-76a3-11eb-a481-2a86bfd2d24d", value: "divisionOneMen", name: "Division One Men" },
+    { competitionId: "ee46747c-76a3-11eb-a481-2a86bfd2d24d", value: "divisionOneWomen", name: "Division One Women" },
+    { competitionId: "ee4a0420-76a3-11eb-a481-2a86bfd2d24d", value: "divisionTwoMen", name: "Division Two Men" },
+    { competitionId: "ee4d24e8-76a3-11eb-a481-2a86bfd2d24d", value: "divisionTwoWomen", name: "Division Two Women" },
+    { competitionId: "ee501d7e-76a3-11eb-a481-2a86bfd2d24d", value: "victorianYouthChampMen", name: "Victorian Youth Championship Men" },
+    { competitionId: "ee53fe30-76a3-11eb-a481-2a86bfd2d24d", value: "victorianYouthChampWomen", name: "Victorian Youth Championship Women" },
+    { competitionId: "ee57fec2-76a3-11eb-a481-2a86bfd2d24d", value: "youthLeagueOneMen", name: "Youth League One Men" },
+    { competitionId: "ee64436c-76a3-11eb-a481-2a86bfd2d24d", value: "youthLeagueOneWomen", name: "Youth League One Women" },
+    { competitionId: "ee615c24-76a3-11eb-a481-2a86bfd2d24d", value: "youthLeagueTwoMen", name: "Youth League Two Men" },
+    { competitionId: "ee6709f8-76a3-11eb-a481-2a86bfd2d24d", value: "youthLeagueTwoWomen", name: "Youth League Two Women" },
+    { competitionId: "a5809a1b-b1d9-11ef-823f-656618bcf3f0", value: "youthLeagueThreeMen", name: "Youth League Three Men" }
 ];
 
 // --------------------
