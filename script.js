@@ -123,8 +123,10 @@ document.addEventListener("DOMContentLoaded", function () {
     populateSeasonSelect();
 })
 
-
 async function populateSeasonSelect() {
+    const seasonSelect = document.getElementById("seasonSelect");
+    seasonSelect.disabled = true;
+
     const yearsSet = new Set();
 
     for (const div of divisions) {
@@ -135,31 +137,45 @@ async function populateSeasonSelect() {
         });
     }
 
-    const select = document.getElementById("seasonSelect");
-
     const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
+
+    // Clear existing options
+    seasonSelect.innerHTML = '';
+
+    // Add the default "Select Season" option
+    const defaultSeasonOption = document.createElement('option');
+    defaultSeasonOption.value = '';
+    defaultSeasonOption.textContent = 'Select Season';
+    defaultSeasonOption.disabled = true;
+    defaultSeasonOption.selected = true;
+    seasonSelect.appendChild(defaultSeasonOption);
 
     sortedYears.forEach((year) => {
         const option = document.createElement("option");
         option.value = year;
         option.textContent = year;
-        select.appendChild(option);
+        seasonSelect.appendChild(option);
     });
 
-    // Add change event listener
-    select.addEventListener("change", () => {
-        const selectedYear = select.value;
+    seasonSelect.disabled = false;
+
+    seasonSelect.addEventListener("change", () => {
+        const selectedYear = seasonSelect.value;
         if (selectedYear) {
-            populateWeekSelect(selectedYear);
+            fetchSeasonData(selectedYear);
         }
     });
-
-    // Enable the select
-    select.disabled = false;
 }
 
-async function populateWeekSelect(year) {
+async function fetchSeasonData(year) {
+    const weekSelect = document.getElementById('weekSelect');
+    weekSelect.disabled = true;
+    showProgressBar();
+
     const weeksSet = new Set();
+
+    const totalSeasons = divisions.length;
+    let retrievedSeasons = 0;
 
     for (const div of divisions) {
         const seasons = await getCachedDivisionSeasons(div.competitionId);
@@ -177,37 +193,130 @@ async function populateWeekSelect(year) {
                 }
             });
         }
+
+        retrievedSeasons++;
+        const percent = Math.round((retrievedSeasons / totalSeasons) * 100);
+        updateProgressBar(percent);
     }
 
     // Sort weeks numerically
     const sortedWeeks = Array.from(weeksSet).sort((a, b) => a - b);
 
     // Populate week select dropdown
-    const select = document.getElementById('weekSelect');
-    select.innerHTML = ''; // Clear old options
+    weekSelect.innerHTML = ''; // Clear old options
+
+    // Re-add the default "Select Week" option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select Week';
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    weekSelect.appendChild(defaultOption);
 
     sortedWeeks.forEach(week => {
         const option = document.createElement('option');
         option.value = week;
         option.textContent = `Week ${week}`;
-        select.appendChild(option);
+        weekSelect.appendChild(option);
     });
 
-    // Enable the select element
-    select.disabled = false;
+    // Enable the weekSelect element
+    weekSelect.disabled = false;
+    hideProgressBar();
+
+    weekSelect.addEventListener("change", () => {
+        const selectedWeek = weekSelect.value;
+        if (selectedWeek) {
+            fetchWeekData(selectedWeek);
+        }
+    });
 }
 
+let weekPlayers = [];
 
+async function fetchWeekData(week) {
+    const year = document.getElementById('seasonSelect').value;
+
+    weekPlayers = []; // Reset from previous run
+    const gamesThisWeek = [];
+
+    // Gather all games for the selected year and filter by week
+    for (const div of divisions) {
+        const seasons = await getCachedDivisionSeasons(div.competitionId);
+        const matchingSeasons = seasons.filter(season => season.year == year);
+
+        for (const season of matchingSeasons) {
+            const games = await getCachedSeasonGames(season.seasonId);
+
+            games.forEach(game => {
+                if (
+                    game.status === "CONFIRMED" &&
+                    game.estimatedFinishTimeUTC &&
+                    convertToWeek(game.estimatedFinishTimeUTC) == week
+                ) {
+                    gamesThisWeek.push(game);
+                }
+            });
+        }
+    }
+
+    showProgressBar();
+    const totalGames = gamesThisWeek.length;
+    let retrievedGames = 0;
+
+    // Process each game
+    for (const game of gamesThisWeek) {
+        try {
+            const gameStats = await getCachedGameStatistics(game.fixtureId);
+            const competitionName = gameStats.banner.competition.name;
+
+            const competitors = gameStats.banner.fixture.competitors;
+            let homeTeamName = "Unknown";
+            let awayTeamName = "Unknown";
+
+            if (competitors[0].isHome) {
+                homeTeamName = competitors[0].name;
+                awayTeamName = competitors[1].name;
+            } else {
+                homeTeamName = competitors[1].name;
+                awayTeamName = competitors[0].name;
+            }
+
+            // Home players
+            const homePlayers = gameStats.statistics.data.base.home.persons[0].rows;
+            for (const player of homePlayers) {
+                weekPlayers.push(fillInPlayerStats(player, homeTeamName, awayTeamName, competitionName));
+            }
+
+            // Away players
+            const awayPlayers = gameStats.statistics.data.base.away.persons[0].rows;
+            for (const player of awayPlayers) {
+                weekPlayers.push(fillInPlayerStats(player, awayTeamName, homeTeamName, competitionName));
+            }
+
+        } catch (error) {
+            console.error(`Error processing game ${game.fixtureId}:`, error);
+        }
+
+            retrievedGames++;
+            const percent = Math.round((retrievedGames / totalGames) * 100);
+            updateProgressBar(percent);
+    }
+
+    populateTable(); // Sort and display the final player list
+
+    hideProgressBar();
+}
 
 function populateTable(sortBy) {
     // default sort by is game score
     sortBy = sortBy || "gameScore";
 
     // Sort players by Game Score descending
-    roundPlayers.sort((a, b) => b.statistics[sortBy] - a.statistics[sortBy]);
+    weekPlayers.sort((a, b) => b.statistics[sortBy] - a.statistics[sortBy]);
 
     // Insert top 15 rows
-    const topPlayers = roundPlayers.slice(0, 15);
+    const topPlayers = weekPlayers.slice(0, 20);
     const statsTableBody = document.getElementById("statsTableBody");
     statsTableBody.innerHTML = "";
 
@@ -234,77 +343,30 @@ function populateTable(sortBy) {
 
 }
 
-async function handleRoundSelect(seasonId, roundNumber) {
-    // show progress bat and set it to 0%
-    const progressContainer = document.getElementById("progressContainer")
-    const progressBar = document.getElementById("progressBar")
-    progressContainer.classList.remove("d-none");
-    progressBar.style.width = "0%";
-    progressBar.setAttribute("aria-valuenow", "0");
-
-    const seasonGames = await getCachedSeasonGames(seasonId);
-    const seasonGamesThisRound = seasonGames.filter(game => game.roundNumber === roundNumber);
-
-    // get game stats and fill in player stats
-    const roundPlayers = [];
-
-    // Progress tracking
-    const totalGames = seasonGamesThisRound.length;
-    let completedGames = 0;
-
-    for (const game of seasonGamesThisRound) {
-        const gameStats = await getCachedGameStatistics(game.fixtureId);
-
-        let competitionName = gameStats.banner.competition.name;
-        let homeTeamName = "Unknown";
-        let awayTeamName = "Unknown";
-        if (gameStats.banner.fixture.competitors[0].isHome) {
-            homeTeamName = gameStats.banner.fixture.competitors[0].name;
-            awayTeamName = gameStats.banner.fixture.competitors[1].name;
-        }
-        else {
-            homeTeamName = gameStats.banner.fixture.competitors[1].name;
-            awayTeamName = gameStats.banner.fixture.competitors[0].name;
-        }
-
-        // fill in the stats for home team
-        const homePlayers = gameStats.statistics.data.base.home.persons[0].rows;
-        for (const player of homePlayers) {
-            roundPlayers.push(fillInPlayerStats(player, homeTeamName, awayTeamName));
-        }
-
-        // fill in the stats for away team
-        const awayPlayers = gameStats.statistics.data.base.away.persons[0].rows;
-        for (const player of awayPlayers) {
-            roundPlayers.push(fillInPlayerStats(player, awayTeamName, homeTeamName));
-        }
-
-        // Update progress
-        completedGames++;
-        const percent = Math.round((completedGames / totalGames) * 100);
-        progressBar.style.width = `${percent}%`;
-        progressBar.setAttribute("aria-valuenow", percent.toString());
-    }
-
-
-    // Hide progress bar and set it to 100%
-    progressContainer.classList.add("d-none");
-    progressBar.style.width = `100%`;
-    progressBar.setAttribute("aria-valuenow", "100");
-
-    populateTable()
-}
-
 // ----------------
 // HELPER FUNCTIONS
 // ----------------
 
-function enableLoadingSpinner() {
-    console.log('loading spinner on');
+function showProgressBar() {
+    const progressContainer = document.getElementById('progressContainer');
+    progressContainer.classList.remove('d-none');
+
+    const progressBar = document.getElementById("progressBar");
+    progressBar.style.width = "0%";
+    progressBar.setAttribute("aria-valuenow", "0");
 }
 
-function disableLoadingSpinner() {
-    console.log('loading spinner off')
+function updateProgressBar(percent) {
+    const progressBar = document.getElementById("progressBar");
+    const clamped = Math.min(100, Math.max(0, percent)); // Ensure 0-100
+    progressBar.style.width = `${clamped}%`;
+    progressBar.setAttribute("aria-valuenow", clamped.toString());
+    progressBar.innerText = `${clamped}%`;
+}
+
+function hideProgressBar() {
+    const progressContainer = document.getElementById('progressContainer');
+    progressContainer.classList.add('d-none');
 }
 
 function convertToWeek(utcString) {
@@ -313,8 +375,6 @@ function convertToWeek(utcString) {
     const dayOfYear = Math.floor((date - oneJan) / (1000 * 60 * 60 * 24)) + 1;
     return Math.ceil(dayOfYear / 7);
 }
-
-
 
 function fillInPlayerStats(player, playerTeamName, opponentTeamName, competitionName) {
     const stats = player.statistics;
