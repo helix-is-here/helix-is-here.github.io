@@ -40,7 +40,7 @@ async function getDivisionSeasonsData(divisionId) {
         const response = await fetch(`${url}?${params}`);
         if (response.ok) {
             const data = await response.json();
-            console.log("Division seasons data:", data);
+            // console.log("Division seasons data:", data);
             return data;
         } else {
             console.error("Request failed:", response.status);
@@ -72,7 +72,7 @@ async function getSeasonGamesData(seasonId) {
         const response = await fetch(`${url}?${params}`);
         if (response.ok) {
             const data = await response.json();
-            console.log("Season games data:", data);
+            // console.log("Season games data:", data);
             return data
         } else {
             console.error("Request failed:", response.status);
@@ -104,7 +104,7 @@ async function getGameStatistics(fixtureId) {
         const response = await fetch(`${url}?${params}`);
         if (response.ok) {
             const data = await response.json();
-            console.log("Game stats:", data);
+            // console.log("Game stats:", data);
             return data
         } else {
             console.error("Request failed:", response.status);
@@ -120,6 +120,14 @@ async function getGameStatistics(fixtureId) {
 
 // once the DOM content has finished loading
 document.addEventListener("DOMContentLoaded", function () {
+    // add event listener to sort table on sortBy select
+    document.getElementById('sortBy').addEventListener('change', populateTable);
+
+    // add event listener to filter by comp when checkboxes changed
+    document.querySelectorAll('.form-check-input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', populateTable);
+    });
+    
     populateSeasonSelect();
 })
 
@@ -171,6 +179,7 @@ async function fetchSeasonData(year) {
     const weekSelect = document.getElementById('weekSelect');
     weekSelect.disabled = true;
     showProgressBar();
+    disableInputsAndSelects();
 
     const weeksSet = new Set();
 
@@ -223,6 +232,7 @@ async function fetchSeasonData(year) {
     // Enable the weekSelect element
     weekSelect.disabled = false;
     hideProgressBar();
+    enableInputsAndSelects();
 
     weekSelect.addEventListener("change", () => {
         const selectedWeek = weekSelect.value;
@@ -260,6 +270,7 @@ async function fetchWeekData(week) {
         }
     }
 
+    disableInputsAndSelects();
     showProgressBar();
     const totalGames = gamesThisWeek.length;
     let retrievedGames = 0;
@@ -306,17 +317,34 @@ async function fetchWeekData(week) {
     populateTable(); // Sort and display the final player list
 
     hideProgressBar();
+    enableInputsAndSelects();
 }
 
-function populateTable(sortBy) {
-    // default sort by is game score
-    sortBy = sortBy || "gameScore";
+function populateTable() {
+    const sortSelect = document.getElementById("sortBy");
+    const sortBy = sortSelect.value;
+
+    const checkedComps = Array.from(document.querySelectorAll('.form-check-input[type="checkbox"]:checked'))
+        .map(cb => cb.value);
+
+    // Filter players by checked competitions
+    const filteredPlayers = weekPlayers.filter(player =>
+        checkedComps.includes(player.competitionName)
+    );
+
+    const key = sortBy || "gameScore";
+
+    filteredPlayers.sort((a, b) => {
+        const aVal = a.statistics?.[key] ?? a[key] ?? 0;
+        const bVal = b.statistics?.[key] ?? b[key] ?? 0;
+        return bVal - aVal; // descending
+    });
 
     // Sort players by Game Score descending
-    weekPlayers.sort((a, b) => b.statistics[sortBy] - a.statistics[sortBy]);
+    filteredPlayers.sort((a, b) => b.statistics[sortBy] - a.statistics[sortBy]);
 
     // Insert top 15 rows
-    const topPlayers = weekPlayers.slice(0, 20);
+    const topPlayers = filteredPlayers.slice(0, 20);
     const statsTableBody = document.getElementById("statsTableBody");
     statsTableBody.innerHTML = "";
 
@@ -350,7 +378,9 @@ function populateTable(sortBy) {
 function showProgressBar() {
     const container = document.getElementById("progressContainer");
     const bar = document.getElementById("progressBar");
+    const table = document.getElementById("statsTable");
 
+    table.classList.add('d-none');
     container.classList.remove("d-none");
     bar.style.width = "0%";
     container.setAttribute("aria-valuenow", "0");
@@ -369,9 +399,23 @@ function updateProgressBar(percent) {
 
 function hideProgressBar() {
     const container = document.getElementById("progressContainer");
+    const table = document.getElementById("statsTable");
+
+    table.classList.remove('d-none');
     container.classList.add("d-none");
 }
 
+function disableInputsAndSelects() {
+    document.querySelectorAll('input, select').forEach(el => {
+        el.disabled = true;
+    });
+}
+
+function enableInputsAndSelects() {
+    document.querySelectorAll('input, select').forEach(el => {
+        el.disabled = false;
+    });
+}
 
 function convertToWeek(utcString) {
     const date = new Date(utcString);
