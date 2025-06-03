@@ -353,16 +353,17 @@ function showProgressBar() {
 
     container.classList.remove("d-none");
     bar.style.width = "0%";
-    bar.setAttribute("aria-valuenow", "0");
+    container.setAttribute("aria-valuenow", "0");
     bar.textContent = "0%";
 }
 
 function updateProgressBar(percent) {
-    const clamped = Math.min(100, Math.max(0, percent));
+    const container = document.getElementById("progressContainer");
     const bar = document.getElementById("progressBar");
+    const clamped = Math.min(100, Math.max(0, percent));
 
     bar.style.width = `${clamped}%`;
-    bar.setAttribute("aria-valuenow", clamped.toString());
+    container.setAttribute("aria-valuenow", clamped.toString());
     bar.textContent = `${clamped}%`;
 }
 

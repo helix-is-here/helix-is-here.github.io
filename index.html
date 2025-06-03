@@ -52,9 +52,12 @@
                     </tbody>
                 </table>
                 <div class="row">
-                    <div id="progressContainer" class="progress d-none" aria-label="Round data loading"
-                        aria-valuemin="0" aria-valuemax="100">
-                        <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
+                    <div class="col">
+                    <div class="progress d-none" id="progressContainer" role="progressbar" aria-label="Fetching Data"
+                        aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" id="progressBar"
+                            style="width: 75%"></div>
+                    </div>
                     </div>
                 </div>
             </div>
