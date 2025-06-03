@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('.form-check-input[type="checkbox"]').forEach(checkbox => {
         checkbox.addEventListener('change', populateTable);
     });
-    
+
     populateSeasonSelect();
 })
 
@@ -196,8 +196,8 @@ async function fetchSeasonData(year) {
             const games = await getCachedSeasonGames(season.seasonId);
 
             games.forEach(game => {
-                if (game.status === "CONFIRMED" && game.estimatedFinishTimeUTC) {
-                    const week = convertToWeek(game.estimatedFinishTimeUTC);
+                if (game.status === "CONFIRMED" && game.startTimeLocal) {
+                    const week = convertToWeek(game.startTimeLocal);
                     weeksSet.add(week);
                 }
             });
@@ -211,10 +211,8 @@ async function fetchSeasonData(year) {
     // Sort weeks numerically
     const sortedWeeks = Array.from(weeksSet).sort((a, b) => a - b);
 
-    // Populate week select dropdown
-    weekSelect.innerHTML = ''; // Clear old options
-
-    // Re-add the default "Select Week" option
+    // Clear old options and re-add default
+    weekSelect.innerHTML = '';
     const defaultOption = document.createElement('option');
     defaultOption.value = '';
     defaultOption.textContent = 'Select Week';
@@ -222,12 +220,15 @@ async function fetchSeasonData(year) {
     defaultOption.selected = true;
     weekSelect.appendChild(defaultOption);
 
+    // Populate with week and date range
     sortedWeeks.forEach(week => {
+        const { range } = getWeekDateRange(year, week);
         const option = document.createElement('option');
         option.value = week;
-        option.textContent = `Week ${week}`;
+        option.textContent = `Week ${week} (${range})`;
         weekSelect.appendChild(option);
     });
+
 
     // Enable the weekSelect element
     weekSelect.disabled = false;
@@ -423,6 +424,25 @@ function convertToWeek(utcString) {
     const dayOfYear = Math.floor((date - oneJan) / (1000 * 60 * 60 * 24)) + 1;
     return Math.ceil(dayOfYear / 7);
 }
+
+function getWeekDateRange(year, weekNumber) {
+    const firstDayOfYear = new Date(year, 0, 1);
+    const dayOffset = ((firstDayOfYear.getDay() + 6) % 7); // ISO week starts on Monday
+    const firstMonday = new Date(firstDayOfYear);
+    firstMonday.setDate(firstDayOfYear.getDate() - dayOffset + 1);
+
+    const startOfWeek = new Date(firstMonday);
+    startOfWeek.setDate(firstMonday.getDate() + (weekNumber - 1) * 7);
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    const options = { month: 'short', day: 'numeric' };
+    const range = `${startOfWeek.toLocaleDateString('en-US', options)} – ${endOfWeek.toLocaleDateString('en-US', options)}`;
+
+    return { startOfWeek, endOfWeek, range };
+}
+
 
 function fillInPlayerStats(player, playerTeamName, opponentTeamName, competitionName) {
     const stats = player.statistics;
