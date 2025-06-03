@@ -298,9 +298,9 @@ async function fetchWeekData(week) {
             console.error(`Error processing game ${game.fixtureId}:`, error);
         }
 
-            retrievedGames++;
-            const percent = Math.round((retrievedGames / totalGames) * 100);
-            updateProgressBar(percent);
+        retrievedGames++;
+        const percent = Math.round((retrievedGames / totalGames) * 100);
+        updateProgressBar(percent);
     }
 
     populateTable(); // Sort and display the final player list
@@ -348,26 +348,29 @@ function populateTable(sortBy) {
 // ----------------
 
 function showProgressBar() {
-    const progressContainer = document.getElementById('progressContainer');
-    progressContainer.classList.remove('d-none');
+    const container = document.getElementById("progressContainer");
+    const bar = document.getElementById("progressBar");
 
-    const progressBar = document.getElementById("progressBar");
-    progressBar.style.width = "0%";
-    progressBar.setAttribute("aria-valuenow", "0");
+    container.classList.remove("d-none");
+    bar.style.width = "0%";
+    bar.setAttribute("aria-valuenow", "0");
+    bar.textContent = "0%";
 }
 
 function updateProgressBar(percent) {
-    const progressBar = document.getElementById("progressBar");
-    const clamped = Math.min(100, Math.max(0, percent)); // Ensure 0-100
-    progressBar.style.width = `${clamped}%`;
-    progressBar.setAttribute("aria-valuenow", clamped.toString());
-    progressBar.innerText = `${clamped}%`;
+    const clamped = Math.min(100, Math.max(0, percent));
+    const bar = document.getElementById("progressBar");
+
+    bar.style.width = `${clamped}%`;
+    bar.setAttribute("aria-valuenow", clamped.toString());
+    bar.textContent = `${clamped}%`;
 }
 
 function hideProgressBar() {
-    const progressContainer = document.getElementById('progressContainer');
-    progressContainer.classList.add('d-none');
+    const container = document.getElementById("progressContainer");
+    container.classList.add("d-none");
 }
+
 
 function convertToWeek(utcString) {
     const date = new Date(utcString);

@@ -25,163 +25,190 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="champMen" id="checkChampMen" checked>
-                    <label class="form-check-label" for="checkChampMen">
-                        Championship Men
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="champWomen" id="checkChampWomen">
-                    <label class="form-check-label" for="checkChampWomen">
-                        Championship Women
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="divisionOneMen" id="checkDivisionOneMen"
-                        checked>
-                    <label class="form-check-label" for="checkDivisionOneMen">
-                        Division One Men
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="divisionOneWomen" id="checkDivisionOneWomen">
-                    <label class="form-check-label" for="checkDivisionOneWomen">
-                        Division One Women
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="divisionTwoMen" id="checkDivisionTwoMen"
-                        checked>
-                    <label class="form-check-label" for="checkDivisionTwoMen">
-                        Division Two Men
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="divisionTwoWomen" id="checkDivisionTwoWomen">
-                    <label class="form-check-label" for="checkDivisionTwoWomen">
-                        Division Two Women
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="victorianYouthChampMen"
-                        id="checkVictorianYouthChampMen">
-                    <label class="form-check-label" for="checkVictorianYouthChampMen">
-                        Vic Youth Champ Men
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="victorianYouthChampWomen"
-                        id="checkVictorianYouthChampWomen">
-                    <label class="form-check-label" for="checkVictorianYouthChampWomen">
-                        Vic Youth Champ Women
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="youthLeagueOneMen"
-                        id="checkYouthLeagueOneMen">
-                    <label class="form-check-label" for="checkYouthLeagueOneMen">
-                        Youth League One Men
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="youthLeagueOneWomen"
-                        id="checkYouthLeagueOneWomen">
-                    <label class="form-check-label" for="checkYouthLeagueOneWomen">
-                        Youth League One Women
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="youthLeagueTwoMen"
-                        id="checkYouthLeagueTwoMen">
-                    <label class="form-check-label" for="checkYouthLeagueOneMen">
-                        Youth League Two Men
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="youthLeagueTwoWomen"
-                        id="checkYouthLeagueOneWomen">
-                    <label class="form-check-label" for="checkYouthLeagueOneWomen">
-                        Youth League Two Women
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="youthLeagueThreeMen"
-                        id="checkYouthLeagueThreeMen">
-                    <label class="form-check-label" for="checkYouthLeagueThreeMen">
-                        Youth League Three Men
-                    </label>
-                </div>
-            </div>
+            <hr>
         </div>
+
         <div class="row">
             <div class="col p-3">
                 <table class="table table-striped border" id="statsTable">
                     <thead>
                         <tr>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('bib')">#</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('personName')">Name</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('teamName')">Team</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('gameTitleHomeVsAway')">Game</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('competitionName')">Comp</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('minutes')">MIN</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('points')">PTS</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('fieldGoalsPercentage')">FG%</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('trueShootingPercentage')">TS%</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('foulsPersonal')">PF</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('plusMinus')">+/-</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('efficiency')">Eff</button></th>
-                            <th scope="col"><button type="button" class="btn btn-link"
-                                    onclick="populateTable('gameScore')">GmSc</button></th>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Team</th>
+                            <th scope="col">Game</th>
+                            <th scope="col">Comp</th>
+                            <th scope="col">MIN</th>
+                            <th scope="col">PTS</th>
+                            <th scope="col">FG%</th>
+                            <th scope="col">TS%</th>
+                            <th scope="col">PF</th>
+                            <th scope="col">+/-</th>
+                            <th scope="col">Eff</th>
+                            <th scope="col">GmSc</th>
                         </tr>
                     </thead>
                     <tbody id="statsTableBody">
                     </tbody>
                 </table>
-
+                <div class="row">
+                    <div id="progressContainer" class="progress d-none" aria-label="Round data loading"
+                        aria-valuemin="0" aria-valuemax="100">
+                        <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
+                    </div>
+                </div>
             </div>
         </div>
+
         <div class="row">
-            <div id="progressContainer" class="progress d-none" role="progressbar" aria-label="Round data loading"
-                aria-valuemin="0" aria-valuemax="100">
-                <div id="progressBar" class="progress-bar" style="width: 0%" aria-valuenow="0"></div>
+            <hr>
+        </div>
+        <div class="row">
+            <div class="col-lg-9 col-md-8 col-sm-6 col-12">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="champMen" id="checkChampMen" checked>
+                            <label class="form-check-label" for="checkChampMen">
+                                Championship Men
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="champWomen" id="checkChampWomen">
+                            <label class="form-check-label" for="checkChampWomen">
+                                Championship Women
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="divisionOneMen"
+                                id="checkDivisionOneMen" checked>
+                            <label class="form-check-label" for="checkDivisionOneMen">
+                                Division One Men
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="divisionOneWomen"
+                                id="checkDivisionOneWomen">
+                            <label class="form-check-label" for="checkDivisionOneWomen">
+                                Division One Women
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="divisionTwoMen"
+                                id="checkDivisionTwoMen" checked>
+                            <label class="form-check-label" for="checkDivisionTwoMen">
+                                Division Two Men
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="divisionTwoWomen"
+                                id="checkDivisionTwoWomen">
+                            <label class="form-check-label" for="checkDivisionTwoWomen">
+                                Division Two Women
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="victorianYouthChampMen"
+                                id="checkVictorianYouthChampMen">
+                            <label class="form-check-label" for="checkVictorianYouthChampMen">
+                                Vic Youth Champ Men
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="victorianYouthChampWomen"
+                                id="checkVictorianYouthChampWomen">
+                            <label class="form-check-label" for="checkVictorianYouthChampWomen">
+                                Vic Youth Champ Women
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="youthLeagueOneMen"
+                                id="checkYouthLeagueOneMen">
+                            <label class="form-check-label" for="checkYouthLeagueOneMen">
+                                Youth League One Men
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="youthLeagueOneWomen"
+                                id="checkYouthLeagueOneWomen">
+                            <label class="form-check-label" for="checkYouthLeagueOneWomen">
+                                Youth League One Women
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="youthLeagueTwoMen"
+                                id="checkYouthLeagueTwoMen">
+                            <label class="form-check-label" for="checkYouthLeagueOneMen">
+                                Youth League Two Men
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="youthLeagueTwoWomen"
+                                id="checkYouthLeagueTwoWomen">
+                            <label class="form-check-label" for="checkYouthLeagueTwoWomen">
+                                Youth League Two Women
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="youthLeagueThreeMen"
+                                id="checkYouthLeagueThreeMen">
+                            <label class="form-check-label" for="checkYouthLeagueThreeMen">
+                                Youth League Three Men
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="row">
+                    <div class="col-12 p-1">
+                        <select id="sortBy" class="form-select">
+                            <option value="gameScore">Sort By</option>
+                            <option>#</option>
+                            <option>Name</option>
+                            <option>Team</option>
+                            <option>Game</option>
+                            <option>Comp</option>
+                            <option>MIN</option>
+                            <option>PTS</option>
+                            <option>FG%</option>
+                            <option>TS%</option>
+                            <option>PF</option>
+                            <option>+/-</option>
+                            <option>Eff</option>
+                            <option>GmSc</option>
+                        </select>
+                    </div>
+                    <div class="col-12 p-1">
+                        <button type="button" class="btn btn-primary" onclick="populateTable()">Filter and Sort</button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
