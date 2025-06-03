@@ -1,0 +1,28 @@
+page load
+	get all division seasons data
+	populate season select
+
+select season
+	get all season games data
+	populate week select
+
+select week
+	find all games played in that week
+	fetch stats for all games played in that week
+	populate table
+	
+sort or filter table
+	populate table
+	
+data[i].status == "SCHEDULED"
+data[i].status == "CONFIRMED"
+
+select.addEventListener("change", () => {
+        const selectedYear = select.value;
+        if (selectedYear) {
+            populateWeekSelect(selectedYear);
+        }
+    });
+	
+
+
