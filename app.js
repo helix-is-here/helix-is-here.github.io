@@ -5,6 +5,8 @@
 const state = {
   settings: {
     dotLengthMs: 150,
+    enableStartDelay: true,
+    enablePreroll: true,
     wordLength: 5,
     wordCount: 10,
     enableLetters: true,
@@ -67,6 +69,10 @@ const MORSE_MAP = {
 
 const dotLengthInput = document.getElementById("dot-length");
 
+const enableStartDelay = document.getElementById("enable-start-delay");
+
+const enableMessagePreroll = document.getElementById("enable-preroll");
+
 const wordLengthInput = document.getElementById("word-length");
 const wordLengthDisplay = document.getElementById("word-length-display");
 
@@ -110,12 +116,22 @@ function getTiming(dotLengthMs) {
   };
 }
 
+async function startDelayCountdown(seconds) {
+  for (let i = seconds; i > 0; i--) {
+    updateStatus(`Starting in ${i}…`);
+    await sleep(1000);
+  }
+}
+
+
 /* =========================
    Settings Sync
    ========================= */
 
 function syncSettingsFromUI() {
   state.settings.dotLengthMs = Number(dotLengthInput.value);
+  state.settings.enableStartDelay = enableStartDelay.checked;
+  state.settings.enablePreroll = enableMessagePreroll.checked;
   state.settings.wordLength = Number(wordLengthInput.value);
   state.settings.wordCount = Number(wordCountInput.value);
   state.settings.enableLetters = enableLettersInput.checked;
@@ -171,9 +187,20 @@ function generateMessage(settings) {
    Morse Encoding
    ========================= */
 
-function encodeMessageToQueue(words, dotLengthMs) {
-  const timing = getTiming(dotLengthMs);
+function encodeMessageToQueue(words, settings) {
+  const timing = getTiming(settings.dotLengthMs);
   const queue = [];
+
+  if (settings.enablePreroll) {
+    // 3x ALL SHIPS (AAA)
+    for (let i = 0; i < 3; i++) {
+      queue.push(
+        ...encodeRunOnProsign("AAA", timing),
+        { on: false, duration: timing.interWordGap }
+      );
+    }
+  }
+
 
   words.forEach((word, wordIndex) => {
     [...word].forEach((char, charIndex) => {
@@ -212,6 +239,43 @@ function encodeMessageToQueue(words, dotLengthMs) {
 
   return queue;
 }
+
+function encodeRunOnProsign(sequence, timing) {
+  // sequence is something like "AAA"
+  const queue = [];
+
+  [...sequence].forEach((char, charIndex) => {
+    const morse = MORSE_MAP[char];
+    if (!morse) return;
+
+    [...morse].forEach((symbol, symbolIndex) => {
+      queue.push({
+        on: true,
+        duration: symbol === "." ? timing.dot : timing.dash
+      });
+
+      // Only intra-symbol gaps, never inter-character gaps
+      if (symbolIndex < morse.length - 1) {
+        queue.push({
+          on: false,
+          duration: timing.intraSymbolGap
+        });
+      }
+    });
+
+    // IMPORTANT: no inter-character gap here (run-on)
+    // Only add intra-symbol gap between letters
+    if (charIndex < sequence.length - 1) {
+      queue.push({
+        on: false,
+        duration: timing.intraSymbolGap
+      });
+    }
+  });
+
+  return queue;
+}
+
 
 /* =========================
    Transmission Engine
@@ -270,12 +334,17 @@ startButton.addEventListener("click", async () => {
   messageOutput.hidden = true;
   revealButton.disabled = true;
 
-  updateStatus("Transmitting...");
   setControlsEnabled(false);
+
+  if (state.settings.enableStartDelay) {
+    await startDelayCountdown(3);
+  }
+
+  updateStatus("Transmitting...");
 
   const queue = encodeMessageToQueue(
     state.generatedMessage,
-    state.settings.dotLengthMs
+    state.settings
   );
 
   await transmitQueue(queue);

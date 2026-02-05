@@ -22,10 +22,20 @@
           Dot length (ms)
           <input type="number" id="dot-length" min="40" max="500" step="10" value="200" />
         </label>
+
+        <label>
+          3 Second Start Delay
+            <input type="checkbox" id="enable-start-delay" checked/>
+        </label>
       </fieldset>
 
       <fieldset>
         <legend>Message Structure</legend>
+
+        <label>
+          Start with "All Ships"x3
+          <input type="checkbox" id="enable-preroll" checked/>
+        </label>
 
         <label>
           Characters per word
@@ -35,7 +45,7 @@
 
         <label>
           Number of words
-          <input type="range" id="word-count" min="1" max="20" value="10" />
+          <input type="range" id="word-count" min="1" max="20" value="1" />
           <span id="word-count-display">10</span>
         </label>
       </fieldset>
@@ -44,13 +54,18 @@
         <legend>Character Sets</legend>
 
         <label>
-          <input type="checkbox" id="enable-letters" checked />
           Letters (A–Z)
+          <input type="checkbox" id="enable-letters" checked />
         </label>
 
         <label>
-          <input type="checkbox" id="enable-numbers" />
           Numbers (0–9)
+          <input type="checkbox" id="enable-numbers" />
+        </label>
+
+        <label>
+          Prosigns
+          <input type="checkbox" id="enable-numbers" disabled />
         </label>
 
         <!--
