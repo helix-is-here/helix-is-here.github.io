@@ -2,6 +2,10 @@
    Application State
    ========================= */
 
+let transmissionToken = 0;
+let transmissionAborted = false;
+let autoRevealInProgress = false;
+
 const state = {
   settings: {
     dotLengthMs: 150,
@@ -19,8 +23,6 @@ const state = {
   isTransmitting: false,
   hasCompleted: false
 };
-
-let autoRevealInProgress = false;
 
 /* =========================
    Morse Definitions
@@ -89,7 +91,7 @@ const enableNumbersInput = document.getElementById("enable-numbers");
 
 const startButton = document.getElementById("start-button");
 const revealButton = document.getElementById("reveal-button");
-const resetButton = document.getElementById("reset-button");
+const stopButton = document.getElementById("stop-button");
 
 const messageOutput = document.getElementById("message-output");
 const statusText = document.getElementById("status-text");
@@ -121,12 +123,15 @@ function getTiming(dotLengthMs) {
   };
 }
 
-async function startDelayCountdown(seconds) {
+async function startDelayCountdown(seconds, token) {
   for (let i = seconds; i > 0; i--) {
+    if (token !== transmissionToken) return;
+
     updateStatus(`Starting in ${i}…`);
     await sleep(1000);
   }
 }
+
 
 function scheduleAutoReveal(delayMs) {
   clearTimeout(autoRevealTimeout);
@@ -140,22 +145,31 @@ function scheduleAutoReveal(delayMs) {
   }, delayMs);
 }
 
-async function autoRevealCountdown(seconds) {
+async function autoRevealCountdown(seconds, token) {
   autoRevealInProgress = true;
 
   for (let i = seconds; i > 0; i--) {
-    if (!state.hasCompleted || !autoRevealInProgress) return;
+    if (
+      token !== transmissionToken ||
+      !state.hasCompleted ||
+      !autoRevealInProgress
+    ) return;
 
     updateStatus(`Auto-reveal in ${i}…`);
     await sleep(1000);
   }
 
-  if (!state.hasCompleted || !autoRevealInProgress) return;
+  if (
+    token !== transmissionToken ||
+    !state.hasCompleted ||
+    !autoRevealInProgress
+  ) return;
 
   messageOutput.textContent = state.generatedMessage.join(" ");
   messageOutput.hidden = false;
   updateStatus("Result revealed");
 }
+
 
 /* =========================
    Settings Sync
@@ -315,14 +329,17 @@ function encodeRunOnProsign(sequence, timing) {
    Transmission Engine
    ========================= */
 
-async function transmitQueue(queue) {
+async function transmitQueue(queue, token) {
   for (const signal of queue) {
+    if (token !== transmissionToken) break;
+
     setSignal(signal.on);
     await sleep(signal.duration);
   }
 
   setSignal(false);
 }
+
 
 /* =========================
    UI State Control
@@ -359,19 +376,25 @@ enableNumbersInput.addEventListener("change", syncSettingsFromUI);
 startButton.addEventListener("click", async () => {
   syncSettingsFromUI();
 
+  transmissionToken++;
+  const token = transmissionToken;
+  transmissionAborted = false;
+
   state.generatedMessage = generateMessage(state.settings);
   if (state.generatedMessage.length === 0) return;
 
   state.isTransmitting = true;
   state.hasCompleted = false;
 
-  messageOutput.hidden = true;
+  stopButton.disabled = false;
   revealButton.disabled = true;
+  messageOutput.hidden = true;
 
   setControlsEnabled(false);
 
   if (state.settings.enableStartDelay) {
-    await startDelayCountdown(3);
+    await startDelayCountdown(3, token);
+    if (token !== transmissionToken) return;
   }
 
   updateStatus("Transmitting...");
@@ -381,20 +404,28 @@ startButton.addEventListener("click", async () => {
     state.settings
   );
 
-  await transmitQueue(queue);
+  await transmitQueue(queue, token);
+
+  if (token !== transmissionToken) return;
 
   state.isTransmitting = false;
   state.hasCompleted = true;
 
-  updateStatus("Transmission complete");
+  stopButton.disabled = true;
   revealButton.disabled = false;
   setControlsEnabled(true);
 
-  if (state.settings.enableAutoReveal) {
-    autoRevealCountdown(5);
-  }
+  updateStatus(
+    transmissionAborted
+      ? "Transmission stopped"
+      : "Transmission complete"
+  );
 
+  if (state.settings.enableAutoReveal && !transmissionAborted) {
+    autoRevealCountdown(5, token);
+  }
 });
+
 
 revealButton.addEventListener("click", () => {
   if (!state.hasCompleted) return;
@@ -406,24 +437,25 @@ revealButton.addEventListener("click", () => {
   updateStatus("Result revealed");
 });
 
+stopButton.addEventListener("click", () => {
+  if (!state.isTransmitting) return;
 
-resetButton.addEventListener("click", () => {
+  transmissionAborted = true;
+  transmissionToken++; // aborts delay, transmit, countdown
+
   autoRevealInProgress = false;
 
-  state.generatedMessage = [];
   state.isTransmitting = false;
-  state.hasCompleted = false;
+  state.hasCompleted = true;
 
-  messageOutput.hidden = true;
-  messageOutput.textContent = "";
-
-  revealButton.disabled = true;
-  updateStatus("Idle");
   setSignal(false);
+
+  stopButton.disabled = true;
+  revealButton.disabled = false;
   setControlsEnabled(true);
+
+  updateStatus("Transmission stopped");
 });
-
-
 
 /* =========================
    Initialisation
