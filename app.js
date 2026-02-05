@@ -120,11 +120,28 @@ function getTiming(dotLengthMs) {
   };
 }
 
-function revealMessage() {
-  messageOutput.textContent = state.generatedMessage.join(" ");
-  messageOutput.hidden = false;
-  updateStatus("Result revealed");
+function renderMessageBoxes(words) {
+  const container = messageOutput;
+  container.innerHTML = ""; // clear previous content
+  container.hidden = false;
+
+  words.forEach((word, wordIndex) => {
+    [...word].forEach(char => {
+      const span = document.createElement("span");
+      span.className = "char-box";
+      span.textContent = char;
+      container.appendChild(span);
+    });
+
+    // add gap between words, except after last word
+    if (wordIndex < words.length - 1) {
+      const spacer = document.createElement("span");
+      spacer.className = "word-gap";
+      container.appendChild(spacer);
+    }
+  });
 }
+
 
 /* =========================
    Countdown Helpers
@@ -158,8 +175,10 @@ async function autoRevealCountdown(seconds, token) {
     !autoRevealInProgress
   ) return;
 
-  revealMessage();
+  renderMessageBoxes(state.generatedMessage);
+  updateStatus("Result revealed");
 }
+
 
 /* =========================
    Settings Sync
@@ -393,28 +412,10 @@ revealButton.addEventListener("click", () => {
 
   autoRevealInProgress = false;
 
-  const container = messageOutput;
-  container.innerHTML = ""; // clear old boxes
-  container.hidden = false;
-
-  state.generatedMessage.forEach((word, wordIndex) => {
-    [...word].forEach(char => {
-      const span = document.createElement("span");
-      span.className = "char-box";
-      span.textContent = char;
-      container.appendChild(span);
-    });
-
-    // add gap between words, except after last word
-    if (wordIndex < state.generatedMessage.length - 1) {
-      const spacer = document.createElement("span");
-      spacer.className = "word-gap";
-      container.appendChild(spacer);
-    }
-  });
-
+  renderMessageBoxes(state.generatedMessage);
   updateStatus("Result revealed");
 });
+
 
 stopButton.addEventListener("click", () => {
   if (!state.isTransmitting) return;
