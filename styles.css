@@ -46,6 +46,11 @@ h2 {
    Settings Panel
    ========================= */
 
+.settings-panel {
+  display: flex;
+  justify-content: space-between;
+}
+
 .settings-panel fieldset {
   border: 1px solid #2a2e35;
   border-radius: 4px;
@@ -136,21 +141,6 @@ button:hover:not(:disabled) {
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-/* =========================
-   Message Reveal
-   ========================= */
-
-.reveal-panel pre {
-  background-color: #0e0f11;
-  border: 1px solid #2a2e35;
-  border-radius: 4px;
-  padding: 0.75rem;
-  color: #f0f0f0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas,
-    "Liberation Mono", monospace;
-  white-space: pre-wrap;
 }
 
 /* =========================

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,27 +8,19 @@
 
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
 
   <main class="app">
 
     <!-- Settings Panel -->
     <section class="panel settings-panel">
-      <h1>Morse Code Receiving Trainer</h1>
-
       <fieldset>
         <legend>Timing</legend>
 
         <label>
           Dot length (ms)
-          <input
-            type="number"
-            id="dot-length"
-            min="40"
-            max="500"
-            step="10"
-            value="120"
-          />
+          <input type="number" id="dot-length" min="40" max="500" step="10" value="200" />
         </label>
       </fieldset>
 
@@ -36,25 +29,13 @@
 
         <label>
           Characters per word
-          <input
-            type="range"
-            id="word-length"
-            min="1"
-            max="10"
-            value="5"
-          />
+          <input type="range" id="word-length" min="1" max="10" value="5" />
           <span id="word-length-display">5</span>
         </label>
 
         <label>
           Number of words
-          <input
-            type="range"
-            id="word-count"
-            min="1"
-            max="20"
-            value="10"
-          />
+          <input type="range" id="word-count" min="1" max="20" value="10" />
           <span id="word-count-display">10</span>
         </label>
       </fieldset>
@@ -83,13 +64,16 @@
 
     <!-- Signal Display -->
     <section class="panel signal-panel">
-      <div
-        id="signal-light"
-        aria-label="Morse signal light"
-        role="status"
-      ></div>
+      <div id="signal-light" aria-label="Morse signal light" role="status"></div>
 
-      <p id="status-text">Idle</p>
+      <p id="status-text">Not Transmitting</p>
+
+    </section>
+
+
+    <!-- Message Reveal -->
+    <section class="panel reveal-panel">
+      <pre id="message-output" hidden></pre>
     </section>
 
     <!-- Controls -->
@@ -99,14 +83,9 @@
       <button id="reset-button">Reset</button>
     </section>
 
-    <!-- Message Reveal -->
-    <section class="panel reveal-panel">
-      <h2>Transmitted Message</h2>
-      <pre id="message-output" hidden></pre>
-    </section>
-
   </main>
 
   <script src="app.js"></script>
 </body>
+
 </html>

@@ -4,7 +4,7 @@
 
 const state = {
   settings: {
-    dotLengthMs: 120,
+    dotLengthMs: 150,
     wordLength: 5,
     wordCount: 10,
     enableLetters: true,
