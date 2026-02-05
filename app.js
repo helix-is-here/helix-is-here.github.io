@@ -7,7 +7,7 @@ const state = {
     dotLengthMs: 150,
     enableStartDelay: true,
     enableAutoReveal: true,
-    enablePreroll: true,
+    enablePreroll: false,
     wordLength: 5,
     wordCount: 10,
     enableLetters: true,
@@ -20,7 +20,7 @@ const state = {
   hasCompleted: false
 };
 
-let autoRevealTimeout = null;
+let autoRevealInProgress = false;
 
 /* =========================
    Morse Definitions
@@ -138,6 +138,23 @@ function scheduleAutoReveal(delayMs) {
     messageOutput.hidden = false;
     updateStatus("Result revealed");
   }, delayMs);
+}
+
+async function autoRevealCountdown(seconds) {
+  autoRevealInProgress = true;
+
+  for (let i = seconds; i > 0; i--) {
+    if (!state.hasCompleted || !autoRevealInProgress) return;
+
+    updateStatus(`Auto-reveal in ${i}…`);
+    await sleep(1000);
+  }
+
+  if (!state.hasCompleted || !autoRevealInProgress) return;
+
+  messageOutput.textContent = state.generatedMessage.join(" ");
+  messageOutput.hidden = false;
+  updateStatus("Result revealed");
 }
 
 /* =========================
@@ -374,7 +391,7 @@ startButton.addEventListener("click", async () => {
   setControlsEnabled(true);
 
   if (state.settings.enableAutoReveal) {
-    scheduleAutoReveal(5000);
+    autoRevealCountdown(5);
   }
 
 });
@@ -382,12 +399,16 @@ startButton.addEventListener("click", async () => {
 revealButton.addEventListener("click", () => {
   if (!state.hasCompleted) return;
 
+  autoRevealInProgress = false;
+
   messageOutput.textContent = state.generatedMessage.join(" ");
   messageOutput.hidden = false;
+  updateStatus("Result revealed");
 });
 
+
 resetButton.addEventListener("click", () => {
-  clearTimeout(autoRevealTimeout);
+  autoRevealInProgress = false;
 
   state.generatedMessage = [];
   state.isTransmitting = false;
@@ -403,11 +424,12 @@ resetButton.addEventListener("click", () => {
 });
 
 
+
 /* =========================
    Initialisation
    ========================= */
 
 syncSettingsFromUI();
 updateDisplays();
-updateStatus("Idle");
+updateStatus("Not Transmitting");
 setSignal(false);
