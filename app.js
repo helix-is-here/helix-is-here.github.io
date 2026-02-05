@@ -362,15 +362,17 @@ startButton.addEventListener("click", async () => {
   wasManuallyStopped = false;
   autoRevealInProgress = false;
 
+  messageOutput.hidden = true;
+  messageOutput.innerHTML = "";
+
+  stopButton.disabled = false;
+  revealButton.disabled = true;
+
   state.generatedMessage = generateMessage(state.settings);
   if (state.generatedMessage.length === 0) return;
 
   state.isTransmitting = true;
   state.hasCompleted = false;
-
-  stopButton.disabled = false;
-  revealButton.disabled = true;
-  messageOutput.hidden = true;
 
   setControlsEnabled(false);
 
