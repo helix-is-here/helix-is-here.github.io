@@ -6,6 +6,7 @@ const state = {
   settings: {
     dotLengthMs: 150,
     enableStartDelay: true,
+    enableAutoReveal: true,
     enablePreroll: true,
     wordLength: 5,
     wordCount: 10,
@@ -18,6 +19,8 @@ const state = {
   isTransmitting: false,
   hasCompleted: false
 };
+
+let autoRevealTimeout = null;
 
 /* =========================
    Morse Definitions
@@ -71,6 +74,8 @@ const dotLengthInput = document.getElementById("dot-length");
 
 const enableStartDelay = document.getElementById("enable-start-delay");
 
+const enableAutoReveal = document.getElementById("enable-auto-reveal");
+
 const enableMessagePreroll = document.getElementById("enable-preroll");
 
 const wordLengthInput = document.getElementById("word-length");
@@ -123,6 +128,17 @@ async function startDelayCountdown(seconds) {
   }
 }
 
+function scheduleAutoReveal(delayMs) {
+  clearTimeout(autoRevealTimeout);
+
+  autoRevealTimeout = setTimeout(() => {
+    if (!state.hasCompleted) return;
+
+    messageOutput.textContent = state.generatedMessage.join(" ");
+    messageOutput.hidden = false;
+    updateStatus("Result revealed");
+  }, delayMs);
+}
 
 /* =========================
    Settings Sync
@@ -131,6 +147,7 @@ async function startDelayCountdown(seconds) {
 function syncSettingsFromUI() {
   state.settings.dotLengthMs = Number(dotLengthInput.value);
   state.settings.enableStartDelay = enableStartDelay.checked;
+  state.settings.enableAutoReveal = enableAutoReveal.checked;
   state.settings.enablePreroll = enableMessagePreroll.checked;
   state.settings.wordLength = Number(wordLengthInput.value);
   state.settings.wordCount = Number(wordCountInput.value);
@@ -355,6 +372,11 @@ startButton.addEventListener("click", async () => {
   updateStatus("Transmission complete");
   revealButton.disabled = false;
   setControlsEnabled(true);
+
+  if (state.settings.enableAutoReveal) {
+    scheduleAutoReveal(5000);
+  }
+
 });
 
 revealButton.addEventListener("click", () => {
@@ -365,6 +387,8 @@ revealButton.addEventListener("click", () => {
 });
 
 resetButton.addEventListener("click", () => {
+  clearTimeout(autoRevealTimeout);
+
   state.generatedMessage = [];
   state.isTransmitting = false;
   state.hasCompleted = false;
@@ -377,6 +401,7 @@ resetButton.addEventListener("click", () => {
   setSignal(false);
   setControlsEnabled(true);
 });
+
 
 /* =========================
    Initialisation
