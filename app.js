@@ -8,12 +8,12 @@ let autoRevealInProgress = false;
 
 const state = {
   settings: {
-    dotLengthMs: 150,
+    dotLengthMs: 250,
     enableStartDelay: true,
     enableAutoReveal: true,
     enablePreroll: false,
     wordLength: 5,
-    wordCount: 10,
+    wordCount: 1,
     enableLetters: true,
     enableNumbers: false
     // enableProsigns: false (future)
@@ -390,8 +390,30 @@ startButton.addEventListener("click", async () => {
 
 revealButton.addEventListener("click", () => {
   if (!state.hasCompleted) return;
+
   autoRevealInProgress = false;
-  revealMessage();
+
+  const container = messageOutput;
+  container.innerHTML = ""; // clear old boxes
+  container.hidden = false;
+
+  state.generatedMessage.forEach((word, wordIndex) => {
+    [...word].forEach(char => {
+      const span = document.createElement("span");
+      span.className = "char-box";
+      span.textContent = char;
+      container.appendChild(span);
+    });
+
+    // add gap between words, except after last word
+    if (wordIndex < state.generatedMessage.length - 1) {
+      const spacer = document.createElement("span");
+      spacer.className = "word-gap";
+      container.appendChild(spacer);
+    }
+  });
+
+  updateStatus("Result revealed");
 });
 
 stopButton.addEventListener("click", () => {

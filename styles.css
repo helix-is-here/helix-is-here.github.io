@@ -103,7 +103,8 @@ h2 {
 }
 
 #signal-light.on {
-  background-color: #ffcc80; /* amber */
+  background-color: #ffcc80;
+  /* amber */
   box-shadow:
     0 0 12px rgba(255, 204, 128, 0.6),
     0 0 24px rgba(255, 204, 128, 0.4);
@@ -112,6 +113,38 @@ h2 {
 #status-text {
   font-size: 0.9rem;
   color: #aeb4bd;
+}
+
+/* =========================
+   Message Output
+   ========================= */
+
+.message-output {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  /* gap between letters */
+  margin-top: 10px;
+}
+
+.message-output .char-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  background-color: #222;
+  color: #fff;
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 16px;
+}
+
+.message-output .word-gap {
+  width: 16px;
+  /* gap between words */
 }
 
 /* =========================
