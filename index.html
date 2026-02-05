@@ -12,8 +12,6 @@
 <body>
 
   <main class="app">
-
-    <!-- Settings Panel -->
     <section class="panel settings-panel">
       <fieldset>
         <legend>Timing</legend>
@@ -25,12 +23,12 @@
 
         <label>
           3 Second Start Delay
-            <input type="checkbox" id="enable-start-delay" checked/>
+          <input type="checkbox" id="enable-start-delay" checked />
         </label>
 
         <label>
           Auto-Reveal After 5 Seconds
-            <input type="checkbox" id="enable-auto-reveal" checked/>
+          <input type="checkbox" id="enable-auto-reveal" checked />
         </label>
       </fieldset>
 
@@ -39,7 +37,7 @@
 
         <label>
           Start with "All Ships"x3
-          <input type="checkbox" id="enable-preroll"/>
+          <input type="checkbox" id="enable-preroll" />
         </label>
 
         <label>
@@ -72,31 +70,18 @@
           Prosigns
           <input type="checkbox" id="enable-numbers" disabled />
         </label>
-
-        <!--
-        <label>
-          <input type="checkbox" id="enable-prosigns" />
-          Prosigns (AR, BT, SK)
-        </label>
-        -->
       </fieldset>
     </section>
 
-    <!-- Signal Display -->
     <section class="panel signal-panel">
       <div id="signal-light" aria-label="Morse signal light" role="status"></div>
-
       <p id="status-text">Not Transmitting</p>
-
     </section>
 
-
-    <!-- Message Reveal -->
     <section class="panel reveal-panel">
-      <pre id="message-output" hidden></pre>
+      <div id="message-output" class="message-output" hidden></div>
     </section>
 
-    <!-- Controls -->
     <section class="panel controls-panel">
       <button id="start-button">Start Transmission</button>
       <button id="stop-button" disabled>Stop Transmission</button>
