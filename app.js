@@ -3,7 +3,7 @@
    ========================= */
 
 let transmissionToken = 0;
-let transmissionAborted = false;
+let wasManuallyStopped = false;
 let autoRevealInProgress = false;
 
 const state = {
@@ -73,11 +73,8 @@ const MORSE_MAP = {
    ========================= */
 
 const dotLengthInput = document.getElementById("dot-length");
-
 const enableStartDelay = document.getElementById("enable-start-delay");
-
 const enableAutoReveal = document.getElementById("enable-auto-reveal");
-
 const enableMessagePreroll = document.getElementById("enable-preroll");
 
 const wordLengthInput = document.getElementById("word-length");
@@ -123,26 +120,22 @@ function getTiming(dotLengthMs) {
   };
 }
 
+function revealMessage() {
+  messageOutput.textContent = state.generatedMessage.join(" ");
+  messageOutput.hidden = false;
+  updateStatus("Result revealed");
+}
+
+/* =========================
+   Countdown Helpers
+   ========================= */
+
 async function startDelayCountdown(seconds, token) {
   for (let i = seconds; i > 0; i--) {
     if (token !== transmissionToken) return;
-
     updateStatus(`Starting in ${i}…`);
     await sleep(1000);
   }
-}
-
-
-function scheduleAutoReveal(delayMs) {
-  clearTimeout(autoRevealTimeout);
-
-  autoRevealTimeout = setTimeout(() => {
-    if (!state.hasCompleted) return;
-
-    messageOutput.textContent = state.generatedMessage.join(" ");
-    messageOutput.hidden = false;
-    updateStatus("Result revealed");
-  }, delayMs);
 }
 
 async function autoRevealCountdown(seconds, token) {
@@ -165,11 +158,8 @@ async function autoRevealCountdown(seconds, token) {
     !autoRevealInProgress
   ) return;
 
-  messageOutput.textContent = state.generatedMessage.join(" ");
-  messageOutput.hidden = false;
-  updateStatus("Result revealed");
+  revealMessage();
 }
-
 
 /* =========================
    Settings Sync
@@ -198,13 +188,8 @@ function updateDisplays() {
 function buildCharacterPool(settings) {
   const pool = [];
 
-  if (settings.enableLetters) {
-    pool.push(...'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  }
-
-  if (settings.enableNumbers) {
-    pool.push(...'0123456789');
-  }
+  if (settings.enableLetters) pool.push(...'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+  if (settings.enableNumbers) pool.push(...'0123456789');
 
   return pool;
 }
@@ -235,12 +220,37 @@ function generateMessage(settings) {
    Morse Encoding
    ========================= */
 
+function encodeRunOnProsign(sequence, timing) {
+  const queue = [];
+
+  [...sequence].forEach((char, charIndex) => {
+    const morse = MORSE_MAP[char];
+    if (!morse) return;
+
+    [...morse].forEach((symbol, symbolIndex) => {
+      queue.push({
+        on: true,
+        duration: symbol === "." ? timing.dot : timing.dash
+      });
+
+      if (symbolIndex < morse.length - 1) {
+        queue.push({ on: false, duration: timing.intraSymbolGap });
+      }
+    });
+
+    if (charIndex < sequence.length - 1) {
+      queue.push({ on: false, duration: timing.intraSymbolGap });
+    }
+  });
+
+  return queue;
+}
+
 function encodeMessageToQueue(words, settings) {
   const timing = getTiming(settings.dotLengthMs);
   const queue = [];
 
   if (settings.enablePreroll) {
-    // 3x ALL SHIPS (AAA)
     for (let i = 0; i < 3; i++) {
       queue.push(
         ...encodeRunOnProsign("AAA", timing),
@@ -248,7 +258,6 @@ function encodeMessageToQueue(words, settings) {
       );
     }
   }
-
 
   words.forEach((word, wordIndex) => {
     [...word].forEach((char, charIndex) => {
@@ -262,68 +271,22 @@ function encodeMessageToQueue(words, settings) {
         });
 
         if (symbolIndex < morse.length - 1) {
-          queue.push({
-            on: false,
-            duration: timing.intraSymbolGap
-          });
+          queue.push({ on: false, duration: timing.intraSymbolGap });
         }
       });
 
       if (charIndex < word.length - 1) {
-        queue.push({
-          on: false,
-          duration: timing.interCharGap
-        });
+        queue.push({ on: false, duration: timing.interCharGap });
       }
     });
 
     if (wordIndex < words.length - 1) {
-      queue.push({
-        on: false,
-        duration: timing.interWordGap
-      });
+      queue.push({ on: false, duration: timing.interWordGap });
     }
   });
 
   return queue;
 }
-
-function encodeRunOnProsign(sequence, timing) {
-  // sequence is something like "AAA"
-  const queue = [];
-
-  [...sequence].forEach((char, charIndex) => {
-    const morse = MORSE_MAP[char];
-    if (!morse) return;
-
-    [...morse].forEach((symbol, symbolIndex) => {
-      queue.push({
-        on: true,
-        duration: symbol === "." ? timing.dot : timing.dash
-      });
-
-      // Only intra-symbol gaps, never inter-character gaps
-      if (symbolIndex < morse.length - 1) {
-        queue.push({
-          on: false,
-          duration: timing.intraSymbolGap
-        });
-      }
-    });
-
-    // IMPORTANT: no inter-character gap here (run-on)
-    // Only add intra-symbol gap between letters
-    if (charIndex < sequence.length - 1) {
-      queue.push({
-        on: false,
-        duration: timing.intraSymbolGap
-      });
-    }
-  });
-
-  return queue;
-}
-
 
 /* =========================
    Transmission Engine
@@ -332,14 +295,12 @@ function encodeRunOnProsign(sequence, timing) {
 async function transmitQueue(queue, token) {
   for (const signal of queue) {
     if (token !== transmissionToken) break;
-
     setSignal(signal.on);
     await sleep(signal.duration);
   }
 
   setSignal(false);
 }
-
 
 /* =========================
    UI State Control
@@ -378,7 +339,9 @@ startButton.addEventListener("click", async () => {
 
   transmissionToken++;
   const token = transmissionToken;
-  transmissionAborted = false;
+
+  wasManuallyStopped = false;
+  autoRevealInProgress = false;
 
   state.generatedMessage = generateMessage(state.settings);
   if (state.generatedMessage.length === 0) return;
@@ -405,7 +368,6 @@ startButton.addEventListener("click", async () => {
   );
 
   await transmitQueue(queue, token);
-
   if (token !== transmissionToken) return;
 
   state.isTransmitting = false;
@@ -416,33 +378,27 @@ startButton.addEventListener("click", async () => {
   setControlsEnabled(true);
 
   updateStatus(
-    transmissionAborted
+    wasManuallyStopped
       ? "Transmission stopped"
       : "Transmission complete"
   );
 
-  if (state.settings.enableAutoReveal && !transmissionAborted) {
+  if (state.settings.enableAutoReveal && !wasManuallyStopped) {
     autoRevealCountdown(5, token);
   }
 });
 
-
 revealButton.addEventListener("click", () => {
   if (!state.hasCompleted) return;
-
   autoRevealInProgress = false;
-
-  messageOutput.textContent = state.generatedMessage.join(" ");
-  messageOutput.hidden = false;
-  updateStatus("Result revealed");
+  revealMessage();
 });
 
 stopButton.addEventListener("click", () => {
   if (!state.isTransmitting) return;
 
-  transmissionAborted = true;
+  wasManuallyStopped = true;
   transmissionToken++; // aborts delay, transmit, countdown
-
   autoRevealInProgress = false;
 
   state.isTransmitting = false;
