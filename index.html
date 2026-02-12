@@ -4,93 +4,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Morse Code Receiving Trainer</title>
+  <title>Morse Trainer</title>
 
-  <link rel="stylesheet" href="styles.css" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Optional: Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Vue 3 via CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 
 <body>
+  <div id="app">
+    <!-- Reusable Navbar -->
+    <navbar-component></navbar-component>
 
-  <main class="app">
-    <section class="panel settings-panel">
-      <fieldset>
-        <legend>Timing</legend>
+    <!-- Page Content -->
+    <main class="container my-4">
+      <router-view></router-view> <!-- This is where page content goes -->
+    </main>
 
-        <label>
-          Dot length (ms)
-          <input type="number" id="dot-length" min="40" max="500" step="10" value="250" />
-        </label>
+    <!-- Reusable Footer -->
+    <footer-component></footer-component>
+  </div>
 
-        <label>
-          3 Second Start Delay
-          <input type="checkbox" id="enable-start-delay" checked />
-        </label>
+  <!-- Optional: Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-        <label>
-          Auto-Reveal After 5 Seconds
-          <input type="checkbox" id="enable-auto-reveal" checked />
-        </label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Message Structure</legend>
-
-        <label>
-          Start with "All Ships"x3
-          <input type="checkbox" id="enable-preroll" />
-        </label>
-
-        <label>
-          Characters per word
-          <input type="range" id="word-length" min="1" max="10" value="5" />
-          <span id="word-length-display">5</span>
-        </label>
-
-        <label>
-          Number of words
-          <input type="range" id="word-count" min="1" max="20" value="1" />
-          <span id="word-count-display">10</span>
-        </label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Character Sets</legend>
-
-        <label>
-          Letters (A–Z)
-          <input type="checkbox" id="enable-letters" checked />
-        </label>
-
-        <label>
-          Numbers (0–9)
-          <input type="checkbox" id="enable-numbers" />
-        </label>
-
-        <label>
-          <s>Prosigns</s>
-          <input type="checkbox" id="enable-numbers" disabled />
-        </label>
-      </fieldset>
-    </section>
-
-    <section class="panel signal-panel">
-      <div id="signal-light" aria-label="Morse signal light" role="status"></div>
-      <p id="status-text">Not Transmitting</p>
-    </section>
-
-    <section class="panel reveal-panel">
-      <div id="message-output" class="message-output" hidden></div>
-    </section>
-
-    <section class="panel controls-panel">
-      <button id="start-button">Start Transmission</button>
-      <button id="stop-button" disabled>Stop Transmission</button>
-      <button id="reveal-button" disabled>Reveal Message</button>
-    </section>
-
-  </main>
-
+  <!-- App JS -->
   <script src="app.js"></script>
 </body>
-
 </html>

@@ -1,193 +1,47 @@
-/* =========================
-   Base / Reset
-   ========================= */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
+/* General spacing and font */
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-  background-color: #0e0f11;
-  color: #d6d6d6;
-  line-height: 1.4;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
 }
 
-/* =========================
-   Layout
-   ========================= */
-
-.app {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 1.5rem;
-  display: grid;
-  gap: 1.5rem;
+/* Navbar styling */
+.navbar {
+  background-color: #343a40;
 }
 
-.panel {
-  background-color: #16181c;
-  border-radius: 6px;
-  padding: 1.25rem;
-  border: 1px solid #23262b;
+.navbar-brand,
+.nav-link {
+  color: #fff !important;
 }
 
-h1,
-h2 {
-  margin-top: 0;
-  font-weight: 500;
-}
-
-/* =========================
-   Settings Panel
-   ========================= */
-
-.settings-panel {
-  display: flex;
-  justify-content: space-between;
-}
-
-.settings-panel fieldset {
-  border: 1px solid #2a2e35;
-  border-radius: 4px;
-  /* margin-bottom: 1rem; */
-  padding: 0rem 1rem 1rem;
-}
-
-.settings-panel legend {
-  padding: 0 0.5rem;
-  color: #aeb4bd;
-  font-size: 0.9rem;
-}
-
-.settings-panel label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
-}
-
-.settings-panel input[type="number"],
-.settings-panel input[type="range"] {
-  flex: 1;
-  max-width: 200px;
-}
-
-.settings-panel span {
-  min-width: 2ch;
-  text-align: right;
-  color: #f0f0f0;
-}
-
-/* =========================
-   Signal Panel
-   ========================= */
-
-.signal-panel {
+/* Footer styling */
+footer {
+  background-color: #343a40;
+  color: #fff;
+  padding: 1rem 0;
   text-align: center;
 }
 
-#signal-light {
-  width: 140px;
-  height: 140px;
-  margin: 0 auto 1rem;
-  border-radius: 50%;
-  background-color: #1c1e22;
-  border: 2px solid #2a2e35;
-  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
-}
-
-#signal-light.on {
-  background-color: #ffcc80;
-  /* amber */
-  box-shadow:
-    0 0 12px rgba(255, 204, 128, 0.6),
-    0 0 24px rgba(255, 204, 128, 0.4);
-}
-
-#status-text {
-  font-size: 0.9rem;
-  color: #aeb4bd;
-  margin-bottom: 0;
-}
-
-/* =========================
-   Message Output
-   ========================= */
-
-.message-output {
+/* Morse message display: each character in a box */
+.morse-message {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  /* gap between letters */
-  margin-top: 10px;
 }
 
-.message-output .char-box {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.morse-char {
   width: 32px;
   height: 32px;
-  border: 1px solid #888;
+  border: 1px solid #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
   border-radius: 4px;
-  background-color: #222;
-  color: #fff;
   font-weight: bold;
   font-family: monospace;
-  font-size: 16px;
 }
 
-.message-output .word-gap {
-  width: 16px;
-  /* gap between words */
-}
-
-/* =========================
-   Controls
-   ========================= */
-
-.controls-panel {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-button {
-  background-color: #1f2329;
-  color: #e0e0e0;
-  border: 1px solid #2a2e35;
-  border-radius: 4px;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.95rem;
-  cursor: pointer;
-}
-
-button:hover:not(:disabled) {
-  background-color: #2a2e35;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* =========================
-   Responsive (Light Touch)
-   ========================= */
-
-@media (max-width: 600px) {
-  .controls-panel {
-    flex-direction: column;
-  }
-
-  #signal-light {
-    width: 120px;
-    height: 120px;
-  }
+.morse-word-space {
+  width: 16px; /* space between words */
 }
