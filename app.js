@@ -13,7 +13,8 @@ const NavbarComponent = {
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav me-auto">
             <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="text/index.html">Trainer</a></li>
+            <li class="nav-item"><a class="nav-link" href="morse-table/index.html">Morse Table</a></li>
+            <li class="nav-item"><a class="nav-link" href="morse-trainer/index.html">Morse Trainer</a></li>
           </ul>
         </div>
       </div>
