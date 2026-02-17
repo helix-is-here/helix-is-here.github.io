@@ -3,7 +3,7 @@ const NavbarComponent = {
     <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container">
         <a class="navbar-brand" href="/">
-          <img src="/favicon-white.png">
+          <img src="/assets/shell-outline-white.png">
           <span>Helix Signals</span>
         </a>
         <div>
