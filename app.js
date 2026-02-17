@@ -9,7 +9,9 @@ const NavbarComponent = {
   template: `
     <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container">
-        <a class="navbar-brand" href="#">Morse Trainer</a>
+        <a class="navbar-brand" href="#">
+          <!-- Insert favicon.png img here -->
+        </a>
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav me-auto">
             <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
@@ -27,7 +29,7 @@ const FooterComponent = {
   template: `
     <footer>
       <div class="container">
-        <small>&copy; 2026 Morse Trainer. All rights reserved.</small>
+        <small>&copy; 2026 Helix Is Here. Made By Jake Grover</small>
       </div>
     </footer>
   `
@@ -37,9 +39,8 @@ const FooterComponent = {
 const HomePage = {
   template: `
     <div>
-      <h1 class="mb-3">Welcome to Morse Trainer</h1>
-      <p>This is a simple Vue + Bootstrap template for your Morse code app.</p>
-      <a href="trainer.html" class="btn btn-primary">Go to Trainer</a>
+      <h1 class="mb-3">Learn Morse and Flags!</h1>
+      <p>Please provide feedback at jake.grover@defence.gov.au</p>
     </div>
   `
 };
