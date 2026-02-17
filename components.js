@@ -3,8 +3,7 @@ const NavbarComponent = {
     <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container">
         <a class="navbar-brand" href="/">
-          <img src="/assets/shell-outline-white.png">
-          <span>Helix Signals</span>
+          <img src="/assets/shell-outline-white.png" alt="Helix">
         </a>
         <div>
           <ul class="navbar-nav ms-auto">
@@ -28,7 +27,7 @@ const FooterComponent = {
   template: `
     <footer class="text-light">
       <div class="container">
-        <small>&copy; 2026 Helix Signals. Built by Jake Grover.</small>
+        <small>Built by Jake Grover | <a href="mailto:grover.jake.t@gmail.com">grover.jake.t@gmail.com</a></small>
       </div>
     </footer>
   `
