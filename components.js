@@ -13,6 +13,15 @@ const NavbarComponent = {
             <li class="nav-item">
               <a class="nav-link" href="/morse-trainer/">Morse Trainer</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><s>Flags Table</s></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><s>Flags Quiz</s></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><s>ADF Ranks Quiz</s></a>
+            </li>
           </ul>
         </div>
       </div>
