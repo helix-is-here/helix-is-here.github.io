@@ -1,10 +1,13 @@
 const NavbarComponent = {
   template: `
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container">
-        <a class="navbar-brand" href="/">Helix Signals</a>
+        <a class="navbar-brand" href="/">
+          <img src="/favicon-white.png" alt="Helix Signals">
+          <span>Helix Signals</span>
+        </a>
         <div>
-          <ul class="navbar-nav me-auto flex-row gap-3">
+          <ul class="navbar-nav ms-auto">
             <li class="nav-item">
               <a class="nav-link" href="/">Home</a>
             </li>
@@ -23,8 +26,8 @@ const NavbarComponent = {
 
 const FooterComponent = {
   template: `
-    <footer class="bg-dark text-light py-3 mt-5">
-      <div class="container text-center">
+    <footer class="text-light">
+      <div class="container">
         <small>&copy; 2026 Helix Signals. Built by Jake Grover.</small>
       </div>
     </footer>

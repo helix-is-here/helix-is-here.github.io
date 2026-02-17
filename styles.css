@@ -1,47 +1,156 @@
-/* General spacing and font */
+/* Color variables */
+:root {
+  --bg-dark: #0a0a0a;
+  --bg-lighter: #1a1a1a;
+  --text-light: #f0f0f0;
+  --text-muted: #888888;
+  --accent: #0088ff;
+}
+
+/* General */
 body {
+  background-color: var(--bg-dark);
+  color: var(--text-light);
   font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
 }
 
-/* Navbar styling */
+/* Navbar */
 .navbar {
-  background-color: #343a40;
+  background-color: var(--bg-lighter);
+  border-bottom: 1px solid #333;
 }
 
-.navbar-brand,
+.navbar-brand {
+  color: var(--text-light) !important;
+  font-weight: normal;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-brand img {
+  height: 32px;
+  width: auto;
+}
+
 .nav-link {
-  color: #fff !important;
+  color: var(--text-light) !important;
 }
 
-/* Footer styling */
+.nav-link:hover {
+  color: var(--accent) !important;
+}
+
+/* Footer */
 footer {
-  background-color: #343a40;
-  color: #fff;
-  padding: 1rem 0;
+  background-color: var(--bg-lighter);
+  border-top: 1px solid #333;
+  margin-top: 3rem;
+  padding: 2rem 0;
   text-align: center;
+  color: var(--text-muted);
 }
 
-/* Morse message display: each character in a box */
+/* Headings */
+h1, h2, h3 {
+  color: var(--text-light);
+}
+
+h2 {
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Links */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 4px;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0066cc;
+  border-color: #0066cc;
+  color: white;
+}
+
+.btn-outline-primary {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--accent);
+  color: white;
+}
+
+/* Tables */
+.table {
+  color: var(--text-light);
+  border-color: #333;
+}
+
+.table thead {
+  border-bottom: 1px solid #444;
+  background-color: var(--bg-lighter);
+}
+
+.table thead th {
+  color: var(--text-light);
+  border-color: #333;
+}
+
+.table tbody tr:hover {
+  background-color: #1a1a1a;
+}
+
+.table td {
+  border-color: #333;
+}
+
+/* Morse display */
 .morse-message {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 8px;
+  padding: 1rem;
+  background-color: var(--bg-lighter);
+  border: 1px solid #333;
+  border-radius: 4px;
 }
 
 .morse-char {
-  width: 32px;
-  height: 32px;
-  border: 1px solid #6c757d;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #444;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
-  border-radius: 4px;
   font-weight: bold;
   font-family: monospace;
+  border-radius: 4px;
 }
 
 .morse-word-space {
-  width: 16px; /* space between words */
+  width: 20px;
 }
