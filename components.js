@@ -8,9 +8,6 @@ const NavbarComponent = {
         <div>
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="/morse-table/">Morse Table</a>
             </li>
             <li class="nav-item">

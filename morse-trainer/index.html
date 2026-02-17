@@ -13,87 +13,103 @@
 </head>
 
 <body>
-  <div id="app">
+  <div id="navbar-app">
     <navbar-component></navbar-component>
+  </div>
 
-    <main class="container my-4">
-      <h2>Morse Code Trainer</h2>
-      
-      <div class="trainer-layout">
-        <section class="settings-section">
-          <fieldset>
-            <legend>Timing</legend>
+  <main class="container my-4">
+    <h2>Morse Code Trainer</h2>
+    
+    <div class="trainer-layout">
+      <section class="settings-section">
+        <fieldset>
+          <legend>Timing</legend>
 
-            <label>
-              Dot length (ms)
-              <input type="number" id="dot-length" min="40" max="500" step="10" value="250" />
-            </label>
+          <label>
+            Dot length (ms)
+            <input type="number" id="dot-length" min="40" max="500" step="10" value="250" />
+          </label>
 
-            <label>
-              <input type="checkbox" id="enable-start-delay" checked />
-              3 Second Start Delay
-            </label>
+          <label>
+            <input type="checkbox" id="enable-start-delay" checked />
+            3 Second Start Delay
+          </label>
 
-            <label>
-              <input type="checkbox" id="enable-auto-reveal" checked />
-              Auto-Reveal After 5 Seconds
-            </label>
-          </fieldset>
+          <label>
+            <input type="checkbox" id="enable-auto-reveal" checked />
+            Auto-Reveal After 5 Seconds
+          </label>
+        </fieldset>
 
-          <fieldset>
-            <legend>Message Structure</legend>
+        <fieldset>
+          <legend>Message Structure</legend>
 
-            <label>
-              <input type="checkbox" id="enable-preroll" />
-              Start with "All Ships" x3
-            </label>
+          <label>
+            <input type="checkbox" id="enable-preroll" />
+            Start with "All Ships" x3
+          </label>
 
-            <label>
-              Characters per word
-              <input type="range" id="word-length" min="1" max="10" value="5" />
-              <span id="word-length-display">5</span>
-            </label>
+          <label>
+            Characters per word
+            <input type="range" id="word-length" min="1" max="10" value="5" />
+            <span id="word-length-display">5</span>
+          </label>
 
-            <label>
-              Number of words
-              <input type="range" id="word-count" min="1" max="20" value="1" />
-              <span id="word-count-display">1</span>
-            </label>
-          </fieldset>
+          <label>
+            Number of words
+            <input type="range" id="word-count" min="1" max="20" value="1" />
+            <span id="word-count-display">1</span>
+          </label>
+        </fieldset>
 
-          <fieldset>
-            <legend>Character Sets</legend>
+        <fieldset>
+          <legend>Character Sets</legend>
 
-            <label>
-              <input type="checkbox" id="enable-letters" checked />
-              Letters (A–Z)
-            </label>
+          <label>
+            <input type="checkbox" id="enable-letters" checked />
+            Letters (A–Z)
+          </label>
 
-            <label>
-              <input type="checkbox" id="enable-numbers" />
-              Numbers (0–9)
-            </label>
-          </fieldset>
-        </section>
+          <label>
+            <input type="checkbox" id="enable-numbers" />
+            Numbers (0–9)
+          </label>
+        </fieldset>
+      </section>
 
-        <section class="signal-section">
-          <div id="signal-light" aria-label="Morse signal light" role="status"></div>
-          <p id="status-text">Not Transmitting</p>
-          <div id="message-output" class="message-output" hidden></div>
-        </section>
-      </div>
+      <section class="signal-section">
+        <div id="signal-light" aria-label="Morse signal light" role="status"></div>
+        <p id="status-text">Not Transmitting</p>
+        <div id="message-output" class="message-output" hidden></div>
+      </section>
+    </div>
 
-      <div class="controls-section">
-        <button id="start-button" class="btn btn-primary">Start Transmission</button>
-        <button id="stop-button" class="btn btn-outline-primary" disabled>Stop Transmission</button>
-        <button id="reveal-button" class="btn btn-primary" disabled>Reveal Message</button>
-      </div>
-    </main>
+    <div class="controls-section">
+      <button id="start-button" class="btn btn-primary">Start Transmission</button>
+      <button id="stop-button" class="btn btn-outline-primary" disabled>Stop Transmission</button>
+      <button id="reveal-button" class="btn btn-primary" disabled>Reveal Message</button>
+    </div>
+  </main>
 
+  <div id="footer-app">
     <footer-component></footer-component>
   </div>
 
   <script src="../components.js"></script>
   <script src="app.js"></script>
+  <script>
+    Vue.createApp({
+      components: {
+        'navbar-component': NavbarComponent,
+        'footer-component': FooterComponent
+      }
+    }).mount('#navbar-app');
+
+    Vue.createApp({
+      components: {
+        'footer-component': FooterComponent
+      }
+    }).mount('#footer-app');
+  </script>
 </body>
 </html>
