@@ -35,20 +35,12 @@ const MorseTablePage = {
     <div>
       <h2 class="mb-4">Morse Code Table</h2>
 
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th>Character</th>
-            <th>Morse</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(value, key) in morse" :key="key">
-            <td><strong>{{ key }}</strong></td>
-            <td>{{ value }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="morse-grid">
+        <div class="morse-card" v-for="(value, key) in morse" :key="key">
+          <div class="morse-letter">{{ key }}</div>
+          <div class="morse-code">{{ value }}</div>
+        </div>
+      </div>
     </div>
   `
 };
