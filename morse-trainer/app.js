@@ -441,3 +441,14 @@ syncSettingsFromUI();
 updateDisplays();
 updateStatus("Not Transmitting");
 setSignal(false);
+
+/* =========================
+   Vue App Setup
+   ========================= */
+
+Vue.createApp({
+  components: {
+    'navbar-component': NavbarComponent,
+    'footer-component': FooterComponent
+  }
+}).mount('#app');
