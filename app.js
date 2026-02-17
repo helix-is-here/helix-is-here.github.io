@@ -1,109 +1,25 @@
-const { createApp } = Vue;
-
-/* =========================
-   Components
-========================= */
-
-// Navbar component
-const NavbarComponent = {
-  template: `
-    <nav class="navbar navbar-expand-lg navbar-dark">
-      <div class="container">
-        <a class="navbar-brand" href="#">
-          <!-- Insert favicon.png img here -->
-        </a>
-        <div class="collapse navbar-collapse">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="morse-table/index.html">Morse Table</a></li>
-            <li class="nav-item"><a class="nav-link" href="morse-trainer/index.html">Morse Trainer</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  `
-};
-
-// Footer component
-const FooterComponent = {
-  template: `
-    <footer>
-      <div class="container">
-        <small>&copy; 2026 Helix Is Here. Made By Jake Grover</small>
-      </div>
-    </footer>
-  `
-};
-
-// Home page component
 const HomePage = {
   template: `
     <div>
-      <h1 class="mb-3">Learn Morse and Flags!</h1>
-      <p>Please provide feedback at jake.grover@defence.gov.au</p>
-    </div>
-  `
-};
+      <h1 class="mb-3">Helix Signals</h1>
+      <p class="lead">Training tools for communications.</p>
 
-// Trainer page component
-const TrainerPage = {
-  data() {
-    return {
-      message: "",
-      chars: []
-    };
-  },
-  methods: {
-    generateDummyMessage() {
-      this.message = "HELLO WORLD";
-      this.chars = this.message.split("").map(c => c === " " ? " " : c);
-    }
-  },
-  template: `
-    <div>
-      <h2 class="mb-3">Morse Trainer</h2>
-
-      <div class="mb-3">
-        <button class="btn btn-success me-2" @click="generateDummyMessage">Generate Message</button>
-      </div>
-
-      <div class="morse-message mt-3">
-        <template v-for="(c, index) in chars" :key="index">
-          <span v-if="c === ' '" class="morse-word-space"></span>
-          <span v-else class="morse-char">{{ c }}</span>
-        </template>
+      <div class="mt-4">
+        <a href="/morse-table/" class="btn btn-outline-primary me-2">
+          View Morse Table
+        </a>
+        <a href="/morse-trainer/" class="btn btn-primary">
+          Launch Morse Trainer
+        </a>
       </div>
     </div>
   `
 };
 
-/* =========================
-   App Setup
-========================= */
-
-const app = createApp({
-  components: {
-    'navbar-component': NavbarComponent,
-    'footer-component': FooterComponent
-  },
-  template: `<router-view></router-view>` // placeholder
-});
-
-// Simple multipage router (without Vue Router)
-const routes = {
-  'index.html': HomePage,
-  'trainer.html': TrainerPage
-};
-
-// Mount correct page based on current URL
-const page = window.location.pathname.split("/").pop() || 'index.html';
-const pageComponent = routes[page] || HomePage;
-
-// Mount Vue
-createApp({
+Vue.createApp({
   components: {
     'navbar-component': NavbarComponent,
     'footer-component': FooterComponent,
-    'router-view': pageComponent
+    'home-page': HomePage
   }
 }).mount('#app');

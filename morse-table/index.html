@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Morse Table | Helix Signals Training</title>
+  <title>Morse Table | Helix Signals</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 
 <body>
-    <!-- insert table here -->
+  <div id="app">
+    <navbar-component></navbar-component>
+
+    <main class="container my-4">
+      <morse-table-page></morse-table-page>
+    </main>
+
+    <footer-component></footer-component>
+  </div>
+
+  <script src="/components.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
