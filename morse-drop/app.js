@@ -8,7 +8,7 @@ let autoRevealInProgress = false;
 
 const state = {
   settings: {
-    dotLengthMs: 250,
+    dotLengthMs: 300,
     enablePreroll: false,
     wordLength: 5,
     autoRepeat: false,
