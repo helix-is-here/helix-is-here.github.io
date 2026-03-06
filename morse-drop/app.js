@@ -11,6 +11,7 @@ const state = {
     dotLengthMs: 250,
     enablePreroll: false,
     wordLength: 5,
+    autoRepeat: false,
     wordCount: 1,
     enableLetters: true,
     enableNumbers: false
@@ -71,6 +72,7 @@ const MORSE_MAP = {
 
 const dotLengthInput = document.getElementById("dot-length");
 const enableMessagePreroll = document.getElementById("enable-preroll");
+const enableAutoRepeat = document.getElementById("enable-auto-repeat");
 
 const wordLengthInput = document.getElementById("word-length");
 const wordLengthDisplay = document.getElementById("word-length-display");
@@ -179,6 +181,7 @@ async function autoRevealCountdown(seconds, token) {
 function syncSettingsFromUI() {
   state.settings.dotLengthMs = Number(dotLengthInput.value);
   state.settings.enablePreroll = enableMessagePreroll.checked;
+  state.settings.autoRepeat = enableAutoRepeat.checked;
   state.settings.wordLength = Number(wordLengthInput.value);
   state.settings.wordCount = Number(wordCountInput.value);
   state.settings.enableLetters = enableLettersInput.checked;
@@ -321,6 +324,7 @@ function setControlsEnabled(enabled) {
   wordCountInput.disabled = !enabled;
   enableLettersInput.disabled = !enabled;
   enableNumbersInput.disabled = !enabled;
+  enableAutoRepeat.disabled = !enabled;
   startButton.disabled = !enabled;
 }
 
@@ -342,6 +346,7 @@ wordCountInput.addEventListener("input", () => {
 
 enableLettersInput.addEventListener("change", syncSettingsFromUI);
 enableNumbersInput.addEventListener("change", syncSettingsFromUI);
+enableAutoRepeat.addEventListener("change", syncSettingsFromUI);
 
 startButton.addEventListener("click", async () => {
   syncSettingsFromUI();
@@ -352,9 +357,8 @@ startButton.addEventListener("click", async () => {
   wasManuallyStopped = false;
   autoRevealInProgress = false;
 
-  messageOutput.hidden = true;
-  messageOutput.innerHTML = "";
-
+  // delay clearing the previous result until just before transmitting
+  // this lets the revealed text stay on screen during the countdown
   stopButton.disabled = false;
   revealButton.disabled = true;
 
@@ -369,6 +373,10 @@ startButton.addEventListener("click", async () => {
   // always include a short countdown before transmitting
   await startDelayCountdown(3, token);
   if (token !== transmissionToken) return;
+
+  // wipe the previous message now that we're about to send a new one
+  messageOutput.hidden = true;
+  messageOutput.innerHTML = "";
 
   updateStatus("Transmitting...");
 
@@ -394,7 +402,12 @@ startButton.addEventListener("click", async () => {
   );
 
   if (!wasManuallyStopped) {
-    autoRevealCountdown(3, token);
+    await autoRevealCountdown(3, token);
+    // after reveal, possibly restart
+    if (state.settings.autoRepeat && token === transmissionToken && !wasManuallyStopped) {
+      // schedule new cycle asynchronously to unwind call stack
+      setTimeout(() => startButton.click(), 0);
+    }
   }
 });
 
@@ -405,6 +418,11 @@ revealButton.addEventListener("click", () => {
 
   renderMessageBoxes(state.generatedMessage);
   updateStatus("Result revealed");
+
+  // if user manually revealed and auto-repeat is enabled, start again
+  if (state.settings.autoRepeat && !wasManuallyStopped) {
+    setTimeout(() => startButton.click(), 0);
+  }
 });
 
 stopButton.addEventListener("click", () => {
