@@ -9,8 +9,6 @@ let autoRevealInProgress = false;
 const state = {
   settings: {
     dotLengthMs: 250,
-    enableStartDelay: true,
-    enableAutoReveal: true,
     enablePreroll: false,
     wordLength: 5,
     wordCount: 1,
@@ -72,8 +70,6 @@ const MORSE_MAP = {
    ========================= */
 
 const dotLengthInput = document.getElementById("dot-length");
-const enableStartDelay = document.getElementById("enable-start-delay");
-const enableAutoReveal = document.getElementById("enable-auto-reveal");
 const enableMessagePreroll = document.getElementById("enable-preroll");
 
 const wordLengthInput = document.getElementById("word-length");
@@ -182,8 +178,6 @@ async function autoRevealCountdown(seconds, token) {
 
 function syncSettingsFromUI() {
   state.settings.dotLengthMs = Number(dotLengthInput.value);
-  state.settings.enableStartDelay = enableStartDelay.checked;
-  state.settings.enableAutoReveal = enableAutoReveal.checked;
   state.settings.enablePreroll = enableMessagePreroll.checked;
   state.settings.wordLength = Number(wordLengthInput.value);
   state.settings.wordCount = Number(wordCountInput.value);
@@ -372,10 +366,9 @@ startButton.addEventListener("click", async () => {
 
   setControlsEnabled(false);
 
-  if (state.settings.enableStartDelay) {
-    await startDelayCountdown(3, token);
-    if (token !== transmissionToken) return;
-  }
+  // always include a short countdown before transmitting
+  await startDelayCountdown(3, token);
+  if (token !== transmissionToken) return;
 
   updateStatus("Transmitting...");
 
@@ -400,8 +393,8 @@ startButton.addEventListener("click", async () => {
       : "Transmission complete"
   );
 
-  if (state.settings.enableAutoReveal && !wasManuallyStopped) {
-    autoRevealCountdown(5, token);
+  if (!wasManuallyStopped) {
+    autoRevealCountdown(3, token);
   }
 });
 
