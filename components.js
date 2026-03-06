@@ -11,7 +11,7 @@ const NavbarComponent = {
               <a class="nav-link" href="/morse-table/">Morse Table</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/morse-trainer/">Morse Trainer</a>
+              <a class="nav-link" href="/morse-trainer/">Morse Drop</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#"><s>Flags Table</s></a>

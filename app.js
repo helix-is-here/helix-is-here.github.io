@@ -9,7 +9,7 @@ const HomePage = {
           View Morse Table
         </a>
         <a href="/morse-trainer/" class="btn btn-primary">
-          Launch Morse Trainer
+          Launch Morse Drop
         </a>
       </div>
     </div>
