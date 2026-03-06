@@ -115,6 +115,11 @@
   font-size: 16px;
 }
 
+/* prosign tokens that are single "characters" made from multiple letters get an overline */
+.message-output .char-box.prosign {
+  text-decoration: overline;
+}
+
 .message-output .word-gap {
   width: 16px;
 }

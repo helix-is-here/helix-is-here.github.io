@@ -14,7 +14,9 @@ const state = {
     autoRepeat: false,
     wordCount: 1,
     enableLetters: true,
-    enableNumbers: false
+    enableNumbers: false,
+    enableProsigns: false,
+    includeII: false
   },
 
   generatedMessage: [],
@@ -66,13 +68,28 @@ const MORSE_MAP = {
   9: "----."
 };
 
+const PROSIGNS_MAP = {
+    IX: "..-..-",
+    BT: "-...-",
+    AR: ".-.-.",
+    AS: ".-...",
+    INT: "..-.-",
+    PT: ".--.-",
+    IMI: "..--..",
+    AA: ".-.-",
+    AAA: ".-.-.-",
+    MIM: "--..--"
+};
+
 /* =========================
    DOM References
    ========================= */
 
 const dotLengthInput = document.getElementById("dot-length");
 const enableMessagePreroll = document.getElementById("enable-preroll");
+const enableIIInput = document.getElementById("enable-ii-between-words");
 const enableAutoRepeat = document.getElementById("enable-auto-repeat");
+const enableProsignsInput = document.getElementById("enable-prosigns");
 
 const wordLengthInput = document.getElementById("word-length");
 const wordLengthDisplay = document.getElementById("word-length-display");
@@ -123,12 +140,23 @@ function renderMessageBoxes(words) {
   container.hidden = false;
 
   words.forEach((word, wordIndex) => {
-    [...word].forEach(char => {
+    word.forEach(token => {
       const span = document.createElement("span");
       span.className = "char-box";
-      span.textContent = char;
+      if (token.length > 1) span.classList.add("prosign");
+      span.textContent = token;
       container.appendChild(span);
     });
+
+    if (state.settings.includeII && wordIndex < words.length - 1) {
+      // show two separate I characters between words
+      ['I','I'].forEach(letter => {
+        const span = document.createElement("span");
+        span.className = "char-box";
+        span.textContent = letter;
+        container.appendChild(span);
+      });
+    }
 
     if (wordIndex < words.length - 1) {
       const spacer = document.createElement("span");
@@ -181,7 +209,9 @@ async function autoRevealCountdown(seconds, token) {
 function syncSettingsFromUI() {
   state.settings.dotLengthMs = Number(dotLengthInput.value);
   state.settings.enablePreroll = enableMessagePreroll.checked;
+  state.settings.includeII = enableIIInput.checked;
   state.settings.autoRepeat = enableAutoRepeat.checked;
+  state.settings.enableProsigns = enableProsignsInput.checked;
   state.settings.wordLength = Number(wordLengthInput.value);
   state.settings.wordCount = Number(wordCountInput.value);
   state.settings.enableLetters = enableLettersInput.checked;
@@ -202,6 +232,10 @@ function buildCharacterPool(settings) {
 
   if (settings.enableLetters) pool.push(...'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
   if (settings.enableNumbers) pool.push(...'0123456789');
+  if (settings.enableProsigns) {
+    // include the keys of the prosigns map (all run-on tokens)
+    pool.push(...Object.keys(PROSIGNS_MAP));
+  }
 
   return pool;
 }
@@ -217,10 +251,10 @@ function generateMessage(settings) {
   const words = [];
 
   for (let w = 0; w < settings.wordCount; w++) {
-    let word = "";
+    const word = [];
     for (let c = 0; c < settings.wordLength; c++) {
       const index = Math.floor(Math.random() * pool.length);
-      word += pool[index];
+      word.push(pool[index]);
     }
     words.push(word);
   }
@@ -272,28 +306,56 @@ function encodeMessageToQueue(words, settings) {
   }
 
   words.forEach((word, wordIndex) => {
-    [...word].forEach((char, charIndex) => {
-      const morse = MORSE_MAP[char];
-      if (!morse) return;
+    word.forEach((token, tokenIndex) => {
+      if (token.length > 1) {
+        // run-on prosign
+        queue.push(...encodeRunOnProsign(token, timing));
+      } else {
+        const morse = MORSE_MAP[token];
+        if (!morse) return;
 
-      [...morse].forEach((symbol, symbolIndex) => {
-        queue.push({
-          on: true,
-          duration: symbol === "." ? timing.dot : timing.dash
+        [...morse].forEach((symbol, symbolIndex) => {
+          queue.push({
+            on: true,
+            duration: symbol === "." ? timing.dot : timing.dash
+          });
+
+          if (symbolIndex < morse.length - 1) {
+            queue.push({ on: false, duration: timing.intraSymbolGap });
+          }
         });
+      }
 
-        if (symbolIndex < morse.length - 1) {
-          queue.push({ on: false, duration: timing.intraSymbolGap });
-        }
-      });
-
-      if (charIndex < word.length - 1) {
+      if (tokenIndex < word.length - 1) {
         queue.push({ on: false, duration: timing.interCharGap });
       }
     });
 
+    // between words we optionally insert II with proper gaps
     if (wordIndex < words.length - 1) {
-      queue.push({ on: false, duration: timing.interWordGap });
+      if (settings.includeII) {
+        // pre-gap
+        queue.push({ on: false, duration: timing.interWordGap });
+        // two separate Is with inter-character gap
+        const morseI = MORSE_MAP['I'];
+        [...morseI].forEach((symbol, symbolIndex) => {
+          queue.push({ on: true, duration: symbol === '.' ? timing.dot : timing.dash });
+          if (symbolIndex < morseI.length - 1) {
+            queue.push({ on: false, duration: timing.intraSymbolGap });
+          }
+        });
+        queue.push({ on: false, duration: timing.interCharGap });
+        [...morseI].forEach((symbol, symbolIndex) => {
+          queue.push({ on: true, duration: symbol === '.' ? timing.dot : timing.dash });
+          if (symbolIndex < morseI.length - 1) {
+            queue.push({ on: false, duration: timing.intraSymbolGap });
+          }
+        });
+        // post-gap
+        queue.push({ on: false, duration: timing.interWordGap });
+      } else {
+        queue.push({ on: false, duration: timing.interWordGap });
+      }
     }
   });
 
@@ -324,6 +386,8 @@ function setControlsEnabled(enabled) {
   wordCountInput.disabled = !enabled;
   enableLettersInput.disabled = !enabled;
   enableNumbersInput.disabled = !enabled;
+  enableProsignsInput.disabled = !enabled;
+  enableIIInput.disabled = !enabled;
   enableAutoRepeat.disabled = !enabled;
   startButton.disabled = !enabled;
 }
@@ -346,6 +410,8 @@ wordCountInput.addEventListener("input", () => {
 
 enableLettersInput.addEventListener("change", syncSettingsFromUI);
 enableNumbersInput.addEventListener("change", syncSettingsFromUI);
+enableProsignsInput.addEventListener("change", syncSettingsFromUI);
+enableIIInput.addEventListener("change", syncSettingsFromUI);
 enableAutoRepeat.addEventListener("change", syncSettingsFromUI);
 
 startButton.addEventListener("click", async () => {
