@@ -13,7 +13,8 @@ const state = {
     wordLength: 5,
     autoRepeat: false,
     wordCount: 1,
-    enableLetters: true,
+    enableLettersAM: true,
+    enableLettersNZ: true,
     enableNumbers: false,
     enableProsigns: false,
     includeII: false
@@ -97,7 +98,8 @@ const wordLengthDisplay = document.getElementById("word-length-display");
 const wordCountInput = document.getElementById("word-count");
 const wordCountDisplay = document.getElementById("word-count-display");
 
-const enableLettersInput = document.getElementById("enable-letters");
+const enableLettersAMInput = document.getElementById("enable-letters-am");
+const enableLettersNZInput = document.getElementById("enable-letters-nz");
 const enableNumbersInput = document.getElementById("enable-numbers");
 
 const startButton = document.getElementById("start-button");
@@ -214,7 +216,8 @@ function syncSettingsFromUI() {
   state.settings.enableProsigns = enableProsignsInput.checked;
   state.settings.wordLength = Number(wordLengthInput.value);
   state.settings.wordCount = Number(wordCountInput.value);
-  state.settings.enableLetters = enableLettersInput.checked;
+  state.settings.enableLettersAM = enableLettersAMInput.checked;
+  state.settings.enableLettersNZ = enableLettersNZInput.checked;
   state.settings.enableNumbers = enableNumbersInput.checked;
 }
 
@@ -230,7 +233,8 @@ function updateDisplays() {
 function buildCharacterPool(settings) {
   const pool = [];
 
-  if (settings.enableLetters) pool.push(...'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+  if (settings.enableLettersAM) pool.push(...'ABCDEFGHIJKLM');
+  if (settings.enableLettersNZ) pool.push(...'NOPQRSTUVWXYZ');
   if (settings.enableNumbers) pool.push(...'0123456789');
   if (settings.enableProsigns) {
     // include the keys of the prosigns map (all run-on tokens)
@@ -384,7 +388,8 @@ function setControlsEnabled(enabled) {
   dotLengthInput.disabled = !enabled;
   wordLengthInput.disabled = !enabled;
   wordCountInput.disabled = !enabled;
-  enableLettersInput.disabled = !enabled;
+  enableLettersAMInput.disabled = !enabled;
+  enableLettersNZInput.disabled = !enabled;
   enableNumbersInput.disabled = !enabled;
   enableProsignsInput.disabled = !enabled;
   enableIIInput.disabled = !enabled;
@@ -408,7 +413,8 @@ wordCountInput.addEventListener("input", () => {
   updateDisplays();
 });
 
-enableLettersInput.addEventListener("change", syncSettingsFromUI);
+enableLettersAMInput.addEventListener("change", syncSettingsFromUI);
+enableLettersNZInput.addEventListener("change", syncSettingsFromUI);
 enableNumbersInput.addEventListener("change", syncSettingsFromUI);
 enableProsignsInput.addEventListener("change", syncSettingsFromUI);
 enableIIInput.addEventListener("change", syncSettingsFromUI);
