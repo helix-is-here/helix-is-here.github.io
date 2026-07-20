@@ -144,13 +144,18 @@ function renderMessageBoxes(words) {
   container.hidden = false;
 
   words.forEach((word, wordIndex) => {
+    const wordWrapper = document.createElement("span");
+    wordWrapper.className = "word-group";
+
     word.forEach(token => {
       const span = document.createElement("span");
       span.className = "char-box";
       if (token.length > 1) span.classList.add("prosign");
       span.textContent = token;
-      container.appendChild(span);
+      wordWrapper.appendChild(span);
     });
+
+    container.appendChild(wordWrapper);
 
     if (wordIndex < words.length - 1) {
       const spacerBefore = document.createElement("span");
@@ -158,10 +163,15 @@ function renderMessageBoxes(words) {
       container.appendChild(spacerBefore);
 
       if (state.settings.includeII) {
+        const iiWrapper = document.createElement("span");
+        iiWrapper.className = "word-group ii-group";
+
         const iiSpan = document.createElement("span");
         iiSpan.className = "char-box";
         iiSpan.textContent = "II";
-        container.appendChild(iiSpan);
+        iiWrapper.appendChild(iiSpan);
+
+        container.appendChild(iiWrapper);
 
         const spacerAfter = document.createElement("span");
         spacerAfter.className = "word-gap";
