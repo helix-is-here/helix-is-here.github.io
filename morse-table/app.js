@@ -43,8 +43,6 @@ const MorseTablePage = {
   },
   template: `
     <div>
-      <h2 class="mb-4">Morse Code Table</h2>
-
       <div class="morse-grid">
         <div class="morse-card" v-for="(value, key) in morse" :key="key">
           <div class="morse-letter">{{ key }}</div>
