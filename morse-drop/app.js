@@ -8,7 +8,8 @@ let autoRevealInProgress = false;
 
 const state = {
   settings: {
-    dotLengthMs: 300,
+    wpm: 20,
+    dotLengthMs: 60,
     enablePreroll: false,
     wordLength: 5,
     autoRepeat: false,
@@ -86,7 +87,8 @@ const PROSIGNS_MAP = {
    DOM References
    ========================= */
 
-const dotLengthInput = document.getElementById("dot-length");
+const wpmInput = document.getElementById("wpm");
+const wpmDisplay = document.getElementById("wpm-display");
 const enableMessagePreroll = document.getElementById("enable-preroll");
 const enableIIInput = document.getElementById("enable-ii-between-words");
 const enableAutoRepeat = document.getElementById("enable-auto-repeat");
@@ -150,20 +152,24 @@ function renderMessageBoxes(words) {
       container.appendChild(span);
     });
 
-    if (state.settings.includeII && wordIndex < words.length - 1) {
-      // show two separate I characters between words
-      ['I','I'].forEach(letter => {
-        const span = document.createElement("span");
-        span.className = "char-box";
-        span.textContent = letter;
-        container.appendChild(span);
-      });
-    }
-
     if (wordIndex < words.length - 1) {
-      const spacer = document.createElement("span");
-      spacer.className = "word-gap";
-      container.appendChild(spacer);
+      const spacerBefore = document.createElement("span");
+      spacerBefore.className = "word-gap";
+      container.appendChild(spacerBefore);
+
+      if (state.settings.includeII) {
+        // show two separate I characters between words
+        ['I','I'].forEach(letter => {
+          const span = document.createElement("span");
+          span.className = "char-box";
+          span.textContent = letter;
+          container.appendChild(span);
+        });
+
+        const spacerAfter = document.createElement("span");
+        spacerAfter.className = "word-gap";
+        container.appendChild(spacerAfter);
+      }
     }
   });
 }
@@ -209,7 +215,8 @@ async function autoRevealCountdown(seconds, token) {
    ========================= */
 
 function syncSettingsFromUI() {
-  state.settings.dotLengthMs = Number(dotLengthInput.value);
+  state.settings.wpm = Number(wpmInput.value);
+  state.settings.dotLengthMs = 1200 / state.settings.wpm;
   state.settings.enablePreroll = enableMessagePreroll.checked;
   state.settings.includeII = enableIIInput.checked;
   state.settings.autoRepeat = enableAutoRepeat.checked;
@@ -222,6 +229,7 @@ function syncSettingsFromUI() {
 }
 
 function updateDisplays() {
+  wpmDisplay.textContent = state.settings.wpm;
   wordLengthDisplay.textContent = state.settings.wordLength;
   wordCountDisplay.textContent = state.settings.wordCount;
 }
@@ -385,7 +393,7 @@ async function transmitQueue(queue, token) {
    ========================= */
 
 function setControlsEnabled(enabled) {
-  dotLengthInput.disabled = !enabled;
+  wpmInput.disabled = !enabled;
   wordLengthInput.disabled = !enabled;
   wordCountInput.disabled = !enabled;
   enableLettersAMInput.disabled = !enabled;
@@ -401,7 +409,10 @@ function setControlsEnabled(enabled) {
    Event Handlers
    ========================= */
 
-dotLengthInput.addEventListener("change", syncSettingsFromUI);
+wpmInput.addEventListener("input", () => {
+  syncSettingsFromUI();
+  updateDisplays();
+});
 
 wordLengthInput.addEventListener("input", () => {
   syncSettingsFromUI();
