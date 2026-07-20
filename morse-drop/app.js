@@ -158,13 +158,10 @@ function renderMessageBoxes(words) {
       container.appendChild(spacerBefore);
 
       if (state.settings.includeII) {
-        // show two separate I characters between words
-        ['I','I'].forEach(letter => {
-          const span = document.createElement("span");
-          span.className = "char-box";
-          span.textContent = letter;
-          container.appendChild(span);
-        });
+        const iiSpan = document.createElement("span");
+        iiSpan.className = "char-box";
+        iiSpan.textContent = "II";
+        container.appendChild(iiSpan);
 
         const spacerAfter = document.createElement("span");
         spacerAfter.className = "word-gap";
