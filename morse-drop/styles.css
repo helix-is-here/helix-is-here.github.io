@@ -56,6 +56,12 @@
 
 /* Signal Section */
 
+.signal-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .signal-section {
   display: flex;
   flex-direction: column;
@@ -135,15 +141,32 @@
 
 .controls-section {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
   justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2rem;
+  align-items: stretch;
+}
+
+.controls-section button {
+  width: 100%;
 }
 
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+@media (min-width: 992px) {
+  .controls-section {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .controls-section button {
+    width: auto;
+    flex: 1 1 0;
+  }
 }
 
 /* Responsive */
@@ -154,14 +177,13 @@ button:disabled {
     gap: 1.5rem;
   }
 
+  .signal-column {
+    gap: 0.75rem;
+  }
+
   #signal-light {
     width: 120px;
     height: 120px;
-  }
-
-  .settings-section label {
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   .controls-section {
@@ -170,5 +192,49 @@ button:disabled {
 
   .controls-section button {
     width: 100%;
+  }
+}
+
+/* Character Sets Fieldset - Two Column Grid */
+
+.settings-section fieldset[data-options-grid="2col"] {
+  display: block;
+}
+
+.settings-section fieldset[data-options-grid="2col"] label {
+  width: calc(50% - 0.5rem);
+  display: inline-flex;
+  margin-top: 0.5rem;
+}
+
+/* Auto Reveal Group - Radio Buttons */
+
+.settings-section fieldset[data-auto-reveal-group] {
+  display: block;
+}
+
+.settings-section fieldset[data-auto-reveal-group] label {
+  display: inline-flex;
+  margin-top: 0.5rem;
+  margin-right: 1rem;
+}
+
+@media (min-width: 992px) {
+  .settings-section fieldset[data-auto-reveal-group] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .settings-section fieldset[data-auto-reveal-group] legend {
+    width: 100%;
+  }
+
+  .settings-section fieldset[data-auto-reveal-group] label {
+    margin-top: 0;
+    margin-right: 0;
+    flex: 1 1 0;
+    min-width: 0;
   }
 }

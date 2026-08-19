@@ -13,6 +13,7 @@ const state = {
     enablePreroll: false,
     wordLength: 5,
     autoRepeat: false,
+    autoReveal: "3s",
     wordCount: 1,
     enableLettersAM: true,
     enableLettersNZ: true,
@@ -93,6 +94,7 @@ const enableMessagePreroll = document.getElementById("enable-preroll");
 const enableIIInput = document.getElementById("enable-ii-between-words");
 const enableAutoRepeat = document.getElementById("enable-auto-repeat");
 const enableProsignsInput = document.getElementById("enable-prosigns");
+const autoRevealInputs = document.querySelectorAll('input[name="auto-reveal"]');
 
 const wordLengthInput = document.getElementById("word-length");
 const wordLengthDisplay = document.getElementById("word-length-display");
@@ -111,6 +113,13 @@ const stopButton = document.getElementById("stop-button");
 const messageOutput = document.getElementById("message-output");
 const statusText = document.getElementById("status-text");
 const signalLight = document.getElementById("signal-light");
+
+function revealGeneratedMessage() {
+  autoRevealInProgress = false;
+
+  renderMessageBoxes(state.generatedMessage);
+  updateStatus("Result revealed");
+}
 
 /* =========================
    Utility Functions
@@ -227,6 +236,7 @@ function syncSettingsFromUI() {
   state.settings.enablePreroll = enableMessagePreroll.checked;
   state.settings.includeII = enableIIInput.checked;
   state.settings.autoRepeat = enableAutoRepeat.checked;
+  state.settings.autoReveal = document.querySelector('input[name="auto-reveal"]:checked')?.value || "3s";
   state.settings.enableProsigns = enableProsignsInput.checked;
   state.settings.wordLength = Number(wordLengthInput.value);
   state.settings.wordCount = Number(wordCountInput.value);
@@ -409,6 +419,9 @@ function setControlsEnabled(enabled) {
   enableProsignsInput.disabled = !enabled;
   enableIIInput.disabled = !enabled;
   enableAutoRepeat.disabled = !enabled;
+  autoRevealInputs.forEach(input => {
+    input.disabled = !enabled;
+  });
   startButton.disabled = !enabled;
 }
 
@@ -437,6 +450,9 @@ enableNumbersInput.addEventListener("change", syncSettingsFromUI);
 enableProsignsInput.addEventListener("change", syncSettingsFromUI);
 enableIIInput.addEventListener("change", syncSettingsFromUI);
 enableAutoRepeat.addEventListener("change", syncSettingsFromUI);
+autoRevealInputs.forEach(input => {
+  input.addEventListener("change", syncSettingsFromUI);
+});
 
 startButton.addEventListener("click", async () => {
   syncSettingsFromUI();
@@ -492,10 +508,18 @@ startButton.addEventListener("click", async () => {
   );
 
   if (!wasManuallyStopped) {
-    await autoRevealCountdown(3, token);
-    // after reveal, possibly restart
-    if (state.settings.autoRepeat && token === transmissionToken && !wasManuallyStopped) {
-      // schedule new cycle asynchronously to unwind call stack
+    if (state.settings.autoReveal === "immediate") {
+      revealGeneratedMessage();
+    } else if (state.settings.autoReveal === "3s") {
+      await autoRevealCountdown(3, token);
+    }
+
+    if (
+      state.settings.autoRepeat &&
+      token === transmissionToken &&
+      !wasManuallyStopped &&
+      state.settings.autoReveal !== "disabled"
+    ) {
       setTimeout(() => startButton.click(), 0);
     }
   }
@@ -506,8 +530,7 @@ revealButton.addEventListener("click", () => {
 
   autoRevealInProgress = false;
 
-  renderMessageBoxes(state.generatedMessage);
-  updateStatus("Result revealed");
+  revealGeneratedMessage();
 
   // if user manually revealed and auto-repeat is enabled, start again
   if (state.settings.autoRepeat && !wasManuallyStopped) {

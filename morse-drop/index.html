@@ -62,7 +62,7 @@
           </label>
         </fieldset>
 
-        <fieldset>
+        <fieldset data-options-grid="2col">
           <legend>Character Sets</legend>
 
           <label>
@@ -85,19 +85,40 @@
             Prosigns
           </label>
         </fieldset>
+
+        <fieldset data-auto-reveal-group>
+          <legend>Auto Reveal</legend>
+
+          <label>
+            <input type="radio" name="auto-reveal" value="disabled" />
+            Disabled
+          </label>
+
+          <label>
+            <input type="radio" name="auto-reveal" value="immediate" />
+            Immediate
+          </label>
+
+          <label>
+            <input type="radio" name="auto-reveal" value="3s" checked />
+            3 seconds
+          </label>
+        </fieldset>
       </section>
 
-      <section class="signal-section">
-        <div id="signal-light" aria-label="Morse signal light" role="status"></div>
-        <p id="status-text">Not Transmitting</p>
-        <div id="message-output" class="message-output" hidden></div>
-      </section>
-    </div>
+      <div class="signal-column">
+        <section class="signal-section">
+          <div id="signal-light" aria-label="Morse signal light" role="status"></div>
+          <p id="status-text">Not Transmitting</p>
+          <div id="message-output" class="message-output" hidden></div>
+        </section>
 
-    <div class="controls-section">
-      <button id="start-button" class="btn btn-primary">Start Transmission</button>
-      <button id="stop-button" class="btn btn-outline-primary" disabled>Stop Transmission</button>
-      <button id="reveal-button" class="btn btn-primary" disabled>Reveal Message</button>
+        <div class="controls-section">
+          <button id="start-button" class="btn btn-primary">Start Transmission</button>
+          <button id="stop-button" class="btn btn-outline-primary" disabled>Stop Transmission</button>
+          <button id="reveal-button" class="btn btn-primary" disabled>Reveal Message</button>
+        </div>
+      </div>
     </div>
   </main>
 
