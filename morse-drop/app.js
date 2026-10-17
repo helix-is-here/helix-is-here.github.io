@@ -15,10 +15,7 @@ const state = {
     autoRepeat: false,
     autoReveal: "3s",
     wordCount: 1,
-    enableLettersAM: true,
-    enableLettersNZ: true,
-    enableNumbers: false,
-    enableProsigns: false,
+    enabledChars: new Set(),
     includeII: false
   },
 
@@ -84,6 +81,17 @@ const PROSIGNS_MAP = {
     MIM: "--..--"
 };
 
+const CHARACTER_GROUPS = [
+  { key: "lettersAM", label: "Letters A–M", chars: [..."ABCDEFGHIJKLM"] },
+  { key: "lettersNZ", label: "Letters N–Z", chars: [..."NOPQRSTUVWXYZ"] },
+  { key: "numbers", label: "Numbers", chars: [..."0123456789"] },
+  { key: "prosigns", label: "Prosigns", chars: Object.keys(PROSIGNS_MAP) }
+];
+
+function getMorseFor(token) {
+  return token.length > 1 ? PROSIGNS_MAP[token] : MORSE_MAP[token];
+}
+
 /* =========================
    DOM References
    ========================= */
@@ -93,7 +101,6 @@ const wpmDisplay = document.getElementById("wpm-display");
 const enableMessagePreroll = document.getElementById("enable-preroll");
 const enableIIInput = document.getElementById("enable-ii-between-words");
 const enableAutoRepeat = document.getElementById("enable-auto-repeat");
-const enableProsignsInput = document.getElementById("enable-prosigns");
 const autoRevealInputs = document.querySelectorAll('input[name="auto-reveal"]');
 
 const wordLengthInput = document.getElementById("word-length");
@@ -102,9 +109,9 @@ const wordLengthDisplay = document.getElementById("word-length-display");
 const wordCountInput = document.getElementById("word-count");
 const wordCountDisplay = document.getElementById("word-count-display");
 
-const enableLettersAMInput = document.getElementById("enable-letters-am");
-const enableLettersNZInput = document.getElementById("enable-letters-nz");
-const enableNumbersInput = document.getElementById("enable-numbers");
+const groupInputs = document.querySelectorAll("input[data-group]");
+const charPickerGroups = document.getElementById("char-picker-groups");
+const charCount = document.getElementById("char-count");
 
 const startButton = document.getElementById("start-button");
 const revealButton = document.getElementById("reveal-button");
@@ -237,12 +244,89 @@ function syncSettingsFromUI() {
   state.settings.includeII = enableIIInput.checked;
   state.settings.autoRepeat = enableAutoRepeat.checked;
   state.settings.autoReveal = document.querySelector('input[name="auto-reveal"]:checked')?.value || "3s";
-  state.settings.enableProsigns = enableProsignsInput.checked;
   state.settings.wordLength = Number(wordLengthInput.value);
   state.settings.wordCount = Number(wordCountInput.value);
-  state.settings.enableLettersAM = enableLettersAMInput.checked;
-  state.settings.enableLettersNZ = enableLettersNZInput.checked;
-  state.settings.enableNumbers = enableNumbersInput.checked;
+}
+
+/* =========================
+   Character Picker
+   ========================= */
+
+function createMorseGlyph(morse) {
+  const glyph = document.createElement("span");
+  glyph.className = "morse-glyph";
+  glyph.setAttribute("aria-hidden", "true");
+
+  [...morse].forEach(symbol => {
+    const mark = document.createElement("span");
+    mark.className = symbol === "." ? "morse-dot" : "morse-dash";
+    glyph.appendChild(mark);
+  });
+
+  return glyph;
+}
+
+function buildCharacterPicker() {
+  CHARACTER_GROUPS.forEach(group => {
+    const section = document.createElement("div");
+    section.className = "char-picker-group";
+
+    const heading = document.createElement("div");
+    heading.className = "char-picker-heading";
+    heading.textContent = group.label;
+    section.appendChild(heading);
+
+    const grid = document.createElement("div");
+    grid.className = "char-picker-grid";
+
+    group.chars.forEach(char => {
+      const morse = getMorseFor(char);
+
+      const label = document.createElement("label");
+      label.className = "char-toggle";
+      label.title = `${char}  ${morse}`;
+
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.dataset.char = char;
+      input.setAttribute("aria-label", `${char} (${morse})`);
+      input.checked = state.settings.enabledChars.has(char);
+      input.addEventListener("change", () => {
+        if (input.checked) state.settings.enabledChars.add(char);
+        else state.settings.enabledChars.delete(char);
+        refreshCharacterUI();
+      });
+
+      const name = document.createElement("span");
+      name.className = "char-toggle-name";
+      if (char.length > 1) name.classList.add("prosign");
+      name.textContent = char;
+
+      label.append(input, name, createMorseGlyph(morse));
+      grid.appendChild(label);
+    });
+
+    section.appendChild(grid);
+    charPickerGroups.appendChild(section);
+  });
+}
+
+function refreshCharacterUI() {
+  const enabled = state.settings.enabledChars;
+
+  charPickerGroups.querySelectorAll("input[data-char]").forEach(input => {
+    input.checked = enabled.has(input.dataset.char);
+  });
+
+  groupInputs.forEach(input => {
+    const group = CHARACTER_GROUPS.find(g => g.key === input.dataset.group);
+    const count = group.chars.filter(c => enabled.has(c)).length;
+    input.checked = count === group.chars.length;
+    input.indeterminate = count > 0 && count < group.chars.length;
+  });
+
+  const total = CHARACTER_GROUPS.reduce((n, g) => n + g.chars.length, 0);
+  charCount.textContent = `${enabled.size} of ${total} enabled`;
 }
 
 function updateDisplays() {
@@ -258,13 +342,11 @@ function updateDisplays() {
 function buildCharacterPool(settings) {
   const pool = [];
 
-  if (settings.enableLettersAM) pool.push(...'ABCDEFGHIJKLM');
-  if (settings.enableLettersNZ) pool.push(...'NOPQRSTUVWXYZ');
-  if (settings.enableNumbers) pool.push(...'0123456789');
-  if (settings.enableProsigns) {
-    // include the keys of the prosigns map (all run-on tokens)
-    pool.push(...Object.keys(PROSIGNS_MAP));
-  }
+  CHARACTER_GROUPS.forEach(group => {
+    group.chars.forEach(char => {
+      if (settings.enabledChars.has(char)) pool.push(char);
+    });
+  });
 
   return pool;
 }
@@ -273,7 +355,7 @@ function generateMessage(settings) {
   const pool = buildCharacterPool(settings);
 
   if (pool.length === 0) {
-    alert("At least one character set must be enabled.");
+    alert("At least one character must be enabled.");
     return [];
   }
 
@@ -413,10 +495,12 @@ function setControlsEnabled(enabled) {
   wpmInput.disabled = !enabled;
   wordLengthInput.disabled = !enabled;
   wordCountInput.disabled = !enabled;
-  enableLettersAMInput.disabled = !enabled;
-  enableLettersNZInput.disabled = !enabled;
-  enableNumbersInput.disabled = !enabled;
-  enableProsignsInput.disabled = !enabled;
+  groupInputs.forEach(input => {
+    input.disabled = !enabled;
+  });
+  charPickerGroups.querySelectorAll("input[data-char]").forEach(input => {
+    input.disabled = !enabled;
+  });
   enableIIInput.disabled = !enabled;
   enableAutoRepeat.disabled = !enabled;
   autoRevealInputs.forEach(input => {
@@ -444,10 +528,16 @@ wordCountInput.addEventListener("input", () => {
   updateDisplays();
 });
 
-enableLettersAMInput.addEventListener("change", syncSettingsFromUI);
-enableLettersNZInput.addEventListener("change", syncSettingsFromUI);
-enableNumbersInput.addEventListener("change", syncSettingsFromUI);
-enableProsignsInput.addEventListener("change", syncSettingsFromUI);
+groupInputs.forEach(input => {
+  input.addEventListener("change", () => {
+    const group = CHARACTER_GROUPS.find(g => g.key === input.dataset.group);
+    group.chars.forEach(char => {
+      if (input.checked) state.settings.enabledChars.add(char);
+      else state.settings.enabledChars.delete(char);
+    });
+    refreshCharacterUI();
+  });
+});
 enableIIInput.addEventListener("change", syncSettingsFromUI);
 enableAutoRepeat.addEventListener("change", syncSettingsFromUI);
 autoRevealInputs.forEach(input => {
@@ -560,6 +650,14 @@ stopButton.addEventListener("click", () => {
 /* =========================
    Initialisation
    ========================= */
+
+groupInputs.forEach(input => {
+  if (!input.checked) return;
+  const group = CHARACTER_GROUPS.find(g => g.key === input.dataset.group);
+  group.chars.forEach(char => state.settings.enabledChars.add(char));
+});
+buildCharacterPicker();
+refreshCharacterUI();
 
 syncSettingsFromUI();
 updateDisplays();

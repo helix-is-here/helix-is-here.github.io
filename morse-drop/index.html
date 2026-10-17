@@ -62,28 +62,38 @@
           </label>
         </fieldset>
 
-        <fieldset data-options-grid="2col">
+        <fieldset class="character-sets">
           <legend>Character Sets</legend>
 
-          <label>
-            <input type="checkbox" id="enable-letters-am" checked />
-            Letters A–M
-          </label>
+          <div data-options-grid="2col">
+            <label>
+              <input type="checkbox" id="enable-letters-am" data-group="lettersAM" checked />
+              Letters A–M
+            </label>
 
-          <label>
-            <input type="checkbox" id="enable-letters-nz" checked />
-            Letters N–Z
-          </label>
+            <label>
+              <input type="checkbox" id="enable-letters-nz" data-group="lettersNZ" checked />
+              Letters N–Z
+            </label>
 
-          <label>
-            <input type="checkbox" id="enable-numbers" />
-            Numbers (0–9)
-          </label>
+            <label>
+              <input type="checkbox" id="enable-numbers" data-group="numbers" />
+              Numbers (0–9)
+            </label>
 
-          <label>
-            <input type="checkbox" id="enable-prosigns" />
-            Prosigns
-          </label>
+            <label>
+              <input type="checkbox" id="enable-prosigns" data-group="prosigns" />
+              Prosigns
+            </label>
+          </div>
+
+          <details class="char-picker">
+            <summary>
+              Individual characters
+              <span id="char-count" class="char-count"></span>
+            </summary>
+            <div id="char-picker-groups"></div>
+          </details>
         </fieldset>
 
         <fieldset data-auto-reveal-group>

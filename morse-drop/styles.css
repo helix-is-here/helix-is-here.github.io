@@ -197,11 +197,11 @@ button:disabled {
 
 /* Character Sets Fieldset - Two Column Grid */
 
-.settings-section fieldset[data-options-grid="2col"] {
+.settings-section [data-options-grid="2col"] {
   display: block;
 }
 
-.settings-section fieldset[data-options-grid="2col"] label {
+.settings-section [data-options-grid="2col"] label {
   width: calc(50% - 0.5rem);
   display: inline-flex;
   margin-top: 0.5rem;
@@ -237,4 +237,125 @@ button:disabled {
     flex: 1 1 0;
     min-width: 0;
   }
+}
+
+/* Individual Character Picker */
+
+.char-picker {
+  margin-top: 1rem;
+  border-top: 1px solid #333;
+  padding-top: 0.75rem;
+}
+
+.char-picker summary {
+  cursor: pointer;
+  color: var(--text-light);
+}
+
+.settings-section .char-picker .char-count {
+  color: var(--text-muted);
+  font-weight: normal;
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+}
+
+.char-picker-group {
+  margin-top: 0.75rem;
+}
+
+.char-picker-heading {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 0.35rem;
+}
+
+.char-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 6px;
+}
+
+.settings-section label.char-toggle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 6px 4px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: var(--bg-dark);
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.1s ease, background-color 0.1s ease;
+}
+
+/* keep the native checkbox for accessibility but visually hide it */
+.char-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.settings-section label.char-toggle:has(input:checked) {
+  border-color: var(--accent);
+  background-color: rgba(0, 136, 255, 0.15);
+  color: var(--text-light);
+}
+
+.settings-section label.char-toggle:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.settings-section label.char-toggle:has(input:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settings-section .char-toggle .char-toggle-name {
+  min-width: 0;
+  margin: 0;
+  text-align: center;
+  color: inherit;
+  font-family: monospace;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.settings-section .char-toggle .char-toggle-name.prosign {
+  text-decoration: overline;
+}
+
+.settings-section .char-toggle .morse-glyph {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  height: 6px;
+  margin: 0;
+}
+
+.settings-section .char-toggle .morse-dot,
+.settings-section .char-toggle .morse-dash {
+  display: block;
+  min-width: 0;
+  height: 4px;
+  margin: 0;
+  border-radius: 2px;
+  background-color: currentColor;
+}
+
+.settings-section .char-toggle .morse-dot {
+  width: 4px;
+}
+
+.settings-section .char-toggle .morse-dash {
+  width: 10px;
 }
