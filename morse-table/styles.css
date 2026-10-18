@@ -29,7 +29,7 @@
 .morse-code {
   font-family: monospace;
   font-size: 1.2rem;
-  color: #888888;
+  color: var(--text-muted);
   text-align: center;
   word-break: break-word;
 }
@@ -84,4 +84,23 @@
   .morse-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+/* Mnemonics image */
+
+.mnemonics {
+  margin-top: 2rem;
+}
+
+.mnemonics summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.mnemonics img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-top: 1rem;
+  border-radius: 4px;
 }

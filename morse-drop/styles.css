@@ -22,7 +22,7 @@
 
 .settings-section legend {
   padding: 0 0.5rem;
-  color: #888888;
+  color: var(--text-muted);
   font-size: 0.9rem;
   font-weight: bold;
 }
@@ -45,7 +45,7 @@
   max-width: 150px;
 }
 
-.settings-section span {
+.settings-section .value-display {
   display: inline-block;
   min-width: 2ch;
   text-align: right;
@@ -91,7 +91,7 @@
 
 #status-text {
   text-align: center;
-  color: #888888;
+  color: var(--text-muted);
   font-size: 0.95rem;
   margin: 0;
 }
@@ -252,7 +252,7 @@ button:disabled {
   color: var(--text-light);
 }
 
-.settings-section .char-picker .char-count {
+.char-picker .char-count {
   color: var(--text-muted);
   font-weight: normal;
   font-size: 0.85rem;
@@ -318,44 +318,64 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.settings-section .char-toggle .char-toggle-name {
-  min-width: 0;
-  margin: 0;
-  text-align: center;
-  color: inherit;
+.char-toggle-name {
   font-family: monospace;
   font-size: 15px;
   font-weight: bold;
   line-height: 1;
 }
 
-.settings-section .char-toggle .char-toggle-name.prosign {
+.char-toggle-name.prosign {
   text-decoration: overline;
 }
 
-.settings-section .char-toggle .morse-glyph {
+.morse-glyph {
   display: flex;
   align-items: center;
   gap: 2px;
-  min-width: 0;
   height: 6px;
-  margin: 0;
 }
 
-.settings-section .char-toggle .morse-dot,
-.settings-section .char-toggle .morse-dash {
+.morse-dot,
+.morse-dash {
   display: block;
-  min-width: 0;
   height: 4px;
-  margin: 0;
   border-radius: 2px;
   background-color: currentColor;
 }
 
-.settings-section .char-toggle .morse-dot {
+.morse-dot {
   width: 4px;
 }
 
-.settings-section .char-toggle .morse-dash {
+.morse-dash {
   width: 10px;
+}
+
+.no-chars-warning {
+  margin: 0.75rem 0 0;
+  color: #ffb74d;
+  font-size: 0.9rem;
+}
+
+/* Keyboard shortcut hint (hidden on touch-only devices) */
+
+.shortcut-hint {
+  margin: 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.shortcut-hint kbd {
+  background-color: var(--bg-lighter);
+  border: 1px solid #444;
+  color: var(--text-light);
+  font-size: 0.8rem;
+}
+
+@media (hover: none) {
+  .shortcut-hint {
+    display: none;
+  }
 }

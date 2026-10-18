@@ -1,30 +1,4 @@
 /* =========================
-   Application State
-   ========================= */
-
-let transmissionToken = 0;
-let wasManuallyStopped = false;
-let autoRevealInProgress = false;
-
-const state = {
-  settings: {
-    wpm: 20,
-    dotLengthMs: 60,
-    enablePreroll: false,
-    wordLength: 5,
-    autoRepeat: false,
-    autoReveal: "3s",
-    wordCount: 1,
-    enabledChars: new Set(),
-    includeII: false
-  },
-
-  generatedMessage: [],
-  isTransmitting: false,
-  hasCompleted: false
-};
-
-/* =========================
    Morse Definitions
    ========================= */
 
@@ -68,29 +42,44 @@ const MORSE_MAP = {
   9: "----."
 };
 
-const PROSIGNS_MAP = {
-    IX: "..-..-",
-    BT: "-...-",
-    AR: ".-.-.",
-    AS: ".-...",
-    INT: "..-.-",
-    PT: ".--.-",
-    IMI: "..--..",
-    AA: ".-.-",
-    AAA: ".-.-.-",
-    MIM: "--..--"
-};
+// Prosigns are run-on: their letters are sent with no gap between them,
+// so their code is just the letters' codes joined together.
+const PROSIGNS = ["IX", "BT", "AR", "AS", "INT", "PT", "IMI", "AA", "AAA", "MIM"];
 
 const CHARACTER_GROUPS = [
   { key: "lettersAM", label: "Letters A–M", chars: [..."ABCDEFGHIJKLM"] },
   { key: "lettersNZ", label: "Letters N–Z", chars: [..."NOPQRSTUVWXYZ"] },
   { key: "numbers", label: "Numbers", chars: [..."0123456789"] },
-  { key: "prosigns", label: "Prosigns", chars: Object.keys(PROSIGNS_MAP) }
+  { key: "prosigns", label: "Prosigns", chars: PROSIGNS }
 ];
 
+const ALL_CHARS = CHARACTER_GROUPS.flatMap(group => group.chars);
+
 function getMorseFor(token) {
-  return token.length > 1 ? PROSIGNS_MAP[token] : MORSE_MAP[token];
+  return [...token].map(char => MORSE_MAP[char]).join("");
 }
+
+/* =========================
+   Application State
+   ========================= */
+
+const STORAGE_KEY = "morseDrop.settings.v1";
+
+let transmissionToken = 0;
+let wasManuallyStopped = false;
+let autoRevealInProgress = false;
+let wakeLock = null;
+
+const state = {
+  // populated from the form by syncSettingsFromUI()
+  settings: {
+    enabledChars: new Set()
+  },
+
+  generatedMessage: [],
+  isTransmitting: false,
+  hasCompleted: false
+};
 
 /* =========================
    DOM References
@@ -112,6 +101,7 @@ const wordCountDisplay = document.getElementById("word-count-display");
 const groupInputs = document.querySelectorAll("input[data-group]");
 const charPickerGroups = document.getElementById("char-picker-groups");
 const charCount = document.getElementById("char-count");
+const noCharsWarning = document.getElementById("no-chars-warning");
 
 const startButton = document.getElementById("start-button");
 const revealButton = document.getElementById("reveal-button");
@@ -120,13 +110,6 @@ const stopButton = document.getElementById("stop-button");
 const messageOutput = document.getElementById("message-output");
 const statusText = document.getElementById("status-text");
 const signalLight = document.getElementById("signal-light");
-
-function revealGeneratedMessage() {
-  autoRevealInProgress = false;
-
-  renderMessageBoxes(state.generatedMessage);
-  updateStatus("Result revealed");
-}
 
 /* =========================
    Utility Functions
@@ -154,48 +137,81 @@ function getTiming(dotLengthMs) {
   };
 }
 
+function createCharBox(text, isProsign) {
+  const span = document.createElement("span");
+  span.className = "char-box";
+  if (isProsign) span.classList.add("prosign");
+  span.textContent = text;
+  return span;
+}
+
+function createWordGap() {
+  const spacer = document.createElement("span");
+  spacer.className = "word-gap";
+  return spacer;
+}
+
 function renderMessageBoxes(words) {
-  const container = messageOutput;
-  container.innerHTML = "";
-  container.hidden = false;
+  messageOutput.innerHTML = "";
+  messageOutput.hidden = false;
 
   words.forEach((word, wordIndex) => {
     const wordWrapper = document.createElement("span");
     wordWrapper.className = "word-group";
-
     word.forEach(token => {
-      const span = document.createElement("span");
-      span.className = "char-box";
-      if (token.length > 1) span.classList.add("prosign");
-      span.textContent = token;
-      wordWrapper.appendChild(span);
+      wordWrapper.appendChild(createCharBox(token, token.length > 1));
     });
-
-    container.appendChild(wordWrapper);
+    messageOutput.appendChild(wordWrapper);
 
     if (wordIndex < words.length - 1) {
-      const spacerBefore = document.createElement("span");
-      spacerBefore.className = "word-gap";
-      container.appendChild(spacerBefore);
+      messageOutput.appendChild(createWordGap());
 
       if (state.settings.includeII) {
         const iiWrapper = document.createElement("span");
         iiWrapper.className = "word-group ii-group";
-
-        const iiSpan = document.createElement("span");
-        iiSpan.className = "char-box";
-        iiSpan.textContent = "II";
-        iiWrapper.appendChild(iiSpan);
-
-        container.appendChild(iiWrapper);
-
-        const spacerAfter = document.createElement("span");
-        spacerAfter.className = "word-gap";
-        container.appendChild(spacerAfter);
+        iiWrapper.appendChild(createCharBox("II", false));
+        messageOutput.appendChild(iiWrapper);
+        messageOutput.appendChild(createWordGap());
       }
     }
   });
 }
+
+function revealGeneratedMessage() {
+  autoRevealInProgress = false;
+  renderMessageBoxes(state.generatedMessage);
+  updateStatus("Result revealed");
+}
+
+/* =========================
+   Screen Wake Lock
+   Keeps phones from dimming mid-transmission. Not supported everywhere,
+   so failures are ignored.
+   ========================= */
+
+async function acquireWakeLock() {
+  if (!("wakeLock" in navigator) || wakeLock) return;
+  try {
+    wakeLock = await navigator.wakeLock.request("screen");
+    wakeLock.addEventListener("release", () => {
+      wakeLock = null;
+    });
+  } catch {
+    wakeLock = null;
+  }
+}
+
+function releaseWakeLock() {
+  if (wakeLock) wakeLock.release().catch(() => {});
+  wakeLock = null;
+}
+
+// the browser drops the lock when the tab is hidden; take it back on return
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && state.isTransmitting) {
+    acquireWakeLock();
+  }
+});
 
 /* =========================
    Countdown Helpers
@@ -212,40 +228,85 @@ async function startDelayCountdown(seconds, token) {
 async function autoRevealCountdown(seconds, token) {
   autoRevealInProgress = true;
 
-  for (let i = seconds; i > 0; i--) {
-    if (
-      token !== transmissionToken ||
-      !state.hasCompleted ||
-      !autoRevealInProgress
-    ) return;
+  const isStillWaiting = () =>
+    token === transmissionToken && state.hasCompleted && autoRevealInProgress;
 
+  for (let i = seconds; i > 0; i--) {
+    if (!isStillWaiting()) return;
     updateStatus(`Auto-reveal in ${i}…`);
     await sleep(1000);
   }
 
-  if (
-    token !== transmissionToken ||
-    !state.hasCompleted ||
-    !autoRevealInProgress
-  ) return;
-
-  renderMessageBoxes(state.generatedMessage);
-  updateStatus("Result revealed");
+  if (!isStillWaiting()) return;
+  revealGeneratedMessage();
 }
 
 /* =========================
-   Settings Sync
+   Settings Sync & Persistence
    ========================= */
 
 function syncSettingsFromUI() {
-  state.settings.wpm = Number(wpmInput.value);
-  state.settings.dotLengthMs = 1200 / state.settings.wpm;
-  state.settings.enablePreroll = enableMessagePreroll.checked;
-  state.settings.includeII = enableIIInput.checked;
-  state.settings.autoRepeat = enableAutoRepeat.checked;
-  state.settings.autoReveal = document.querySelector('input[name="auto-reveal"]:checked')?.value || "3s";
-  state.settings.wordLength = Number(wordLengthInput.value);
-  state.settings.wordCount = Number(wordCountInput.value);
+  const settings = state.settings;
+  settings.wpm = Number(wpmInput.value);
+  settings.dotLengthMs = 1200 / settings.wpm;
+  settings.enablePreroll = enableMessagePreroll.checked;
+  settings.includeII = enableIIInput.checked;
+  settings.autoRepeat = enableAutoRepeat.checked;
+  settings.autoReveal = document.querySelector('input[name="auto-reveal"]:checked')?.value || "3s";
+  settings.wordLength = Number(wordLengthInput.value);
+  settings.wordCount = Number(wordCountInput.value);
+}
+
+function updateDisplays() {
+  wpmDisplay.textContent = state.settings.wpm;
+  wordLengthDisplay.textContent = state.settings.wordLength;
+  wordCountDisplay.textContent = state.settings.wordCount;
+}
+
+function saveSettings() {
+  const settings = state.settings;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      wpm: settings.wpm,
+      enablePreroll: settings.enablePreroll,
+      includeII: settings.includeII,
+      autoRepeat: settings.autoRepeat,
+      autoReveal: settings.autoReveal,
+      wordLength: settings.wordLength,
+      wordCount: settings.wordCount,
+      enabledChars: [...settings.enabledChars]
+    }));
+  } catch {
+    // storage unavailable (private browsing etc.); settings just won't persist
+  }
+}
+
+// Writes saved values back into the form. Returns false if nothing was saved.
+function loadSavedSettings() {
+  let saved;
+  try {
+    saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  } catch {
+    return false;
+  }
+  if (!saved || typeof saved !== "object") return false;
+
+  if (saved.wpm != null) wpmInput.value = saved.wpm;
+  if (saved.wordLength != null) wordLengthInput.value = saved.wordLength;
+  if (saved.wordCount != null) wordCountInput.value = saved.wordCount;
+  enableMessagePreroll.checked = Boolean(saved.enablePreroll);
+  enableIIInput.checked = Boolean(saved.includeII);
+  enableAutoRepeat.checked = Boolean(saved.autoRepeat);
+  const savedReveal = [...autoRevealInputs].find(input => input.value === saved.autoReveal);
+  if (savedReveal) savedReveal.checked = true;
+
+  if (Array.isArray(saved.enabledChars)) {
+    state.settings.enabledChars = new Set(
+      saved.enabledChars.filter(char => ALL_CHARS.includes(char))
+    );
+  }
+
+  return true;
 }
 
 /* =========================
@@ -290,11 +351,10 @@ function buildCharacterPicker() {
       input.type = "checkbox";
       input.dataset.char = char;
       input.setAttribute("aria-label", `${char} (${morse})`);
-      input.checked = state.settings.enabledChars.has(char);
       input.addEventListener("change", () => {
         if (input.checked) state.settings.enabledChars.add(char);
         else state.settings.enabledChars.delete(char);
-        refreshCharacterUI();
+        onCharactersChanged();
       });
 
       const name = document.createElement("span");
@@ -325,14 +385,14 @@ function refreshCharacterUI() {
     input.indeterminate = count > 0 && count < group.chars.length;
   });
 
-  const total = CHARACTER_GROUPS.reduce((n, g) => n + g.chars.length, 0);
-  charCount.textContent = `${enabled.size} of ${total} enabled`;
+  charCount.textContent = `${enabled.size} of ${ALL_CHARS.length} enabled`;
+  noCharsWarning.hidden = enabled.size > 0;
+  updateStartAvailability();
 }
 
-function updateDisplays() {
-  wpmDisplay.textContent = state.settings.wpm;
-  wordLengthDisplay.textContent = state.settings.wordLength;
-  wordCountDisplay.textContent = state.settings.wordCount;
+function onCharactersChanged() {
+  refreshCharacterUI();
+  saveSettings();
 }
 
 /* =========================
@@ -340,24 +400,12 @@ function updateDisplays() {
    ========================= */
 
 function buildCharacterPool(settings) {
-  const pool = [];
-
-  CHARACTER_GROUPS.forEach(group => {
-    group.chars.forEach(char => {
-      if (settings.enabledChars.has(char)) pool.push(char);
-    });
-  });
-
-  return pool;
+  return ALL_CHARS.filter(char => settings.enabledChars.has(char));
 }
 
 function generateMessage(settings) {
   const pool = buildCharacterPool(settings);
-
-  if (pool.length === 0) {
-    alert("At least one character must be enabled.");
-    return [];
-  }
+  if (pool.length === 0) return [];
 
   const words = [];
 
@@ -377,26 +425,34 @@ function generateMessage(settings) {
    Morse Encoding
    ========================= */
 
-function encodeRunOnProsign(sequence, timing) {
+// One character or run-on prosign: its dots and dashes with element gaps
+function encodeToken(token, timing) {
+  const morse = getMorseFor(token);
   const queue = [];
 
-  [...sequence].forEach((char, charIndex) => {
-    const morse = MORSE_MAP[char];
-    if (!morse) return;
-
-    [...morse].forEach((symbol, symbolIndex) => {
-      queue.push({
-        on: true,
-        duration: symbol === "." ? timing.dot : timing.dash
-      });
-
-      if (symbolIndex < morse.length - 1) {
-        queue.push({ on: false, duration: timing.intraSymbolGap });
-      }
+  [...morse].forEach((symbol, symbolIndex) => {
+    queue.push({
+      on: true,
+      duration: symbol === "." ? timing.dot : timing.dash
     });
 
-    if (charIndex < sequence.length - 1) {
+    if (symbolIndex < morse.length - 1) {
       queue.push({ on: false, duration: timing.intraSymbolGap });
+    }
+  });
+
+  return queue;
+}
+
+// Tokens sent as separate characters, with character gaps between them
+function encodeWord(tokens, timing) {
+  const queue = [];
+
+  tokens.forEach((token, tokenIndex) => {
+    queue.push(...encodeToken(token, timing));
+
+    if (tokenIndex < tokens.length - 1) {
+      queue.push({ on: false, duration: timing.interCharGap });
     }
   });
 
@@ -405,67 +461,25 @@ function encodeRunOnProsign(sequence, timing) {
 
 function encodeMessageToQueue(words, settings) {
   const timing = getTiming(settings.dotLengthMs);
+  const wordGap = { on: false, duration: timing.interWordGap };
   const queue = [];
 
   if (settings.enablePreroll) {
+    // "All Ships": AAA sent three times
     for (let i = 0; i < 3; i++) {
-      queue.push(
-        ...encodeRunOnProsign("AAA", timing),
-        { on: false, duration: timing.interWordGap }
-      );
+      queue.push(...encodeToken("AAA", timing), wordGap);
     }
   }
 
   words.forEach((word, wordIndex) => {
-    word.forEach((token, tokenIndex) => {
-      if (token.length > 1) {
-        // run-on prosign
-        queue.push(...encodeRunOnProsign(token, timing));
-      } else {
-        const morse = MORSE_MAP[token];
-        if (!morse) return;
+    queue.push(...encodeWord(word, timing));
 
-        [...morse].forEach((symbol, symbolIndex) => {
-          queue.push({
-            on: true,
-            duration: symbol === "." ? timing.dot : timing.dash
-          });
-
-          if (symbolIndex < morse.length - 1) {
-            queue.push({ on: false, duration: timing.intraSymbolGap });
-          }
-        });
-      }
-
-      if (tokenIndex < word.length - 1) {
-        queue.push({ on: false, duration: timing.interCharGap });
-      }
-    });
-
-    // between words we optionally insert II with proper gaps
     if (wordIndex < words.length - 1) {
+      queue.push(wordGap);
+
       if (settings.includeII) {
-        // pre-gap
-        queue.push({ on: false, duration: timing.interWordGap });
-        // two separate Is with inter-character gap
-        const morseI = MORSE_MAP['I'];
-        [...morseI].forEach((symbol, symbolIndex) => {
-          queue.push({ on: true, duration: symbol === '.' ? timing.dot : timing.dash });
-          if (symbolIndex < morseI.length - 1) {
-            queue.push({ on: false, duration: timing.intraSymbolGap });
-          }
-        });
-        queue.push({ on: false, duration: timing.interCharGap });
-        [...morseI].forEach((symbol, symbolIndex) => {
-          queue.push({ on: true, duration: symbol === '.' ? timing.dot : timing.dash });
-          if (symbolIndex < morseI.length - 1) {
-            queue.push({ on: false, duration: timing.intraSymbolGap });
-          }
-        });
-        // post-gap
-        queue.push({ on: false, duration: timing.interWordGap });
-      } else {
-        queue.push({ on: false, duration: timing.interWordGap });
+        // separative sign: two separate Is, flanked by word gaps
+        queue.push(...encodeWord(["I", "I"], timing), wordGap);
       }
     }
   });
@@ -491,41 +505,139 @@ async function transmitQueue(queue, token) {
    UI State Control
    ========================= */
 
+function updateStartAvailability() {
+  startButton.disabled =
+    state.isTransmitting || state.settings.enabledChars.size === 0;
+}
+
 function setControlsEnabled(enabled) {
-  wpmInput.disabled = !enabled;
-  wordLengthInput.disabled = !enabled;
-  wordCountInput.disabled = !enabled;
-  groupInputs.forEach(input => {
+  const controls = [
+    wpmInput,
+    wordLengthInput,
+    wordCountInput,
+    enableMessagePreroll,
+    enableIIInput,
+    enableAutoRepeat,
+    ...autoRevealInputs,
+    ...groupInputs,
+    ...charPickerGroups.querySelectorAll("input[data-char]")
+  ];
+
+  controls.forEach(input => {
     input.disabled = !enabled;
   });
-  charPickerGroups.querySelectorAll("input[data-char]").forEach(input => {
-    input.disabled = !enabled;
-  });
-  enableIIInput.disabled = !enabled;
-  enableAutoRepeat.disabled = !enabled;
-  autoRevealInputs.forEach(input => {
-    input.disabled = !enabled;
-  });
-  startButton.disabled = !enabled;
+
+  updateStartAvailability();
+}
+
+function finishTransmission() {
+  state.isTransmitting = false;
+  state.hasCompleted = true;
+
+  stopButton.disabled = true;
+  revealButton.disabled = false;
+  setControlsEnabled(true);
+  releaseWakeLock();
+}
+
+/* =========================
+   Actions
+   ========================= */
+
+async function startTransmission() {
+  syncSettingsFromUI();
+
+  const message = generateMessage(state.settings);
+  if (message.length === 0) return;
+
+  transmissionToken++;
+  const token = transmissionToken;
+
+  wasManuallyStopped = false;
+  autoRevealInProgress = false;
+
+  state.generatedMessage = message;
+  state.isTransmitting = true;
+  state.hasCompleted = false;
+
+  stopButton.disabled = false;
+  revealButton.disabled = true;
+  setControlsEnabled(false);
+  acquireWakeLock();
+
+  // short countdown first; the previous result stays visible during it
+  await startDelayCountdown(3, token);
+  if (token !== transmissionToken) return;
+
+  messageOutput.hidden = true;
+  messageOutput.innerHTML = "";
+
+  updateStatus("Transmitting...");
+
+  const queue = encodeMessageToQueue(state.generatedMessage, state.settings);
+  await transmitQueue(queue, token);
+
+  // a manual stop bumps the token and handles its own cleanup
+  if (token !== transmissionToken) return;
+
+  finishTransmission();
+  updateStatus("Transmission complete");
+
+  if (state.settings.autoReveal === "immediate") {
+    revealGeneratedMessage();
+  } else if (state.settings.autoReveal === "3s") {
+    await autoRevealCountdown(3, token);
+  }
+
+  if (
+    state.settings.autoRepeat &&
+    state.settings.autoReveal !== "disabled" &&
+    token === transmissionToken
+  ) {
+    setTimeout(startTransmission, 0);
+  }
+}
+
+function revealMessage() {
+  if (!state.hasCompleted) return;
+
+  revealGeneratedMessage();
+
+  // if user manually revealed and auto-repeat is enabled, start again
+  if (state.settings.autoRepeat && !wasManuallyStopped) {
+    setTimeout(startTransmission, 0);
+  }
+}
+
+function stopTransmission() {
+  if (!state.isTransmitting) return;
+
+  wasManuallyStopped = true;
+  transmissionToken++;
+  autoRevealInProgress = false;
+
+  setSignal(false);
+  finishTransmission();
+  updateStatus("Transmission stopped");
 }
 
 /* =========================
    Event Handlers
    ========================= */
 
-wpmInput.addEventListener("input", () => {
-  syncSettingsFromUI();
-  updateDisplays();
+[wpmInput, wordLengthInput, wordCountInput].forEach(input => {
+  input.addEventListener("input", () => {
+    syncSettingsFromUI();
+    updateDisplays();
+    saveSettings();
+  });
 });
 
-wordLengthInput.addEventListener("input", () => {
-  syncSettingsFromUI();
-  updateDisplays();
-});
-
-wordCountInput.addEventListener("input", () => {
-  syncSettingsFromUI();
-  updateDisplays();
+[enableMessagePreroll, enableIIInput, enableAutoRepeat, ...autoRevealInputs].forEach(input => {
+  input.addEventListener("change", () => {
+    syncSettingsFromUI();
+    saveSettings();
+  });
 });
 
 groupInputs.forEach(input => {
@@ -535,131 +647,49 @@ groupInputs.forEach(input => {
       if (input.checked) state.settings.enabledChars.add(char);
       else state.settings.enabledChars.delete(char);
     });
-    refreshCharacterUI();
+    onCharactersChanged();
   });
 });
-enableIIInput.addEventListener("change", syncSettingsFromUI);
-enableAutoRepeat.addEventListener("change", syncSettingsFromUI);
-autoRevealInputs.forEach(input => {
-  input.addEventListener("change", syncSettingsFromUI);
-});
 
-startButton.addEventListener("click", async () => {
-  syncSettingsFromUI();
+startButton.addEventListener("click", startTransmission);
+revealButton.addEventListener("click", revealMessage);
+stopButton.addEventListener("click", stopTransmission);
 
-  transmissionToken++;
-  const token = transmissionToken;
+// Space: start, or reveal a finished message that isn't showing yet. Esc: stop.
+document.addEventListener("keydown", event => {
+  if (event.ctrlKey || event.metaKey || event.altKey || event.repeat) return;
 
-  wasManuallyStopped = false;
-  autoRevealInProgress = false;
+  // leave keys alone when a form control or button has focus
+  if (event.target.closest("input, button, select, textarea, summary, a, label")) return;
 
-  // delay clearing the previous result until just before transmitting
-  // this lets the revealed text stay on screen during the countdown
-  stopButton.disabled = false;
-  revealButton.disabled = true;
-
-  state.generatedMessage = generateMessage(state.settings);
-  if (state.generatedMessage.length === 0) return;
-
-  state.isTransmitting = true;
-  state.hasCompleted = false;
-
-  setControlsEnabled(false);
-
-  // always include a short countdown before transmitting
-  await startDelayCountdown(3, token);
-  if (token !== transmissionToken) return;
-
-  // wipe the previous message now that we're about to send a new one
-  messageOutput.hidden = true;
-  messageOutput.innerHTML = "";
-
-  updateStatus("Transmitting...");
-
-  const queue = encodeMessageToQueue(
-    state.generatedMessage,
-    state.settings
-  );
-
-  await transmitQueue(queue, token);
-  if (token !== transmissionToken) return;
-
-  state.isTransmitting = false;
-  state.hasCompleted = true;
-
-  stopButton.disabled = true;
-  revealButton.disabled = false;
-  setControlsEnabled(true);
-
-  updateStatus(
-    wasManuallyStopped
-      ? "Transmission stopped"
-      : "Transmission complete"
-  );
-
-  if (!wasManuallyStopped) {
-    if (state.settings.autoReveal === "immediate") {
-      revealGeneratedMessage();
-    } else if (state.settings.autoReveal === "3s") {
-      await autoRevealCountdown(3, token);
+  if (event.key === " ") {
+    event.preventDefault();
+    if (!revealButton.disabled && messageOutput.hidden) {
+      revealMessage();
+    } else if (!startButton.disabled) {
+      startTransmission();
     }
-
-    if (
-      state.settings.autoRepeat &&
-      token === transmissionToken &&
-      !wasManuallyStopped &&
-      state.settings.autoReveal !== "disabled"
-    ) {
-      setTimeout(() => startButton.click(), 0);
-    }
+  } else if (event.key === "Escape") {
+    stopTransmission();
   }
-});
-
-revealButton.addEventListener("click", () => {
-  if (!state.hasCompleted) return;
-
-  autoRevealInProgress = false;
-
-  revealGeneratedMessage();
-
-  // if user manually revealed and auto-repeat is enabled, start again
-  if (state.settings.autoRepeat && !wasManuallyStopped) {
-    setTimeout(() => startButton.click(), 0);
-  }
-});
-
-stopButton.addEventListener("click", () => {
-  if (!state.isTransmitting) return;
-
-  wasManuallyStopped = true;
-  transmissionToken++;
-  autoRevealInProgress = false;
-
-  state.isTransmitting = false;
-  state.hasCompleted = true;
-
-  setSignal(false);
-
-  stopButton.disabled = true;
-  revealButton.disabled = false;
-  setControlsEnabled(true);
-
-  updateStatus("Transmission stopped");
 });
 
 /* =========================
    Initialisation
    ========================= */
 
-groupInputs.forEach(input => {
-  if (!input.checked) return;
-  const group = CHARACTER_GROUPS.find(g => g.key === input.dataset.group);
-  group.chars.forEach(char => state.settings.enabledChars.add(char));
-});
-buildCharacterPicker();
-refreshCharacterUI();
+if (!loadSavedSettings()) {
+  // first visit: enable the groups that are ticked in the HTML
+  groupInputs.forEach(input => {
+    if (!input.checked) return;
+    const group = CHARACTER_GROUPS.find(g => g.key === input.dataset.group);
+    group.chars.forEach(char => state.settings.enabledChars.add(char));
+  });
+}
 
+buildCharacterPicker();
 syncSettingsFromUI();
 updateDisplays();
+refreshCharacterUI();
 updateStatus("Not Transmitting");
 setSignal(false);

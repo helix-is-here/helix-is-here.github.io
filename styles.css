@@ -40,8 +40,23 @@ body {
   color: var(--text-light) !important;
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.nav-link.active {
   color: var(--accent) !important;
+}
+
+.nav-link-upcoming,
+.nav-link-upcoming:hover {
+  color: var(--text-muted) !important;
+  cursor: default;
+}
+
+.navbar-toggler {
+  border-color: #444;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 2px var(--accent);
 }
 
 /* Footer */
@@ -100,57 +115,4 @@ a:hover {
 .btn-outline-primary:hover {
   background-color: var(--accent);
   color: white;
-}
-
-/* Tables */
-.table {
-  color: var(--text-light);
-  border-color: #333;
-}
-
-.table thead {
-  border-bottom: 1px solid #444;
-  background-color: var(--bg-lighter);
-}
-
-.table thead th {
-  color: var(--text-light);
-  border-color: #333;
-}
-
-.table tbody tr:hover {
-  background-color: #1a1a1a;
-}
-
-.table td {
-  border-color: #333;
-}
-
-/* Morse display */
-.morse-message {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 1rem;
-  background-color: var(--bg-lighter);
-  border: 1px solid #333;
-  border-radius: 4px;
-}
-
-.morse-char {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #444;
-  background-color: var(--bg-dark);
-  color: var(--text-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-family: monospace;
-  border-radius: 4px;
-}
-
-.morse-word-space {
-  width: 20px;
 }
