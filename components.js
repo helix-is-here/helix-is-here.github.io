@@ -7,10 +7,10 @@
 const NAV_LINKS = [
   { label: "Morse Table", href: "/morse-table/" },
   { label: "Morse Drop", href: "/morse-drop/" },
+  { label: "ADF Ranks Quiz", href: "/adf-ranks-quiz/" },
   // not built yet: shown struck out and not clickable
   { label: "Flags Table" },
-  { label: "Flags Quiz" },
-  { label: "ADF Ranks Quiz" }
+  { label: "Flags Quiz" }
 ];
 
 function renderNavLink(link) {

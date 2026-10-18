@@ -8,6 +8,10 @@ Training tools for communicators, hosted on GitHub Pages at
 - **Morse Table** (`/morse-table/`): reference grid of letters and numbers.
 - **Morse Drop** (`/morse-drop/`): flashing-light trainer that sends random
   groups and reveals them afterwards. Settings are saved in the browser.
+- **ADF Ranks Quiz** (`/adf-ranks-quiz/`): multiple-choice quiz matching rank
+  insignia and rank names across the Navy, Army and Air Force. Rank data is in
+  `adf-ranks-quiz/ranks.js`; insignia are drawn in `insignia.js`, and any rank
+  can use a real image instead by adding an `image` path.
 
 ## Structure
 
@@ -20,6 +24,7 @@ components.js     shared navbar and footer
 styles.css        shared colours and base styles
 morse-table/      Morse Table page
 morse-drop/       Morse Drop page
+adf-ranks-quiz/   ADF Ranks Quiz page
 assets/           images and icons
 ```
 
