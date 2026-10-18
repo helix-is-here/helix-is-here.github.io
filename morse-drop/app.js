@@ -465,9 +465,10 @@ function encodeMessageToQueue(words, settings) {
   const queue = [];
 
   if (settings.enablePreroll) {
-    // "All Ships": AAA sent three times
+    // general call "AA AA AA": the unknown-station / all-stations call
+    // (AAA is the full stop, not a call)
     for (let i = 0; i < 3; i++) {
-      queue.push(...encodeToken("AAA", timing), wordGap);
+      queue.push(...encodeToken("AA", timing), wordGap);
     }
   }
 
