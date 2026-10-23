@@ -5,17 +5,23 @@
 const STORAGE_KEY = "ranksQuiz.settings.v1";
 const OPTION_COUNT = 4;
 
+// how long the answer stays on screen before the next question
+const ADVANCE_DELAY_CORRECT_MS = 1200;
+const ADVANCE_DELAY_WRONG_MS = 3000;
+
 const state = {
   settings: {
     mode: "insignia-to-name",
     services: new Set(Object.keys(SERVICES)),
-    groups: new Set(Object.keys(GROUPS))
+    groups: new Set(Object.keys(GROUPS)),
+    starStyle: "slides"
   },
   score: 0,
   total: 0,
   streak: 0,
   question: null,
-  recentIds: []
+  recentIds: [],
+  advanceTimer: null
 };
 
 /* =========================
@@ -25,17 +31,17 @@ const state = {
 const modeInputs = document.querySelectorAll('input[name="quiz-mode"]');
 const serviceInputs = document.querySelectorAll('input[name="service"]');
 const groupInputs = document.querySelectorAll('input[name="group"]');
+const starStyleInputs = document.querySelectorAll('input[name="star-style"]');
 const poolCount = document.getElementById("pool-count");
 
 const scoreDisplay = document.getElementById("score");
 const streakDisplay = document.getElementById("streak");
 const resetButton = document.getElementById("reset-button");
 
-const questionText = document.getElementById("question-text");
 const promptArea = document.getElementById("prompt");
 const optionsArea = document.getElementById("options");
 const feedback = document.getElementById("feedback");
-const nextButton = document.getElementById("next-button");
+const advanceBar = document.getElementById("advance-bar");
 
 const studyGrid = document.getElementById("study-grid");
 
@@ -65,6 +71,10 @@ function tier(rank) {
 
 function rankLabel(rank) {
   return `${rank.name} (${rank.abbr})`;
+}
+
+function insigniaFor(rank) {
+  return insigniaMarkup(rank, state.settings.starStyle === "boards");
 }
 
 /* =========================
@@ -123,12 +133,11 @@ function renderQuestion() {
   const question = state.question;
   feedback.textContent = "";
   feedback.className = "feedback";
-  nextButton.hidden = true;
   optionsArea.innerHTML = "";
   promptArea.innerHTML = "";
 
   if (!question) {
-    questionText.textContent = "Select at least one service and one rank group to start.";
+    promptArea.innerHTML = `<p class="empty-message">Select at least one service and one rank group to start.</p>`;
     return;
   }
 
@@ -136,10 +145,8 @@ function renderQuestion() {
   const service = SERVICES[answer.service];
 
   if (mode === "insignia-to-name") {
-    questionText.textContent = `Which ${service} rank wears this insignia?`;
-    promptArea.innerHTML = `<div class="prompt-insignia">${insigniaMarkup(answer)}</div>`;
+    promptArea.innerHTML = `<div class="prompt-insignia">${insigniaFor(answer)}</div>`;
   } else {
-    questionText.textContent = "Which insignia belongs to this rank?";
     promptArea.innerHTML = `
       <div class="prompt-name">
         <span class="prompt-service">${service}</span>
@@ -159,7 +166,7 @@ function renderQuestion() {
     if (mode === "insignia-to-name") {
       button.innerHTML = `${key}<span class="option-name">${rank.name}</span><span class="option-abbr">${rank.abbr}</span>`;
     } else {
-      button.innerHTML = `${key}<span class="option-insignia">${insigniaMarkup(rank)}</span>`;
+      button.innerHTML = `${key}<span class="option-insignia">${insigniaFor(rank)}</span>`;
       button.setAttribute("aria-label", `Option ${index + 1}`);
     }
 
@@ -186,7 +193,7 @@ function renderStudySheet() {
       const card = document.createElement("div");
       card.className = "study-card";
       card.innerHTML = `
-        <div class="study-insignia">${insigniaMarkup(rank)}</div>
+        <div class="study-insignia">${insigniaFor(rank)}</div>
         <div class="study-name">${rank.name}</div>
         <div class="study-abbr">${rank.abbr}</div>`;
       grid.appendChild(card);
@@ -206,7 +213,23 @@ function renderPoolCount() {
    Actions
    ========================= */
 
+function cancelAutoAdvance() {
+  clearTimeout(state.advanceTimer);
+  state.advanceTimer = null;
+  advanceBar.classList.remove("running");
+}
+
+function scheduleAutoAdvance(delayMs) {
+  cancelAutoAdvance();
+  // restart the bar's fill animation
+  advanceBar.style.setProperty("--advance-ms", `${delayMs}ms`);
+  void advanceBar.offsetWidth;
+  advanceBar.classList.add("running");
+  state.advanceTimer = setTimeout(nextQuestion, delayMs);
+}
+
 function nextQuestion() {
+  cancelAutoAdvance();
   state.question = buildQuestion();
   renderQuestion();
 }
@@ -241,8 +264,7 @@ function answerQuestion(id) {
     feedback.className = "feedback feedback-wrong";
   }
 
-  nextButton.hidden = false;
-  nextButton.focus();
+  scheduleAutoAdvance(correct ? ADVANCE_DELAY_CORRECT_MS : ADVANCE_DELAY_WRONG_MS);
 }
 
 function resetScore() {
@@ -261,6 +283,7 @@ function syncSettingsFromUI() {
   state.settings.mode = document.querySelector('input[name="quiz-mode"]:checked')?.value || "insignia-to-name";
   state.settings.services = new Set([...serviceInputs].filter(i => i.checked).map(i => i.value));
   state.settings.groups = new Set([...groupInputs].filter(i => i.checked).map(i => i.value));
+  state.settings.starStyle = document.querySelector('input[name="star-style"]:checked')?.value || "slides";
 }
 
 function saveSettings() {
@@ -268,7 +291,8 @@ function saveSettings() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       mode: state.settings.mode,
       services: [...state.settings.services],
-      groups: [...state.settings.groups]
+      groups: [...state.settings.groups],
+      starStyle: state.settings.starStyle
     }));
   } catch {
     // storage unavailable; settings just won't persist
@@ -292,6 +316,8 @@ function loadSavedSettings() {
   if (Array.isArray(saved.groups)) {
     groupInputs.forEach(input => { input.checked = saved.groups.includes(input.value); });
   }
+  const savedStarStyle = [...starStyleInputs].find(input => input.value === saved.starStyle);
+  if (savedStarStyle) savedStarStyle.checked = true;
 }
 
 function onSettingsChanged() {
@@ -307,14 +333,13 @@ function onSettingsChanged() {
    Event Handlers
    ========================= */
 
-[...modeInputs, ...serviceInputs, ...groupInputs].forEach(input => {
+[...modeInputs, ...serviceInputs, ...groupInputs, ...starStyleInputs].forEach(input => {
   input.addEventListener("change", onSettingsChanged);
 });
 
 resetButton.addEventListener("click", resetScore);
-nextButton.addEventListener("click", nextQuestion);
 
-// 1-4 pick an answer; Space/Enter moves on once answered
+// 1-4 pick an answer; Space/Enter skips the wait once answered
 document.addEventListener("keydown", event => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.repeat) return;
   if (event.target.closest("input, select, textarea")) return;

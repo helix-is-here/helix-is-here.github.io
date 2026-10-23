@@ -48,6 +48,18 @@
           <label><input type="checkbox" name="group" value="appointment" checked /> Special appointments</label>
           <p id="pool-count" class="pool-count"></p>
         </fieldset>
+
+        <fieldset>
+          <legend>Navy Star Ranks</legend>
+          <label>
+            <input type="radio" name="star-style" value="slides" checked />
+            Rank slides (stripes)
+          </label>
+          <label>
+            <input type="radio" name="star-style" value="boards" />
+            Shoulder boards
+          </label>
+        </fieldset>
       </section>
 
       <section class="quiz-column">
@@ -58,17 +70,16 @@
             <button id="reset-button" class="btn btn-sm btn-outline-primary">Reset</button>
           </div>
 
-          <p id="question-text" class="question-text"></p>
           <div id="prompt" class="prompt"></div>
           <div id="options" class="options"></div>
 
           <p id="feedback" class="feedback" role="status"></p>
 
-          <button id="next-button" class="btn btn-primary next-button" hidden>Next question</button>
+          <div id="advance-bar" class="advance-bar" aria-hidden="true"><span></span></div>
         </div>
 
         <p class="shortcut-hint">
-          Shortcuts: <kbd>1</kbd>–<kbd>4</kbd> answer &middot; <kbd>Space</kbd> next
+          Shortcuts: <kbd>1</kbd>–<kbd>4</kbd> answer &middot; <kbd>Space</kbd> skip to next
         </p>
       </section>
     </div>

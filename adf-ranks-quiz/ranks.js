@@ -2,8 +2,10 @@
    ADF rank data
    Ordered most senior first within each service. `group` is one of:
    officer, enlisted (including warrant officers) or appointment.
-   Insignia items are listed bottom-up (see insignia.js). To use a real
-   picture instead of the drawing, add e.g. image: "/assets/ranks/navy-adml.png".
+   Insignia items are listed bottom-up (see insignia.js). Navy star ranks
+   also have `boardInsignia`: the gold shoulder board, shown when the
+   "shoulder boards" option is chosen. To use a real picture instead of a
+   drawing, add e.g. image: "/assets/ranks/navy-adml.png" (or boardImage).
 
    Left out of the quiz on purpose:
    - Acting Sub Lieutenant: same insignia as Sub Lieutenant
@@ -25,15 +27,20 @@ const GROUPS = {
 const RANKS = [
   // ---------- Navy ----------
   { id: "navy-af", service: "navy", group: "officer", name: "Admiral of the Fleet", abbr: "AF",
-    insignia: { board: true, items: ["batonsWreathSilver", "crown"] } },
+    insignia: { stripes: ["m", "m", "m", "m", "b"], label: "" },
+    boardInsignia: { board: true, items: ["batonsWreathSilver", "crown"] } },
   { id: "navy-adml", service: "navy", group: "officer", name: "Admiral", abbr: "ADML",
-    insignia: { board: true, items: ["stars4", "swordBatonSilver", "crown"] } },
+    insignia: { stripes: ["m", "m", "m", "b"], label: "" },
+    boardInsignia: { board: true, items: ["stars4", "swordBatonSilver", "crown"] } },
   { id: "navy-vadm", service: "navy", group: "officer", name: "Vice Admiral", abbr: "VADM",
-    insignia: { board: true, items: ["stars3", "swordBatonSilver", "crown"] } },
+    insignia: { stripes: ["m", "m", "b"], label: "" },
+    boardInsignia: { board: true, items: ["stars3", "swordBatonSilver", "crown"] } },
   { id: "navy-radm", service: "navy", group: "officer", name: "Rear Admiral", abbr: "RADM",
-    insignia: { board: true, items: ["stars2", "swordBatonSilver", "crown"] } },
+    insignia: { stripes: ["m", "b"], label: "" },
+    boardInsignia: { board: true, items: ["stars2", "swordBatonSilver", "crown"] } },
   { id: "navy-cdre", service: "navy", group: "officer", name: "Commodore", abbr: "CDRE",
-    insignia: { stripes: ["b"], label: "" } },
+    insignia: { stripes: ["b"], label: "" },
+    boardInsignia: { board: true, items: ["stars1", "anchorSilver", "crown"] } },
   { id: "navy-capt", service: "navy", group: "officer", name: "Captain", abbr: "CAPT",
     insignia: { stripes: ["m", "m", "m", "m"], label: "" } },
   { id: "navy-cmdr", service: "navy", group: "officer", name: "Commander", abbr: "CMDR",

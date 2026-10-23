@@ -87,9 +87,9 @@
   margin-left: auto;
 }
 
-.question-text {
-  margin: 0;
-  font-size: 1.1rem;
+.empty-message {
+  margin: 2rem 0;
+  color: var(--text-muted);
   text-align: center;
 }
 
@@ -234,8 +234,36 @@
   color: #ff7b7b;
 }
 
-.next-button {
-  min-width: 200px;
+/* fills while waiting to move to the next question */
+.advance-bar {
+  width: 100%;
+  max-width: 240px;
+  height: 3px;
+  background-color: #333;
+  border-radius: 2px;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.advance-bar.running {
+  visibility: visible;
+}
+
+.advance-bar span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background-color: var(--accent);
+}
+
+.advance-bar.running span {
+  animation: advance-fill var(--advance-ms, 1500ms) linear forwards;
+}
+
+@keyframes advance-fill {
+  to {
+    width: 100%;
+  }
 }
 
 .shortcut-hint {

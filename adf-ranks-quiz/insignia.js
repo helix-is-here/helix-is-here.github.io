@@ -13,6 +13,7 @@ const PALETTES = {
     metalDark: "#a07a0c",
     board: "#efbd2b",
     boardLine: "#c9960f",
+    boardOutline: "#3d2c00",
     silver: "#f2f2f2",
     silverDark: "#8a8a8a",
     text: "#e9b824"
@@ -204,8 +205,8 @@ function anchorShape(color, h) {
     <path d="M-1,9 C8,14 -8,22 4,30 C10,34 6,40 1,44" fill="none" stroke="${color}" stroke-width="1.2"/>`;
 }
 
-function anchorItem(p) {
-  return { h: 48, draw: y => `<g transform="translate(${CX} ${y})">${anchorShape(p.metal, 46)}</g>` };
+function anchorItem(p, color = p.metal) {
+  return { h: 48, w: 40, draw: y => `<g transform="translate(${CX} ${y})">${anchorShape(color, 46)}</g>` };
 }
 
 function crossedAnchorsItem(p) {
@@ -305,7 +306,8 @@ const ITEM_BUILDERS = {
   chevrons1: p => chevronsItem(p, 1),
   chevrons2: p => chevronsItem(p, 2),
   chevrons3: p => chevronsItem(p, 3),
-  anchor: anchorItem,
+  anchor: p => anchorItem(p),
+  anchorSilver: p => anchorItem(p, p.silver),
   crossedAnchors: crossedAnchorsItem,
   wreathAnchor: wreathAnchorItem,
   knot: knotItem,
@@ -369,6 +371,14 @@ function stackItems(items, hasTopButton) {
   return out;
 }
 
+// dark edge around shapes drawn on the gold shoulder board
+const BOARD_OUTLINE_FILTER = `<filter id="board-outline" x="-10%" y="-10%" width="120%" height="120%">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="0.9" result="thick"/>
+  <feFlood flood-color="${PALETTES.navy.boardOutline}"/>
+  <feComposite in2="thick" operator="in" result="edge"/>
+  <feMerge><feMergeNode in="edge"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>`;
+
 /* ---------- slide shapes ---------- */
 
 function slideOutline(shape) {
@@ -388,7 +398,7 @@ function renderInsignia(insignia, service) {
     for (let x = 12; x < 92; x += 6) {
       body += `<line x1="${x}" y1="20" x2="${x}" y2="195" stroke="${p.boardLine}" stroke-width="1"/>`;
     }
-    body += `<circle cx="${CX}" cy="30" r="9" fill="${p.metal}" stroke="${p.metalDark}" stroke-width="1.5"/>`;
+    body += `<circle cx="${CX}" cy="30" r="9" fill="${p.metal}" stroke="${p.boardOutline}" stroke-width="2"/>`;
   }
 
   if (service === "army") {
@@ -415,19 +425,27 @@ function renderInsignia(insignia, service) {
   }
 
   if (insignia.items && insignia.items.length) {
-    body += stackItems(insignia.items.map(name => ITEM_BUILDERS[name](p)), insignia.board || service === "army");
+    const items = stackItems(insignia.items.map(name => ITEM_BUILDERS[name](p)), insignia.board || service === "army");
+    // on the gold board, outline everything so gold and silver stand out
+    body += insignia.board ? `<g filter="url(#board-outline)">${items}</g>` : items;
   }
 
   const label = insignia.label === undefined ? "AUSTRALIA" : insignia.label;
   if (label) {
-    const labelColor = insignia.board ? "#ffffff" : p.text;
+    if (insignia.board) {
+      body += `<rect x="5" y="176" width="90" height="19" fill="${p.slide}"/>`;
+    }
+    const labelColor = insignia.board ? p.metal : p.text;
     const labelSize = label.length > 4 ? 12 : 18;
     body += `<text x="${CX}" y="189" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="${labelSize}" fill="${labelColor}">${label}</text>`;
   }
 
   const outline = slideOutline(shape);
   return `<svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg" class="insignia-svg">
-    <defs><clipPath id="clip-${shape}"><path d="${outline}"/></clipPath></defs>
+    <defs>
+      <clipPath id="clip-${shape}"><path d="${outline}"/></clipPath>
+      ${insignia.board ? BOARD_OUTLINE_FILTER : ""}
+    </defs>
     <path d="${outline}" fill="${fill}"/>
     <g clip-path="url(#clip-${shape})">${body}</g>
     <path d="${outline}" fill="none" stroke="${insignia.board ? "#111" : "#000"}" stroke-opacity="0.6" stroke-width="2"/>
@@ -435,9 +453,12 @@ function renderInsignia(insignia, service) {
 }
 
 // Returns markup for a rank's insignia: a supplied image if it has one, else the drawing.
-function insigniaMarkup(rank) {
-  if (rank.image) {
-    return `<img src="${rank.image}" alt="" class="insignia-img">`;
+// With useBoards, navy star ranks use their gold shoulder board instead of the rank slide.
+function insigniaMarkup(rank, useBoards = false) {
+  const board = useBoards && rank.boardInsignia;
+  const image = board ? rank.boardImage : rank.image;
+  if (image) {
+    return `<img src="${image}" alt="" class="insignia-img">`;
   }
-  return renderInsignia(rank.insignia, rank.service);
+  return renderInsignia(board ? rank.boardInsignia : rank.insignia, rank.service);
 }
