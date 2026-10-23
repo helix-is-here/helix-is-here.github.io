@@ -5,10 +5,6 @@
 const STORAGE_KEY = "ranksQuiz.settings.v1";
 const OPTION_COUNT = 4;
 
-// how long the answer stays on screen before the next question
-const ADVANCE_DELAY_CORRECT_MS = 1200;
-const ADVANCE_DELAY_WRONG_MS = 3000;
-
 const state = {
   settings: {
     mode: "insignia-to-name",
@@ -20,8 +16,7 @@ const state = {
   total: 0,
   streak: 0,
   question: null,
-  recentIds: [],
-  advanceTimer: null
+  recentIds: []
 };
 
 /* =========================
@@ -40,8 +35,7 @@ const resetButton = document.getElementById("reset-button");
 
 const promptArea = document.getElementById("prompt");
 const optionsArea = document.getElementById("options");
-const feedback = document.getElementById("feedback");
-const advanceBar = document.getElementById("advance-bar");
+const lastResult = document.getElementById("last-result");
 
 const studyGrid = document.getElementById("study-grid");
 
@@ -131,8 +125,6 @@ function renderScore() {
 
 function renderQuestion() {
   const question = state.question;
-  feedback.textContent = "";
-  feedback.className = "feedback";
   optionsArea.innerHTML = "";
   promptArea.innerHTML = "";
 
@@ -213,23 +205,7 @@ function renderPoolCount() {
    Actions
    ========================= */
 
-function cancelAutoAdvance() {
-  clearTimeout(state.advanceTimer);
-  state.advanceTimer = null;
-  advanceBar.classList.remove("running");
-}
-
-function scheduleAutoAdvance(delayMs) {
-  cancelAutoAdvance();
-  // restart the bar's fill animation
-  advanceBar.style.setProperty("--advance-ms", `${delayMs}ms`);
-  void advanceBar.offsetWidth;
-  advanceBar.classList.add("running");
-  state.advanceTimer = setTimeout(nextQuestion, delayMs);
-}
-
 function nextQuestion() {
-  cancelAutoAdvance();
   state.question = buildQuestion();
   renderQuestion();
 }
@@ -248,23 +224,32 @@ function answerQuestion(id) {
     state.streak = 0;
   }
   renderScore();
+  renderLastResult(question.answer, RANKS.find(rank => rank.id === id));
+  nextQuestion();
+}
 
-  optionsArea.querySelectorAll(".option").forEach(button => {
-    button.disabled = true;
-    if (button.dataset.id === question.answer.id) button.classList.add("correct");
-    else if (button.dataset.id === id) button.classList.add("wrong");
-  });
+// The previous answer stays on show below the new question.
+function renderLastResult(answer, chosen) {
+  const correct = answer.id === chosen.id;
+  const entry = (rank, note) => `
+    <div class="result-entry">
+      <span class="result-insignia">${insigniaFor(rank)}</span>
+      <span class="result-text">
+        <span class="result-note">${note}</span>
+        <span class="result-name">${rankLabel(rank)}</span>
+        <span class="result-service">${SERVICES[rank.service]}</span>
+      </span>
+    </div>`;
 
-  if (correct) {
-    feedback.textContent = `Correct: ${rankLabel(question.answer)}`;
-    feedback.className = "feedback feedback-correct";
-  } else {
-    const chosen = RANKS.find(rank => rank.id === id);
-    feedback.textContent = `Not quite. That was ${rankLabel(question.answer)}; you picked ${rankLabel(chosen)}.`;
-    feedback.className = "feedback feedback-wrong";
-  }
+  lastResult.className = `last-result ${correct ? "result-correct" : "result-wrong"}`;
+  lastResult.innerHTML = correct
+    ? entry(answer, "Correct")
+    : entry(answer, "Answer") + entry(chosen, "You picked");
+}
 
-  scheduleAutoAdvance(correct ? ADVANCE_DELAY_CORRECT_MS : ADVANCE_DELAY_WRONG_MS);
+function clearLastResult() {
+  lastResult.className = "last-result";
+  lastResult.innerHTML = "";
 }
 
 function resetScore() {
@@ -272,6 +257,7 @@ function resetScore() {
   state.total = 0;
   state.streak = 0;
   renderScore();
+  clearLastResult();
   nextQuestion();
 }
 
@@ -339,7 +325,7 @@ function onSettingsChanged() {
 
 resetButton.addEventListener("click", resetScore);
 
-// 1-4 pick an answer; Space/Enter skips the wait once answered
+// 1-4 pick an answer
 document.addEventListener("keydown", event => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.repeat) return;
   if (event.target.closest("input, select, textarea")) return;
@@ -348,15 +334,6 @@ document.addEventListener("keydown", event => {
   if (number >= 1 && number <= OPTION_COUNT && state.question && !state.question.answered) {
     const option = state.question.options[number - 1];
     if (option) answerQuestion(option.id);
-    return;
-  }
-
-  // a focused button already handles Space/Enter itself
-  if ((event.key === " " || event.key === "Enter") && !event.target.closest("button, summary, a")) {
-    if (state.question?.answered) {
-      event.preventDefault();
-      nextQuestion();
-    }
   }
 });
 

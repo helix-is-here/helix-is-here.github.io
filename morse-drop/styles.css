@@ -20,7 +20,11 @@
   margin: 0;
 }
 
+/* legend sits on the fieldset border (undoes Bootstrap's floated legend) */
 .settings-section legend {
+  float: none;
+  width: auto;
+  margin-bottom: 0;
   padding: 0 0.5rem;
   color: var(--text-muted);
   font-size: 0.9rem;
@@ -207,33 +211,27 @@ button:disabled {
   margin-top: 0.5rem;
 }
 
+/* no top margin on the first label (or first row of labels) in a fieldset */
+.settings-section fieldset > label:first-of-type,
+.settings-section [data-options-grid="2col"] label:nth-child(-n+2) {
+  margin-top: 0;
+}
+
 /* Auto Reveal Group - Radio Buttons */
 
 .settings-section fieldset[data-auto-reveal-group] {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
 }
 
 .settings-section fieldset[data-auto-reveal-group] label {
-  display: inline-flex;
-  margin-top: 0.5rem;
-  margin-right: 1rem;
+  margin: 0;
 }
 
 @media (min-width: 992px) {
-  .settings-section fieldset[data-auto-reveal-group] {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .settings-section fieldset[data-auto-reveal-group] legend {
-    width: 100%;
-  }
-
   .settings-section fieldset[data-auto-reveal-group] label {
-    margin-top: 0;
-    margin-right: 0;
     flex: 1 1 0;
     min-width: 0;
   }

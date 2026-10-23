@@ -2,7 +2,7 @@
 
 :root {
   --correct: #2e9e5b;
-  --wrong: #d64545;
+  --wrong: #ff7b7b;
 }
 
 .quiz-layout {
@@ -43,6 +43,10 @@
   gap: 0.75rem;
   margin-top: 0.6rem;
   color: var(--text-light);
+}
+
+.settings-section fieldset > label:first-of-type {
+  margin-top: 0;
 }
 
 .pool-count {
@@ -175,21 +179,6 @@
   outline-offset: 2px;
 }
 
-.option:disabled {
-  cursor: default;
-  opacity: 1;
-}
-
-.option.correct {
-  border-color: var(--correct);
-  background-color: rgba(46, 158, 91, 0.2);
-}
-
-.option.wrong {
-  border-color: var(--wrong);
-  background-color: rgba(214, 69, 69, 0.2);
-}
-
 .option-key {
   position: absolute;
   top: 4px;
@@ -218,52 +207,67 @@
   padding: 1.25rem 0.5rem 0.75rem;
 }
 
-/* Feedback */
+/* Result of the previous answer */
 
-.feedback {
-  min-height: 1.5em;
-  margin: 0;
-  text-align: center;
+.last-result {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1.5rem;
+  width: 100%;
+  min-height: 72px;
+  padding-top: 1rem;
+  border-top: 1px solid #333;
 }
 
-.feedback-correct {
+.last-result:empty {
+  border-top-color: transparent;
+}
+
+.result-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.result-insignia {
+  flex-shrink: 0;
+  width: 28px;
+  height: 56px;
+}
+
+.result-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.result-note {
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.result-correct .result-note {
   color: var(--correct);
 }
 
-.feedback-wrong {
-  color: #ff7b7b;
+.result-wrong .result-entry:first-child .result-note {
+  color: var(--correct);
 }
 
-/* fills while waiting to move to the next question */
-.advance-bar {
-  width: 100%;
-  max-width: 240px;
-  height: 3px;
-  background-color: #333;
-  border-radius: 2px;
-  overflow: hidden;
-  visibility: hidden;
+.result-wrong .result-entry + .result-entry .result-note {
+  color: var(--wrong);
 }
 
-.advance-bar.running {
-  visibility: visible;
+.result-name {
+  font-size: 0.95rem;
 }
 
-.advance-bar span {
-  display: block;
-  width: 0;
-  height: 100%;
-  background-color: var(--accent);
-}
-
-.advance-bar.running span {
-  animation: advance-fill var(--advance-ms, 1500ms) linear forwards;
-}
-
-@keyframes advance-fill {
-  to {
-    width: 100%;
-  }
+.result-service {
+  color: var(--text-muted);
+  font-size: 0.8rem;
 }
 
 .shortcut-hint {
