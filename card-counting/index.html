@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card Counting | Helix</title>
+  <meta name="description" content="Blackjack card counting trainer using the Hi-Lo system.">
+
+  <link rel="icon" type="image/png" href="/assets/shell-outline-black-bg.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div data-site-navbar></div>
+
+  <main class="container my-4">
+    <h1 class="mb-3">Card Counting</h1>
+
+    <details class="explainer" id="explainer">
+      <summary>How counting works (Hi-Lo)</summary>
+      <p>
+        Low cards left in the shoe help the dealer; high cards help you. Counting
+        keeps a rough score of which kind is left. Give every card you see a value
+        and keep a running total in your head, called the <strong>running count</strong>.
+      </p>
+      <div class="value-key">
+        <div class="value-key-item plus"><span class="value-key-cards">2 3 4 5 6</span><span class="value-key-value">+1</span></div>
+        <div class="value-key-item zero"><span class="value-key-cards">7 8 9</span><span class="value-key-value">0</span></div>
+        <div class="value-key-item minus"><span class="value-key-cards">10 J Q K A</span><span class="value-key-value">&minus;1</span></div>
+      </div>
+      <p>
+        Start at 0 when the deck is shuffled. A high positive count means lots of
+        tens and aces are still to come, which is good for you, so you bet more.
+        A full deck adds up to exactly 0.
+      </p>
+      <p class="mb-0">
+        Tip: cards that cancel out (a 5 and a K, say) add 0, so count them in pairs
+        rather than one by one.
+      </p>
+    </details>
+
+    <ul class="mode-tabs" role="tablist">
+      <li><button type="button" role="tab" data-mode="flash" aria-selected="true">Flash Drill</button></li>
+      <li><button type="button" role="tab" data-mode="countdown" aria-selected="false">Deck Countdown</button></li>
+      <li><button type="button" role="tab" data-mode="table" aria-selected="false" disabled title="Coming soon"><s>Blackjack Table</s></button></li>
+    </ul>
+
+    <!-- =========================== Flash Drill =========================== -->
+    <div class="trainer-layout" data-panel="flash">
+      <section class="settings-section">
+        <fieldset>
+          <legend>Flash Drill</legend>
+          <label>
+            Cards per flash
+            <input type="range" id="flash-group" min="1" max="4" value="1" />
+            <span id="flash-group-display" class="value-display">1</span>
+          </label>
+          <label>
+            Seconds per flash
+            <input type="range" id="flash-speed" min="0.3" max="3" step="0.1" value="1.5" />
+            <span id="flash-speed-display" class="value-display">1.5</span>
+          </label>
+          <label>
+            Number of flashes
+            <input type="range" id="flash-count" min="5" max="52" value="10" />
+            <span id="flash-count-display" class="value-display">10</span>
+          </label>
+          <label>
+            <input type="checkbox" id="flash-show-values" />
+            Show each card's value (training wheels)
+          </label>
+        </fieldset>
+        <p class="settings-note">
+          Cards come from one shuffled deck, so a flash drill can never show more
+          than 52 cards.
+        </p>
+      </section>
+
+      <div class="play-column">
+        <section class="play-section">
+          <div class="card-row" id="flash-cards" aria-live="off"></div>
+          <p class="status-text" id="flash-status" role="status">Press Start when you're ready.</p>
+
+          <form class="answer-form" id="flash-answer" hidden>
+            <label for="flash-guess">What's the running count?</label>
+            <div class="answer-row">
+              <input type="number" id="flash-guess" class="form-control" inputmode="numeric" step="1" required />
+              <button type="submit" class="btn btn-primary">Check</button>
+            </div>
+          </form>
+
+          <div class="result" id="flash-result" hidden></div>
+        </section>
+
+        <div class="controls-section">
+          <button id="flash-start" class="btn btn-primary">Start</button>
+          <button id="flash-stop" class="btn btn-outline-primary" disabled>Stop</button>
+        </div>
+        <p class="shortcut-hint"><kbd>Space</kbd> start &middot; <kbd>Esc</kbd> stop</p>
+      </div>
+    </div>
+
+    <!-- ========================= Deck Countdown ========================= -->
+    <div class="trainer-layout" data-panel="countdown" hidden>
+      <section class="settings-section">
+        <fieldset>
+          <legend>Deck Countdown</legend>
+          <label>
+            Cards turned per step
+            <input type="range" id="countdown-group" min="1" max="3" value="1" />
+            <span id="countdown-group-display" class="value-display">1</span>
+          </label>
+          <label>
+            Cards held back
+            <input type="range" id="countdown-holdback" min="0" max="10" value="3" />
+            <span id="countdown-holdback-display" class="value-display">3</span>
+          </label>
+        </fieldset>
+        <p class="settings-note">
+          Turn through a shuffled deck as fast as you can while keeping the count.
+          A full deck always ends at 0, so a few cards are held back unseen. Your
+          final count has to be right for the time to count.
+        </p>
+        <div class="best-times" id="countdown-best"></div>
+      </section>
+
+      <div class="play-column">
+        <section class="play-section">
+          <div class="countdown-meta">
+            <span>Cards left: <strong id="countdown-left">&ndash;</strong></span>
+            <span>Time: <strong id="countdown-timer">0.0s</strong></span>
+          </div>
+          <button type="button" class="card-row card-row-button" id="countdown-cards" aria-label="Turn next card" disabled></button>
+          <p class="status-text" id="countdown-status" role="status">Press Start, then tap the cards (or press Space) to turn the next one.</p>
+
+          <form class="answer-form" id="countdown-answer" hidden>
+            <label for="countdown-guess">What's the running count?</label>
+            <div class="answer-row">
+              <input type="number" id="countdown-guess" class="form-control" inputmode="numeric" step="1" required />
+              <button type="submit" class="btn btn-primary">Check</button>
+            </div>
+          </form>
+
+          <div class="result" id="countdown-result" hidden></div>
+        </section>
+
+        <div class="controls-section">
+          <button id="countdown-start" class="btn btn-primary">Start</button>
+          <button id="countdown-next" class="btn btn-primary" disabled>Next Card</button>
+          <button id="countdown-stop" class="btn btn-outline-primary" disabled>Stop</button>
+        </div>
+        <p class="shortcut-hint"><kbd>Space</kbd> start / next card &middot; <kbd>Esc</kbd> stop</p>
+      </div>
+    </div>
+  </main>
+
+  <div data-site-footer></div>
+
+  <script src="../components.js"></script>
+  <script src="cards.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

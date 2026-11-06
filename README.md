@@ -12,6 +12,9 @@ Training tools for communicators, hosted on GitHub Pages at
   insignia and rank names across the Navy, Army and Air Force. Rank data is in
   `adf-ranks-quiz/ranks.js`; insignia are drawn in `insignia.js`, and any rank
   can use a real image instead by adding an `image` path.
+- **Card Counting** (`/card-counting/`): Hi-Lo blackjack counting trainer with a
+  timed flash drill and a deck countdown. Card and count helpers are in
+  `card-counting/cards.js`; best countdown times are saved in the browser.
 
 ## Structure
 
@@ -25,6 +28,7 @@ styles.css        shared colours and base styles
 morse-table/      Morse Table page
 morse-drop/       Morse Drop page
 adf-ranks-quiz/   ADF Ranks Quiz page
+card-counting/    Card Counting page
 assets/           images and icons
 ```
 
